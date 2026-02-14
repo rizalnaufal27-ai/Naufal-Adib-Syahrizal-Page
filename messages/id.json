@@ -1,0 +1,18 @@
+{
+    "Hero": {
+        "available": "Tersedia untuk proyek",
+        "university": "Universitas Indraprasta PGRI — Mahasiswa Desain Komunikasi Visual",
+        "bio": "Menggabungkan ide berbasis konsep dengan penceritaan visual untuk menciptakan karya kreatif yang bermakna dan berdampak di bidang desain grafis, ilustrasi, fotografi, dan pengeditan video.",
+        "cta": {
+            "resume": "Lihat Resume",
+            "contact": "Hubungi Saya"
+        }
+    },
+    "Navbar": {
+        "home": "Beranda",
+        "about": "Tentang",
+        "work": "Karya",
+        "services": "Layanan",
+        "contact": "Kontak"
+    }
+}

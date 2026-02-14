@@ -1,0 +1,18 @@
+{
+    "Hero": {
+        "available": "Available for work",
+        "university": "Universitas Indraprasta PGRI — Visual Communication Design Student",
+        "bio": "Combining concept-based ideas with visual storytelling to create meaningful and impactful creative works across graphic design, illustration, photography, and video editing.",
+        "cta": {
+            "resume": "View Resume",
+            "contact": "Get in Touch"
+        }
+    },
+    "Navbar": {
+        "home": "Home",
+        "about": "About",
+        "work": "Work",
+        "services": "Services",
+        "contact": "Contact"
+    }
+}
