@@ -69,6 +69,21 @@ export default function HeroSection({ onViewResume }: { onViewResume?: () => voi
           </span>
         </motion.h1>
 
+        {/* University & Status */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="flex flex-col items-center text-center gap-1 mb-8"
+        >
+          <span className="text-xl md:text-2xl font-medium text-white/80">
+            {t('university_name')}
+          </span>
+          <span className="text-lg md:text-xl text-white/60">
+            {t('student_status')}
+          </span>
+        </motion.div>
+
         {/* Bio */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
