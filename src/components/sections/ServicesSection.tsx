@@ -17,12 +17,12 @@ const cardPop = {
 };
 
 const services = [
-    { title: "Graphic Design", description: "Logo, banner, poster, and complete brand identity packages. Clean, modern, impactful.", icon: Palette, color: "#8B5CF6", price: "From $5" },
-    { title: "Illustration", description: "Character illustration — half body, full body, and full render. Bring your characters to life.", icon: Sparkles, color: "#EC4899", price: "From $5" },
-    { title: "Photography", description: "Graduation, product, and event photography. Professional editing and retouching included.", icon: Camera, color: "#06B6D4", price: "From $1" },
-    { title: "Video Editing", description: "Professional post-production, color grading, motion graphics, transitions, and sound design.", icon: Film, color: "#F59E0B", price: "From $10" },
-    { title: "Web Design", description: "Modern, responsive website design with stunning UI/UX. Landing pages, portfolios, and business sites.", icon: Globe, color: "#22C55E", price: "From $25" },
-    { title: "App Development", description: "Custom mobile and web applications built with modern technologies. From concept to deployment.", icon: Smartphone, color: "#6366F1", price: "From $50" },
+    { title: "Graphic Design", description: "Logo, banner, poster, and complete brand identity packages. Clean, modern, impactful.", icon: Palette, color: "#8B5CF6", price: "Mulai Rp 75.000" },
+    { title: "Illustration", description: "Character illustration — half body, full body, and full render. Bring your characters to life.", icon: Sparkles, color: "#EC4899", price: "Mulai Rp 75.000" },
+    { title: "Photography", description: "Graduation, product, and event photography. Professional editing and retouching included.", icon: Camera, color: "#06B6D4", price: "Mulai Rp 150.000" },
+    { title: "Video Editing", description: "Professional post-production, color grading, motion graphics, transitions, and sound design.", icon: Film, color: "#F59E0B", price: "Mulai Rp 150.000" },
+    { title: "Web Design", description: "Modern, responsive website design with stunning UI/UX. Landing pages, portfolios, and business sites.", icon: Globe, color: "#22C55E", price: "Mulai Rp 350.000" },
+    { title: "App Development", description: "Custom mobile and web applications built with modern technologies. From concept to deployment.", icon: Smartphone, color: "#6366F1", price: "Mulai Rp 750.000" },
 ];
 
 export default function ServicesSection({ onOpenPricing }: ServicesSectionProps) {
