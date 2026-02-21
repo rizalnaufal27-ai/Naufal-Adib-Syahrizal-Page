@@ -40,7 +40,7 @@ export default function PromoCarousel() {
                             <img
                                 src={promo.src}
                                 alt={promo.alt}
-                                className="w-full h-auto object-cover rounded-2xl md:rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-white/10 relative z-10 transition-transform duration-500 group-hover:scale-[1.02]"
+                                className="w-full aspect-[4/3] md:aspect-[16/9] object-cover rounded-2xl md:rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-white/10 relative z-10 transition-transform duration-500 group-hover:scale-[1.02]"
                             />
                         </div>
                     ))}
