@@ -14,6 +14,7 @@ export const metadata: Metadata = {
 
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
+import Script from 'next/script';
 
 import SpaceAmbience from "@/components/SpaceAmbience";
 
@@ -33,6 +34,12 @@ export default async function RootLayout({
           {children}
           <SpaceAmbience />
         </NextIntlClientProvider>
+        {/* Midtrans Snap.js — loaded before interactive for payment pages */}
+        <Script
+          src="https://app.sandbox.midtrans.com/snap/snap.js"
+          data-client-key={process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY}
+          strategy="beforeInteractive"
+        />
       </body>
     </html>
   );

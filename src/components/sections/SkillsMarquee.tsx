@@ -1,110 +1,125 @@
 "use client";
+import { useState } from "react";
 
 const skills = [
     {
         name: "Photoshop",
         color: "#31A8FF",
-        icon: (
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                <rect width="32" height="32" rx="6" fill="#001E36" />
-                <text x="5" y="22" fill="#31A8FF" fontSize="14" fontWeight="bold" fontFamily="Arial">Ps</text>
-            </svg>
-        ),
+        abbr: "Ps",
+        bgColor: "#001E36",
     },
     {
         name: "Illustrator",
         color: "#FF9A00",
-        icon: (
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                <rect width="32" height="32" rx="6" fill="#330000" />
-                <text x="6" y="22" fill="#FF9A00" fontSize="14" fontWeight="bold" fontFamily="Arial">Ai</text>
-            </svg>
-        ),
+        abbr: "Ai",
+        bgColor: "#330000",
     },
     {
         name: "CapCut",
         color: "#FFFFFF",
-        icon: (
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                <rect width="32" height="32" rx="6" fill="#000000" stroke="#333" strokeWidth="1" />
-                <text x="3" y="21" fill="#FFFFFF" fontSize="10" fontWeight="bold" fontFamily="Arial">Cap</text>
-            </svg>
-        ),
+        abbr: "Cc",
+        bgColor: "#000000",
     },
     {
         name: "Canva",
-        color: "#7D2AE8",
-        icon: (
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                <rect width="32" height="32" rx="6" fill="#7D2AE8" />
-                <text x="7" y="22" fill="#FFFFFF" fontSize="14" fontWeight="bold" fontFamily="Arial">C</text>
-            </svg>
-        ),
+        color: "#FFFFFF",
+        abbr: "C",
+        bgColor: "#7D2AE8",
     },
     {
         name: "DaVinci Resolve",
         color: "#FF6B35",
-        icon: (
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                <rect width="32" height="32" rx="6" fill="#1A1A2E" />
-                <circle cx="16" cy="16" r="8" stroke="#FF6B35" strokeWidth="2" fill="none" />
-                <circle cx="16" cy="16" r="3" fill="#FF6B35" />
-            </svg>
-        ),
+        abbr: "Dv",
+        bgColor: "#1A1A2E",
     },
     {
         name: "Camera",
         color: "#E5E5E5",
-        icon: (
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                <rect width="32" height="32" rx="6" fill="#1A1A1A" />
-                <path d="M8 12h2l2-3h8l2 3h2a2 2 0 012 2v10a2 2 0 01-2 2H8a2 2 0 01-2-2V14a2 2 0 012-2z" stroke="#E5E5E5" strokeWidth="1.5" fill="none" />
-                <circle cx="16" cy="17" r="4" stroke="#E5E5E5" strokeWidth="1.5" fill="none" />
-                <circle cx="16" cy="17" r="1.5" fill="#E5E5E5" />
-            </svg>
-        ),
+        abbr: "📷",
+        bgColor: "#1A1A1A",
+    },
+    {
+        name: "Figma",
+        color: "#A259FF",
+        abbr: "Fi",
+        bgColor: "#1E1E1E",
+    },
+    {
+        name: "VS Code",
+        color: "#007ACC",
+        abbr: "VS",
+        bgColor: "#1E1E1E",
     },
 ];
 
 export default function SkillsMarquee() {
-    const doubledSkills = [...skills, ...skills, ...skills, ...skills];
+    const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
     return (
-        <div className="py-24 overflow-hidden">
-            <div className="section-container mb-12">
+        <div className="py-28 overflow-hidden">
+            <div className="section-container mb-16">
                 <div className="text-center">
-                    <p className="text-sm uppercase tracking-[0.3em] mb-3" style={{ color: "var(--color-highlight)" }}>
-                        Toolkit
+                    <p className="section-label">Toolkit</p>
+                    <h2 className="section-title gradient-text">Skills & Tools</h2>
+                    <p className="text-sm mt-4 max-w-md mx-auto" style={{ color: "var(--color-text-muted)" }}>
+                        Mastering the tools that bring creative visions to life
                     </p>
-                    <h2 className="text-3xl md:text-5xl font-bold gradient-text">Skills & Tools</h2>
                 </div>
             </div>
 
-            {/* Marquee Row 1 */}
-            <div className="relative">
-                <div
-                    className="flex gap-6 py-4"
-                    style={{ animation: "marquee 30s linear infinite", width: "max-content" }}
-                >
-                    {doubledSkills.map((skill, i) => (
+            {/* Antigravity Grid */}
+            <div className="section-container">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6 max-w-3xl mx-auto">
+                    {skills.map((skill, i) => (
                         <div
-                            key={`r1-${i}`}
-                            className="glass-card flex items-center gap-3 px-6 py-4 shrink-0"
-                            style={{ minWidth: "180px" }}
+                            key={skill.name}
+                            className="antigravity-item glass-card flex flex-col items-center justify-center gap-3 p-6 md:p-8 cursor-default group"
+                            onMouseEnter={() => setHoveredIndex(i)}
+                            onMouseLeave={() => setHoveredIndex(null)}
+                            style={{
+                                borderColor: hoveredIndex === i ? `${skill.color}40` : undefined,
+                            }}
                         >
+                            {/* Icon badge */}
                             <div
-                                className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
-                                style={{ background: `${skill.color}10` }}
+                                className="w-12 h-12 rounded-xl flex items-center justify-center text-sm font-bold transition-transform duration-300 group-hover:scale-110"
+                                style={{
+                                    background: skill.bgColor,
+                                    color: skill.color,
+                                    boxShadow: hoveredIndex === i ? `0 0 20px ${skill.color}30` : "none",
+                                }}
                             >
-                                {skill.icon}
+                                {skill.abbr}
                             </div>
+
+                            {/* Name */}
                             <span
-                                className="text-sm font-semibold whitespace-nowrap"
-                                style={{ color: "var(--color-text)" }}
+                                className="text-xs font-semibold text-center whitespace-nowrap transition-colors duration-300"
+                                style={{
+                                    color: hoveredIndex === i ? skill.color : "var(--color-text-muted)",
+                                }}
                             >
                                 {skill.name}
                             </span>
                         </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* Marquee strip below */}
+            <div className="relative mt-12">
+                <div
+                    className="flex gap-8 py-4 opacity-30"
+                    style={{ animation: "marquee 20s linear infinite", width: "max-content" }}
+                >
+                    {[...skills, ...skills, ...skills, ...skills].map((skill, i) => (
+                        <span
+                            key={`m-${i}`}
+                            className="text-xs font-mono uppercase tracking-widest whitespace-nowrap"
+                            style={{ color: skill.color }}
+                        >
+                            {skill.name}
+                        </span>
                     ))}
                 </div>
 
