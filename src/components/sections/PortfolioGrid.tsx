@@ -3,12 +3,14 @@ import { useState, useMemo } from "react";
 import { Project, projects, ProjectCategory } from "@/data/projects";
 import ProjectModal from "@/components/ui/project-modal";
 import { motion, AnimatePresence, Variants } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 function isVideo(src: string) {
     return /\.(mp4|webm|mov|avi)$/i.test(src);
 }
 
 export default function PortfolioGrid() {
+    const t = useTranslations("PortfolioGrid");
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
     const [activeCategory, setActiveCategory] = useState<"All" | ProjectCategory>("All");
 
@@ -55,7 +57,7 @@ export default function PortfolioGrid() {
                     transition={{ duration: 0.5 }}
                     className="text-sm uppercase tracking-[0.3em] mb-3 text-cyan-400"
                 >
-                    Selected Works
+                    {t("selectedWorks")}
                 </motion.p>
                 <motion.h2
                     initial={{ opacity: 0, y: 20 }}
@@ -69,7 +71,7 @@ export default function PortfolioGrid() {
                         WebkitTextFillColor: "transparent",
                     }}
                 >
-                    Portfolio
+                    {t("portfolio")}
                 </motion.h2>
                 <motion.p
                     initial={{ opacity: 0 }}
@@ -78,7 +80,7 @@ export default function PortfolioGrid() {
                     transition={{ delay: 0.3 }}
                     className="text-sm text-white/40 max-w-md mx-auto"
                 >
-                    Browse through recent projects across design, illustration, and development.
+                    {t("browse")}
                 </motion.p>
 
                 {/* Category Tabs */}
@@ -200,7 +202,7 @@ export default function PortfolioGrid() {
                                 />
                                 {/* View prompt */}
                                 <p className="text-xs text-white/40 mt-2 translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300 delay-200">
-                                    Click to view →
+                                    {t("clickToView")}
                                 </p>
                             </div>
 
@@ -230,7 +232,7 @@ export default function PortfolioGrid() {
                             <line x1="8" y1="14" x2="12" y2="14" />
                         </svg>
                     </div>
-                    <p className="text-white/30 text-sm">No projects found in this category.</p>
+                    <p className="text-white/30 text-sm">{t("noProjects")}</p>
                 </motion.div>
             )}
 

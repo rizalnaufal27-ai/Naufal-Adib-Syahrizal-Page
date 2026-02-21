@@ -1,12 +1,14 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 interface FloatingOrderFabProps {
     onClick: () => void;
 }
 
 export default function FloatingOrderFab({ onClick }: FloatingOrderFabProps) {
+    const t = useTranslations("FloatingOrderFab");
     const [hovered, setHovered] = useState(false);
 
     return (
@@ -50,7 +52,7 @@ export default function FloatingOrderFab({ onClick }: FloatingOrderFabProps) {
                     transition={{ duration: 0.2 }}
                     className="text-sm font-semibold text-white whitespace-nowrap overflow-hidden"
                 >
-                    Place an Order
+                    {t("placeOrder")}
                 </motion.span>
 
                 <style jsx>{`

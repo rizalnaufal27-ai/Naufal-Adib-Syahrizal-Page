@@ -1,12 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 interface IntroSequenceProps {
     onComplete: () => void;
 }
 
 export default function IntroSequence({ onComplete }: IntroSequenceProps) {
+    const t = useTranslations("IntroSequence");
     const [isExiting, setIsExiting] = useState(false);
 
     useEffect(() => {
@@ -75,7 +77,7 @@ export default function IntroSequence({ onComplete }: IntroSequenceProps) {
                             animate={{ opacity: 1 }}
                             transition={{ delay: 0.5 }}
                         >
-                            Initializing Core
+                            {t("initializing")}
                         </motion.p>
                     </div>
                 </motion.div>

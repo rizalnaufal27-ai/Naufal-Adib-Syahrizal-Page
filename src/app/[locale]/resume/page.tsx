@@ -5,6 +5,8 @@ import { CardStack, CardStackItem } from "@/components/ui/card-stack";
 import { projects, Project } from "@/data/projects";
 import ProjectModal from "@/components/ui/project-modal";
 import WarpTunnel from "@/components/ui/warp-tunnel";
+import { useTranslations } from "next-intl";
+import Link from "next/link";
 
 // Transform projects data to match CardStackItem interface
 const items: CardStackItem[] = projects.map((project) => ({
@@ -67,7 +69,7 @@ export default function ResumePage() {
             >
                 {/* This text appears initially then blurs out/explodes */}
                 <h1 className="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20 tracking-tighter">
-                    RESUME
+                    {t("resume")}
                 </h1>
             </div>
 
@@ -77,10 +79,10 @@ export default function ResumePage() {
             >
                 <div className="text-center mb-12">
                     <p className="text-sm uppercase tracking-[0.3em] mb-3 text-cyan-400">
-                        Selected Works
+                        {t("selectedWorks")}
                     </p>
                     <h1 className="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
-                        Project Gallery
+                        {t("projectGallery")}
                     </h1>
                 </div>
 
@@ -117,7 +119,7 @@ export default function ResumePage() {
                                     <div className="truncate text-lg font-semibold text-white">{item.title}</div>
                                     {item.description && <div className="mt-1 line-clamp-2 text-sm text-white/80">{item.description}</div>}
                                     <div className="mt-3 inline-flex items-center text-xs font-medium text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        Click for details <span className="ml-1">→</span>
+                                        {t("clickForDetails")} <span className="ml-1">→</span>
                                     </div>
                                 </div>
                             </div>
@@ -126,9 +128,9 @@ export default function ResumePage() {
                 </div>
 
                 <div className="mt-12 text-center">
-                    <a href="/" className="px-6 py-2 rounded-full border border-white/20 hover:bg-white/10 transition-colors text-sm">
-                        Back to Home
-                    </a>
+                    <Link href="/" className="px-6 py-2 rounded-full border border-white/20 hover:bg-white/10 transition-colors text-sm">
+                        {t("backToHome")}
+                    </Link>
                 </div>
             </div>
 

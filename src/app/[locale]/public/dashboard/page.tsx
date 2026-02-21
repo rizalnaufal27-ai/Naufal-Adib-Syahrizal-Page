@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { useTranslations } from "next-intl";
 
 interface Order {
     id: string;
@@ -17,6 +18,8 @@ interface Order {
 
 export default function FullPublicDashboard() {
     const router = useRouter();
+    const t = useTranslations("PublicDashboard");
+    const tDash = useTranslations("Dashboard.columns");
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -49,12 +52,12 @@ export default function FullPublicDashboard() {
             <Navbar />
             <div className="section-container max-w-5xl mx-auto mt-10">
                 <div className="text-center mb-12">
-                    <p className="section-label">Transparency</p>
+                    <p className="section-label">{t("transparency")}</p>
                     <h1 className="text-3xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-white/80 to-white/60 mb-4">
-                        Public Dashboard
+                        {t("title")}
                     </h1>
                     <p className="text-sm" style={{ color: "var(--color-text-muted)" }}>
-                        A real-time view of all active and past projects. No login required.
+                        {t("subtitle")}
                     </p>
                 </div>
 
@@ -69,19 +72,19 @@ export default function FullPublicDashboard() {
                                 <thead>
                                     <tr style={{ borderBottom: "1px solid var(--color-border)" }}>
                                         <th className="text-left px-6 py-4 text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--color-text-muted)" }}>
-                                            Order ID
+                                            {tDash("order")}
                                         </th>
                                         <th className="text-left px-6 py-4 text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--color-text-muted)" }}>
-                                            Service Type
+                                            {tDash("service")}
                                         </th>
                                         <th className="text-left px-6 py-4 text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--color-text-muted)" }}>
                                             Date
                                         </th>
                                         <th className="text-left px-6 py-4 text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--color-text-muted)" }}>
-                                            Status
+                                            {tDash("status")}
                                         </th>
                                         <th className="text-left px-6 py-4 text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--color-text-muted)" }}>
-                                            Progress
+                                            {tDash("progress")}
                                         </th>
                                         <th className="px-4 py-4"></th>
                                     </tr>
@@ -90,7 +93,7 @@ export default function FullPublicDashboard() {
                                     {orders.length === 0 ? (
                                         <tr>
                                             <td colSpan={6} className="px-6 py-12 text-center text-sm" style={{ color: "var(--color-text-muted)" }}>
-                                                No projects found.
+                                                {t("noProjects")}
                                             </td>
                                         </tr>
                                     ) : orders.map((order) => {
@@ -143,7 +146,7 @@ export default function FullPublicDashboard() {
                                                 </td>
                                                 <td className="px-4 py-5">
                                                     <span className="text-xs text-indigo-400/60 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                                        View →
+                                                        {t("view")}
                                                     </span>
                                                 </td>
                                             </tr>

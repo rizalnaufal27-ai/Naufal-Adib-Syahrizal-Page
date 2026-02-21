@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 interface Order {
     id: string;
@@ -23,6 +24,7 @@ export default function TrackProjectPage() {
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(false);
     const [searched, setSearched] = useState(false);
+    const t = useTranslations("TrackPage");
 
     const handleSearch = async (e?: React.FormEvent) => {
         e?.preventDefault();
@@ -66,7 +68,7 @@ export default function TrackProjectPage() {
                         </svg>
                     </div>
                     <h1 className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-white/80 to-white/60 mb-3">
-                        Track My Project
+                        {t("title")}
                     </h1>
                     <p className="text-sm text-white/40 max-w-md mx-auto">
                         Enter the email you used when placing your order to view your project status and details.
@@ -85,7 +87,7 @@ export default function TrackProjectPage() {
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        placeholder="your@email.com"
+                        placeholder={t("placeholder")}
                         required
                         className="flex-1 px-5 py-3.5 rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all placeholder:text-white/20"
                         style={{
@@ -107,7 +109,7 @@ export default function TrackProjectPage() {
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                                     <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
                                 </svg>
-                                Search
+                                {t("search")}
                             </>
                         )}
                     </button>
@@ -124,13 +126,13 @@ export default function TrackProjectPage() {
                         >
                             {orders.length === 0 ? (
                                 <div className="text-center py-16 rounded-2xl border border-dashed border-white/10 bg-white/[0.01]">
-                                    <p className="text-white/40 text-sm mb-2">No projects found for this email.</p>
+                                    <p className="text-white/40 text-sm mb-2">{t("noProjects")}</p>
                                     <p className="text-white/20 text-xs">Make sure you&apos;re using the same email from your order.</p>
                                 </div>
                             ) : (
                                 <div className="space-y-4">
                                     <p className="text-xs text-white/40 uppercase tracking-wider font-semibold mb-4">
-                                        {orders.length} project{orders.length > 1 ? "s" : ""} found
+                                        {orders.length} {t("projectsFound")}
                                     </p>
                                     {orders.map((order, i) => {
                                         const ss = getStatusStyle(order.status);
@@ -155,7 +157,7 @@ export default function TrackProjectPage() {
                                                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75" />
                                                             <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500" />
                                                         </span>
-                                                        <span className="text-[10px] text-indigo-400 uppercase tracking-wider font-bold">Active</span>
+                                                        <span className="text-[10px] text-indigo-400 uppercase tracking-wider font-bold">{t("active")}</span>
                                                     </div>
                                                 )}
 
@@ -201,7 +203,7 @@ export default function TrackProjectPage() {
                                                 <div className="flex justify-between items-center mt-3 text-xs text-white/20">
                                                     <span>{new Date(order.created_at).toLocaleDateString()}</span>
                                                     <span className="flex items-center gap-1 text-indigo-400/70 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                        View Details →
+                                                        {t("viewDetails")} →
                                                     </span>
                                                 </div>
                                             </motion.div>

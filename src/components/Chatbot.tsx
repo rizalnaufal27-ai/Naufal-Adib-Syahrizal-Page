@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef, useEffect, type ReactNode } from "react";
+import { useTranslations } from "next-intl";
 
 interface ChatbotProps {
     onOpenPricing: () => void;
@@ -74,6 +75,7 @@ function renderMd(text: string): ReactNode {
 }
 
 export default function Chatbot({ onOpenPricing }: ChatbotProps) {
+    const t = useTranslations("Chatbot");
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState("");
@@ -101,7 +103,7 @@ export default function Chatbot({ onOpenPricing }: ChatbotProps) {
             });
 
             const data = await res.json();
-            let assistantContent = data.content || "Sorry, I couldn't process that. Please try again.";
+            let assistantContent = data.content || t("error.processing");
 
             if (assistantContent.includes("[OPEN_PRICING]")) {
                 assistantContent = assistantContent.replace("[OPEN_PRICING]", "").trim();
@@ -119,7 +121,7 @@ export default function Chatbot({ onOpenPricing }: ChatbotProps) {
         } catch {
             setMessages([
                 ...newMessages,
-                { role: "assistant", content: "I'm having trouble connecting. Please try again later." },
+                { role: "assistant", content: t("error.connection") },
             ]);
         }
 
@@ -156,8 +158,8 @@ export default function Chatbot({ onOpenPricing }: ChatbotProps) {
                     <div className="px-5 py-4 flex items-center gap-3" style={{ background: "linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.1))", borderBottom: "1px solid var(--color-border)" }}>
                         <div className="w-9 h-9 rounded-full flex-shrink-0" style={{ background: "linear-gradient(135deg, var(--color-primary), var(--color-secondary), var(--color-highlight))", animation: "glowPulse 3s ease-in-out infinite" }} />
                         <div>
-                            <p className="text-sm font-semibold" style={{ color: "var(--color-text)" }}>Naufal&apos;s Assistant</p>
-                            <p className="text-xs" style={{ color: "var(--color-text-muted)" }}>AI-powered • Pricing • Portfolio • Tracking</p>
+                            <p className="text-sm font-semibold" style={{ color: "var(--color-text)" }}>{t("title")}</p>
+                            <p className="text-xs" style={{ color: "var(--color-text-muted)" }}>{t("subtitle")}</p>
                         </div>
                     </div>
 
@@ -166,12 +168,12 @@ export default function Chatbot({ onOpenPricing }: ChatbotProps) {
                         {messages.length === 0 && (
                             <div className="text-center py-6">
                                 <div className="w-14 h-14 rounded-full mx-auto mb-3" style={{ background: "linear-gradient(135deg, var(--color-primary), var(--color-secondary), var(--color-highlight))", animation: "float 6s ease-in-out infinite" }} />
-                                <p className="text-sm font-medium" style={{ color: "var(--color-text)" }}>Hi! How can I help you? 👋</p>
-                                <p className="text-xs mt-1 mb-3" style={{ color: "var(--color-text-muted)" }}>Ask about services, pricing, tracking, or portfolio</p>
+                                <p className="text-sm font-medium" style={{ color: "var(--color-text)" }}>{t("greeting")} 👋</p>
+                                <p className="text-xs mt-1 mb-3" style={{ color: "var(--color-text-muted)" }}>{t("helpText")}</p>
                                 {/* Quick action buttons */}
                                 <div className="flex flex-wrap gap-1.5 justify-center">
-                                    {["💰 Show Pricing", "🎨 Portfolio", "📦 Track Project", "🛒 How to Order"].map(q => (
-                                        <button key={q} onClick={() => { setInput(q.slice(2).trim()); }} className="px-3 py-1.5 rounded-full text-[11px] font-medium transition-all hover:scale-105" style={{ background: "rgba(99,102,241,0.12)", color: "#818cf8", border: "1px solid rgba(99,102,241,0.2)" }}>{q}</button>
+                                    {[t("quickActions.pricing"), t("quickActions.portfolio"), t("quickActions.track"), t("quickActions.order")].map(q => (
+                                        <button key={q} onClick={() => { setInput(q.replace(/^[\u2700-\u27bf\ud800-\udbff\udc00-\udfff\u2000-\u3300\ufe0e\ufe0f\u00a9\u00ae]+\s*/, "").trim()); }} className="px-3 py-1.5 rounded-full text-[11px] font-medium transition-all hover:scale-105" style={{ background: "rgba(99,102,241,0.12)", color: "#818cf8", border: "1px solid rgba(99,102,241,0.2)" }}>{q}</button>
                                     ))}
                                 </div>
                             </div>
@@ -211,7 +213,7 @@ export default function Chatbot({ onOpenPricing }: ChatbotProps) {
                     <div className="p-3" style={{ borderTop: "1px solid var(--color-border)" }}>
                         <div className="flex gap-2">
                             <input
-                                type="text" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && sendMessage()} placeholder="Ask about pricing, portfolio, tracking..."
+                                type="text" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && sendMessage()} placeholder={t("placeholder")}
                                 className="flex-1 px-4 py-3 rounded-xl text-sm" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid var(--color-border)", color: "var(--color-text)", outline: "none" }}
                             />
                             <button onClick={sendMessage} disabled={loading || !input.trim()} className="px-4 rounded-xl transition-all duration-300" style={{ background: input.trim() ? "linear-gradient(135deg, var(--color-primary), var(--color-secondary))" : "rgba(255,255,255,0.05)", color: input.trim() ? "#fff" : "var(--color-text-muted)" }}>

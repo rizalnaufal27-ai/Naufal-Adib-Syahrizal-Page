@@ -8,6 +8,7 @@ import {
     CheckCircle2, CreditCard, MessageSquare, FileImage, RefreshCw, Lock,
     Layout, ShieldCheck, Zap, ChevronDown, Clock, ArrowLeft
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface Order {
     id: string;
@@ -39,6 +40,7 @@ export default function UnifiedOrderPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [chatOpen, setChatOpen] = useState(false);
+    const t = useTranslations("OrderPage");
 
     const fetchOrder = useCallback(async () => {
         try {
@@ -108,7 +110,7 @@ export default function UnifiedOrderPage() {
                 </div>
                 <p className="text-white/60 text-sm">{error || "Order not found"}</p>
                 <button onClick={() => router.push("/track")} className="mt-4 text-xs text-indigo-400 hover:text-indigo-300">
-                    ← Back to Track
+                    {t("backToTrack")}
                 </button>
             </div>
         </div>
@@ -122,32 +124,32 @@ export default function UnifiedOrderPage() {
     // Workflow kanban phases
     const phases = [
         {
-            name: "Deposit",
+            name: t("phases.deposit"),
             icon: CreditCard,
             status: isDepositPaid ? "completed" : "active",
-            detail: isDepositPaid ? "Paid" : "Awaiting payment",
+            detail: isDepositPaid ? t("phases.paid") : t("phases.awaitingPayment"),
         },
         {
-            name: "Production",
+            name: t("phases.production"),
             icon: Layout,
             status: isDepositPaid
                 ? (order.progress >= 80 ? "completed" : "active")
                 : "locked",
-            detail: isDepositPaid ? `${order.progress}%` : "Locked",
+            detail: isDepositPaid ? `${order.progress}%` : t("phases.locked"),
         },
         {
-            name: "Review",
+            name: t("phases.review"),
             icon: FileImage,
             status: order.progress >= 80
                 ? (order.progress >= 100 ? "completed" : "active")
                 : "locked",
-            detail: order.evidence_links?.length > 0 ? `${order.evidence_links.length} files` : "Pending",
+            detail: order.evidence_links?.length > 0 ? `${order.evidence_links.length} files` : t("phases.pending"),
         },
         {
-            name: "Delivered",
+            name: t("phases.delivered"),
             icon: CheckCircle2,
             status: isCompleted ? "completed" : "locked",
-            detail: isCompleted ? "Complete" : "Final payment",
+            detail: isCompleted ? t("phases.complete") : t("phases.finalPayment"),
         },
     ];
 
@@ -182,7 +184,7 @@ export default function UnifiedOrderPage() {
                             className="flex items-center gap-1.5 text-xs text-white/40 hover:text-white transition-colors px-3 py-2 rounded-lg hover:bg-white/5"
                         >
                             <RefreshCw size={12} className={loading ? "animate-spin" : ""} />
-                            <span className="hidden sm:inline">Sync</span>
+                            <span className="hidden sm:inline">{t("sync")}</span>
                         </button>
                         {/* Status badge */}
                         <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
@@ -222,7 +224,7 @@ export default function UnifiedOrderPage() {
                                                         : "text-white/30"
                                             } />
                                             <span className="text-[10px] font-bold uppercase tracking-wider text-white/40">
-                                                Step {i + 1}
+                                                {t(`workflow.step${i + 1}`)}
                                             </span>
                                         </div>
                                         <div className="font-semibold text-xs md:text-sm mb-2">{phase.name}</div>
@@ -257,10 +259,10 @@ export default function UnifiedOrderPage() {
                         <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
                             <h2 className="text-sm font-bold flex items-center gap-2 mb-3 text-white/80">
                                 <ShieldCheck size={16} className="text-indigo-400" />
-                                Project Overview
+                                {t("overview")}
                             </h2>
                             <p className="text-sm text-white/40 leading-relaxed">
-                                {order.description || "No public description available."}
+                                {order.description || t("noDescription")}
                             </p>
                         </div>
                     )}
@@ -271,7 +273,7 @@ export default function UnifiedOrderPage() {
                             <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-white/[0.01]">
                                 <h2 className="text-sm font-bold flex items-center gap-2 text-white/80">
                                     <CreditCard size={16} className="text-indigo-400" />
-                                    Payment Status
+                                    {t("paymentStatus")}
                                 </h2>
                                 <span className="font-mono text-sm font-bold text-indigo-400">
                                     Rp {order.gross_amount?.toLocaleString("id-ID") || 0}
@@ -289,13 +291,13 @@ export default function UnifiedOrderPage() {
                                                 ? <CheckCircle2 size={16} className="text-green-400" />
                                                 : <Clock size={16} className="text-indigo-400 animate-pulse" />
                                             }
-                                            <span className="font-semibold text-sm">Down Payment (20%)</span>
+                                            <span className="font-semibold text-sm">{t("downPayment")}</span>
                                         </div>
                                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${isDepositPaid
                                             ? "bg-green-500/10 text-green-400 border border-green-500/20"
                                             : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
                                             }`}>
-                                            {isDepositPaid ? "Paid" : "Unpaid"}
+                                            {isDepositPaid ? t("phases.paid") : t("unpaid")}
                                         </span>
                                     </div>
                                     <div className="flex items-center justify-between mt-3">
@@ -329,7 +331,7 @@ export default function UnifiedOrderPage() {
                                                     ? <Lock size={16} className="text-white/30" />
                                                     : <Clock size={16} className="text-indigo-400" />
                                             }
-                                            <span className="font-semibold text-sm">Final Payment (80%)</span>
+                                            <span className="font-semibold text-sm">{t("finalPaymentStatus")}</span>
                                         </div>
                                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${isCompleted
                                             ? "bg-green-500/10 text-green-400 border border-green-500/20"
@@ -337,7 +339,7 @@ export default function UnifiedOrderPage() {
                                                 ? "bg-white/5 text-white/30 border border-white/10"
                                                 : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
                                             }`}>
-                                            {isCompleted ? "Paid" : !isDepositPaid ? "Locked" : "Unpaid"}
+                                            {isCompleted ? t("phases.paid") : !isDepositPaid ? t("phases.locked") : t("unpaid")}
                                         </span>
                                     </div>
                                     <div className="flex items-center justify-between mt-3">
@@ -365,14 +367,14 @@ export default function UnifiedOrderPage() {
                             <div className="px-6 py-4 border-b border-white/5 bg-white/[0.01]">
                                 <h2 className="text-sm font-bold flex items-center gap-2 text-white/80">
                                     <MessageSquare size={16} className="text-indigo-400" />
-                                    Production Progress
+                                    {t("productionProgress")}
                                 </h2>
                             </div>
                             <div className="p-6 space-y-5">
                                 {/* Progress bar */}
                                 <div className="space-y-2">
                                     <div className="flex justify-between text-xs text-white/40">
-                                        <span>Completion Status</span>
+                                        <span>{t("completionStatus")}</span>
                                         <span className="text-white font-mono font-bold">{order.progress}%</span>
                                     </div>
                                     <div className="h-2 bg-white/5 rounded-full overflow-hidden">
@@ -392,7 +394,7 @@ export default function UnifiedOrderPage() {
                                 {order.evidence_links && order.evidence_links.length > 0 && (
                                     <div>
                                         <h3 className="text-xs font-bold text-white/40 uppercase tracking-wider mb-3">
-                                            Evidence ({order.evidence_links.length})
+                                            {t("evidence")} ({order.evidence_links.length})
                                         </h3>
                                         <div className="grid grid-cols-3 gap-2">
                                             {order.evidence_links.map((ev, i) => (
@@ -401,7 +403,7 @@ export default function UnifiedOrderPage() {
                                                 >
                                                     <img src={ev.url} alt={`Evidence ${i + 1}`} className="w-full h-full object-cover" />
                                                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                                        <span className="text-[10px] font-bold text-white uppercase">View</span>
+                                                        <span className="text-[10px] font-bold text-white uppercase">{t("view")}</span>
                                                     </div>
                                                 </a>
                                             ))}
@@ -417,7 +419,7 @@ export default function UnifiedOrderPage() {
                                     >
                                         <div className="flex items-center gap-2">
                                             <MessageSquare size={14} className="text-indigo-400" />
-                                            <span className="text-sm font-semibold">Chat with Admin</span>
+                                            <span className="text-sm font-semibold">{t("chatWithAdmin")}</span>
                                         </div>
                                         <ChevronDown size={14} className={`text-white/40 transition-transform duration-300 ${chatOpen ? "rotate-180" : ""}`} />
                                     </button>
@@ -436,10 +438,10 @@ export default function UnifiedOrderPage() {
                             <div className="px-6 py-4 border-b border-white/5 bg-gradient-to-r from-pink-500/10 to-indigo-500/10 backdrop-blur-md">
                                 <h2 className="text-sm font-bold flex items-center gap-2 text-white">
                                     <MessageSquare size={16} className="text-pink-400" />
-                                    Private Consultation Room
+                                    {t("privateConsultation")}
                                 </h2>
                                 <p className="text-[10px] text-white/50 mt-1">
-                                    Discuss your project details with the admin in real-time.
+                                    {t("consultationDesc")}
                                 </p>
                             </div>
                             <div className="h-[500px] border-t border-white/5 bg-[#0a0a0a]">
@@ -454,24 +456,24 @@ export default function UnifiedOrderPage() {
 
                     {/* Quick Info Card */}
                     <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
-                        <h3 className="text-xs font-bold text-white/40 uppercase tracking-wider mb-4">Project Details</h3>
+                        <h3 className="text-xs font-bold text-white/40 uppercase tracking-wider mb-4">{t("projectDetails")}</h3>
                         <div className="space-y-4">
                             <div>
-                                <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">Client</p>
+                                <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">{t("client")}</p>
                                 <p className="text-sm font-medium">{order.customer_name || "—"}</p>
                             </div>
                             <div>
-                                <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">Service</p>
+                                <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">{t("service")}</p>
                                 <p className="text-sm font-medium">{order.service_type}</p>
                             </div>
                             <div>
-                                <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">Total Value</p>
+                                <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">{t("totalValue")}</p>
                                 <p className="text-sm font-mono font-bold text-indigo-400">
                                     Rp {order.gross_amount?.toLocaleString("id-ID") || 0}
                                 </p>
                             </div>
                             <div>
-                                <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">Started</p>
+                                <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">{t("started")}</p>
                                 <p className="text-sm">{new Date(order.created_at).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}</p>
                             </div>
                         </div>
@@ -482,7 +484,7 @@ export default function UnifiedOrderPage() {
                         <div className="rounded-2xl border border-green-500/20 bg-green-500/[0.03] p-6">
                             <h3 className="text-xs font-bold text-green-400 uppercase tracking-wider mb-4 flex items-center gap-2">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
-                                Project Results ({order.result_files.length} files)
+                                {t("projectResults")} ({order.result_files.length} files)
                             </h3>
                             <div className="space-y-2">
                                 {order.result_files.map((f: { name: string; url: string; type: string; size: number; uploadedAt: string }, i: number) => (
@@ -495,7 +497,7 @@ export default function UnifiedOrderPage() {
                                             <p className="text-[10px] text-white/30">{(f.size / 1024 / 1024).toFixed(2)} MB</p>
                                         </div>
                                         <a href={f.url} target="_blank" rel="noopener noreferrer" download className="px-4 py-2 rounded-lg text-xs font-bold text-white transition-all hover:brightness-110" style={{ background: "linear-gradient(135deg, #22C55E, #16A34A)" }}>
-                                            Download
+                                            {t("download")}
                                         </a>
                                     </div>
                                 ))}
@@ -505,15 +507,15 @@ export default function UnifiedOrderPage() {
 
                     {/* Milestone Logs */}
                     <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
-                        <h3 className="text-xs font-bold text-white/40 uppercase tracking-wider mb-4">Activity Log</h3>
+                        <h3 className="text-xs font-bold text-white/40 uppercase tracking-wider mb-4">{t("activityLog")}</h3>
                         <div className="space-y-4 relative">
                             <div className="absolute left-[5px] top-2 bottom-2 w-px bg-white/10" />
 
                             {isCompleted && (
                                 <div className="relative pl-5">
                                     <div className="absolute left-0 top-1.5 w-2.5 h-2.5 rounded-full bg-green-500 border-2 border-[#050505]" />
-                                    <div className="text-[10px] text-white/30 mb-0.5">Completed</div>
-                                    <div className="text-xs text-green-400 font-medium">All payments settled</div>
+                                    <div className="text-[10px] text-white/30 mb-0.5">{t("completed")}</div>
+                                    <div className="text-xs text-green-400 font-medium">{t("allPaymentsSettled")}</div>
                                 </div>
                             )}
 
@@ -522,14 +524,14 @@ export default function UnifiedOrderPage() {
                                 <div className="text-[10px] text-white/30 mb-0.5">
                                     {new Date(order.updated_at).toLocaleString("id-ID", { hour: "2-digit", minute: "2-digit", day: "numeric", month: "short" })}
                                 </div>
-                                <div className="text-xs text-white/70">Latest update logged</div>
+                                <div className="text-xs text-white/70">{t("latestUpdateLogged")}</div>
                             </div>
 
                             {isDepositPaid && (
                                 <div className="relative pl-5">
                                     <div className="absolute left-0 top-1.5 w-2.5 h-2.5 rounded-full bg-green-500/60 border-2 border-[#050505]" />
-                                    <div className="text-[10px] text-white/30 mb-0.5">Payment</div>
-                                    <div className="text-xs text-white/50">Down payment received</div>
+                                    <div className="text-[10px] text-white/30 mb-0.5">{t("payment")}</div>
+                                    <div className="text-xs text-white/50">{t("downPaymentReceived")}</div>
                                 </div>
                             )}
 
@@ -538,14 +540,14 @@ export default function UnifiedOrderPage() {
                                 <div className="text-[10px] text-white/30 mb-0.5">
                                     {new Date(order.created_at).toLocaleString("id-ID", { hour: "2-digit", minute: "2-digit", day: "numeric", month: "short" })}
                                 </div>
-                                <div className="text-xs text-white/50">Project initiated</div>
+                                <div className="text-xs text-white/50">{t("projectInitiated")}</div>
                             </div>
                         </div>
                     </div>
 
                     {/* Public View Link */}
                     <div className="rounded-2xl bg-gradient-to-br from-indigo-900/20 to-purple-900/20 border border-indigo-500/20 p-6 text-center">
-                        <p className="text-xs text-white/50 mb-3">Share publicly</p>
+                        <p className="text-xs text-white/50 mb-3">{t("sharePublicly")}</p>
                         <button
                             onClick={() => {
                                 const url = `${window.location.origin}/public/dashboard/${order.uuid_token}`;
@@ -556,7 +558,7 @@ export default function UnifiedOrderPage() {
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
                             </svg>
-                            Copy Public Link
+                            {t("copyPublicLink")}
                         </button>
                     </div>
 
@@ -567,8 +569,8 @@ export default function UnifiedOrderPage() {
                         rel="noopener noreferrer"
                         className="block rounded-2xl border border-green-500/20 bg-green-500/5 p-5 text-center hover:bg-green-500/10 transition-colors"
                     >
-                        <p className="text-xs text-white/50 mb-1">Need help?</p>
-                        <p className="text-sm font-semibold text-green-400">Contact via WhatsApp →</p>
+                        <p className="text-xs text-white/50 mb-1">{t("needHelp")}</p>
+                        <p className="text-sm font-semibold text-green-400">{t("contactViaWhatsapp")}</p>
                     </a>
                 </div>
             </div>
