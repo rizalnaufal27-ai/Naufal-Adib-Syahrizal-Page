@@ -19,7 +19,9 @@ const services: { key: ServiceType; label: string; icon: string; desc: string }[
 export default function PricingCalculator({ onPriceCalculated }: PricingCalculatorProps) {
     const t = useTranslations("PricingCalculator");
     const s = usePricingStore();
-    const [isPromo, setIsPromo] = useState(true); // Default promo to true
+    // Promo valid until March 1, 2026
+    const isPromoValid = new Date() < new Date("2026-03-01T00:00:00+07:00");
+    const [isPromo, setIsPromo] = useState(isPromoValid); // Only default true if before expiry
 
     useEffect(() => {
         // Auto-detect currency
@@ -258,15 +260,17 @@ export default function PricingCalculator({ onPriceCalculated }: PricingCalculat
             )}
 
             {/* Price Summary */}
-            {(s.getTotalUSD() > 0) && (
+            {s.getTotalUSD() > 0 && (
                 <div className="space-y-3 pt-4">
-                    <label className="flex items-center gap-3 p-4 rounded-xl cursor-pointer transition-all hover:bg-white/5" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid var(--color-border)" }}>
-                        <input type="checkbox" checked={isPromo} onChange={(e) => setIsPromo(e.target.checked)} className="w-5 h-5 accent-pink-500 rounded" />
-                        <div>
-                            <p className="text-sm font-bold text-white">{t("promoTitle")}</p>
-                            <p className="text-[11px] text-white/50">{t("promoDesc")}</p>
-                        </div>
-                    </label>
+                    {isPromoValid && (
+                        <label className="flex items-center gap-3 p-4 rounded-xl cursor-pointer transition-all hover:bg-white/5" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid var(--color-border)" }}>
+                            <input type="checkbox" checked={isPromo} onChange={(e) => setIsPromo(e.target.checked)} className="w-5 h-5 accent-pink-500 rounded" />
+                            <div>
+                                <p className="text-sm font-bold text-white">{t("promoTitle")}</p>
+                                <p className="text-[11px] text-white/50">{t("promoDesc")}</p>
+                            </div>
+                        </label>
+                    )}
 
                     <div className="p-4 rounded-xl" style={{ background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.2)" }}>
                         <div className="flex justify-between items-center">
