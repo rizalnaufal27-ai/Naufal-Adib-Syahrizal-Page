@@ -16,12 +16,12 @@ const cardPop = {
 };
 
 const services = [
-    { title: "Graphic Design", description: "Logo, banner, poster, and complete brand identity packages. Clean, modern, impactful.", emoji: "🎨", color: "#8B5CF6", gradient: "from-violet-500/20 to-purple-500/10", price: "From $5" },
-    { title: "Illustration", description: "Character illustration — half body, full body, and full render. Bring your characters to life.", emoji: "✦", color: "#EC4899", gradient: "from-pink-500/20 to-rose-500/10", price: "From $5" },
-    { title: "Photography", description: "Graduation, product, and event photography. Professional editing and retouching included.", emoji: "📷", color: "#06B6D4", gradient: "from-cyan-500/20 to-teal-500/10", price: "From $1" },
-    { title: "Video Editing", description: "Professional post-production, color grading, motion graphics, transitions, and sound design.", emoji: "🎬", color: "#F59E0B", gradient: "from-amber-500/20 to-yellow-500/10", price: "From $10" },
-    { title: "Web Design", description: "Modern, responsive website design with stunning UI/UX. Landing pages, portfolios, and business sites.", emoji: "🌐", color: "#22C55E", gradient: "from-emerald-500/20 to-green-500/10", price: "From $25" },
-    { title: "App Development", description: "Custom mobile and web applications built with modern technologies. From concept to deployment.", emoji: "📱", color: "#6366F1", gradient: "from-indigo-500/20 to-blue-500/10", price: "From $50" },
+    { title: "Graphic Design", description: "Logo, banner, poster, and complete brand identity packages. Clean, modern, impactful.", emoji: "🎨", color: "#8B5CF6", price: "From $5" },
+    { title: "Illustration", description: "Character illustration — half body, full body, and full render. Bring your characters to life.", emoji: "✦", color: "#EC4899", price: "From $5" },
+    { title: "Photography", description: "Graduation, product, and event photography. Professional editing and retouching included.", emoji: "📷", color: "#06B6D4", price: "From $1" },
+    { title: "Video Editing", description: "Professional post-production, color grading, motion graphics, transitions, and sound design.", emoji: "🎬", color: "#F59E0B", price: "From $10" },
+    { title: "Web Design", description: "Modern, responsive website design with stunning UI/UX. Landing pages, portfolios, and business sites.", emoji: "🌐", color: "#22C55E", price: "From $25" },
+    { title: "App Development", description: "Custom mobile and web applications built with modern technologies. From concept to deployment.", emoji: "📱", color: "#6366F1", price: "From $50" },
 ];
 
 export default function ServicesSection({ onOpenPricing }: ServicesSectionProps) {
@@ -35,7 +35,7 @@ export default function ServicesSection({ onOpenPricing }: ServicesSectionProps)
                 <div className="text-center mb-16">
                     <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-[0.3em] mb-3" style={{ background: "linear-gradient(90deg, #c084fc, #818cf8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>✦ What I Offer</motion.p>
                     <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-black tracking-tight" style={{ background: "linear-gradient(135deg, #fff 0%, #e0e7ff 40%, #c084fc 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Services</motion.h2>
-                    <motion.p variants={fadeUp} className="text-sm mt-4 max-w-lg mx-auto text-white/55">
+                    <motion.p variants={fadeUp} className="text-sm mt-4 max-w-lg mx-auto" style={{ color: "#B8B0D0" }}>
                         End-to-end creative solutions tailored to your brand. From design to development.
                     </motion.p>
                 </div>
@@ -56,15 +56,15 @@ export default function ServicesSection({ onOpenPricing }: ServicesSectionProps)
                             {/* Cosmic particle on hover */}
                             <div className="absolute top-4 right-4 w-2 h-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-700" style={{ background: service.color, boxShadow: `0 0 15px ${service.color}`, animation: "cosmicFloat 8s ease-in-out infinite" }} />
 
-                            {/* Emoji icon with cosmic glow */}
+                            {/* Emoji icon */}
                             <div className="text-4xl mb-5 transition-all duration-500 group-hover:scale-110 group-hover:drop-shadow-[0_0_20px_rgba(139,92,246,0.5)] will-change-transform" style={{ filter: "drop-shadow(0 0 8px rgba(0,0,0,0.3))" }}>
                                 {service.emoji}
                             </div>
 
-                            <h3 className="text-lg font-bold mb-2 text-white group-hover:text-purple-200 transition-colors duration-300">
+                            <h3 className="text-lg font-bold mb-2 transition-colors duration-300" style={{ color: "#E8E0FF" }}>
                                 {service.title}
                             </h3>
-                            <p className="text-sm leading-relaxed mb-6 text-white/60 group-hover:text-white/75 transition-colors duration-300">
+                            <p className="text-sm leading-relaxed mb-6 transition-colors duration-300" style={{ color: "#B8B0D0" }}>
                                 {service.description}
                             </p>
 

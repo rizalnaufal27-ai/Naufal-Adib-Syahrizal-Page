@@ -25,7 +25,7 @@ const fadeUp = {
 
 const skillPop = {
     hidden: { opacity: 0, scale: 0.7, rotate: -5 },
-    visible: { opacity: 1, scale: 1, rotate: 0, transition: { duration: 0.5, ease: "backOut" } },
+    visible: { opacity: 1, scale: 1, rotate: 0, transition: { duration: 0.5, ease: "backOut" as const } },
 };
 
 export default function SkillsMarquee() {
@@ -40,7 +40,7 @@ export default function SkillsMarquee() {
                 <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }} className="text-center">
                     <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-[0.3em] mb-3" style={{ background: "linear-gradient(90deg, #c084fc, #818cf8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>✦ Toolkit</motion.p>
                     <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-black tracking-tight" style={{ background: "linear-gradient(135deg, #fff 0%, #e0e7ff 40%, #c084fc 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Skills & Tools</motion.h2>
-                    <motion.p variants={fadeUp} className="text-sm mt-4 max-w-md mx-auto text-white/55">Mastering the tools that bring creative visions to life</motion.p>
+                    <motion.p variants={fadeUp} className="text-sm mt-4 max-w-md mx-auto" style={{ color: "#B8B0D0" }}>Mastering the tools that bring creative visions to life</motion.p>
                 </motion.div>
             </div>
 
@@ -89,7 +89,7 @@ export default function SkillsMarquee() {
 
                             {/* Name */}
                             <span className="text-xs font-semibold text-center whitespace-nowrap transition-all duration-300 relative z-10"
-                                style={{ color: hoveredIndex === i ? skill.color : "rgba(255,255,255,0.55)" }}>
+                                style={{ color: hoveredIndex === i ? skill.color : "#B8B0D0" }}>
                                 {skill.name}
                             </span>
                         </motion.div>
@@ -101,13 +101,12 @@ export default function SkillsMarquee() {
             <div className="relative mt-14">
                 <div className="flex gap-10 py-4" style={{ animation: "marquee 30s linear infinite", width: "max-content" }}>
                     {[...skills, ...skills, ...skills, ...skills].map((skill, i) => (
-                        <span key={`m-${i}`} className="text-xs font-mono uppercase tracking-[0.2em] whitespace-nowrap flex items-center gap-2" style={{ color: `${skill.color}40` }}>
-                            <span className="w-1 h-1 rounded-full" style={{ background: `${skill.color}30` }} />
+                        <span key={`m-${i}`} className="text-xs font-mono uppercase tracking-[0.2em] whitespace-nowrap flex items-center gap-2" style={{ color: `${skill.color}50` }}>
+                            <span className="w-1 h-1 rounded-full" style={{ background: `${skill.color}40` }} />
                             {skill.name}
                         </span>
                     ))}
                 </div>
-                {/* Edge fades */}
                 <div className="absolute left-0 top-0 bottom-0 w-32 z-10 pointer-events-none" style={{ background: "linear-gradient(to right, var(--color-bg), transparent)" }} />
                 <div className="absolute right-0 top-0 bottom-0 w-32 z-10 pointer-events-none" style={{ background: "linear-gradient(to left, var(--color-bg), transparent)" }} />
             </div>

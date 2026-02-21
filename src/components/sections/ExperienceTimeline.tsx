@@ -30,7 +30,7 @@ export default function ExperienceTimeline() {
             </motion.div>
 
             <div className="relative max-w-2xl mx-auto">
-                {/* Timeline line — cosmic gradient */}
+                {/* Timeline line */}
                 <div className="absolute left-6 md:left-8 top-0 bottom-0 w-px" style={{ background: "linear-gradient(to bottom, transparent, rgba(139,92,246,0.3) 10%, rgba(99,102,241,0.2) 50%, rgba(236,72,153,0.2) 90%, transparent)" }} />
 
                 <div className="space-y-6">
@@ -44,22 +44,20 @@ export default function ExperienceTimeline() {
                             custom={i}
                             className="relative pl-16 md:pl-20"
                         >
-                            {/* Timeline dot — cosmic glow */}
+                            {/* Timeline dot */}
                             <div className="absolute left-4 md:left-6 top-8 w-4 h-4 rounded-full transition-all duration-500" style={{
                                 background: `linear-gradient(135deg, ${exp.color}, ${exp.color}80)`,
                                 boxShadow: `0 0 15px ${exp.color}50, 0 0 30px ${exp.color}20`,
                             }}>
-                                {/* Orbital ring */}
                                 <div className="absolute -inset-1.5 rounded-full border border-dashed" style={{ borderColor: `${exp.color}30`, animation: `orbitalSpin ${8 + i * 2}s linear infinite` }} />
                             </div>
 
                             <div className="rounded-2xl p-6 group hover:-translate-y-1 transition-all duration-500 relative overflow-hidden"
                                 style={{ background: `${exp.color}04`, border: `1px solid ${exp.color}15`, backdropFilter: "blur(10px)" }}>
-                                {/* Hover glow */}
                                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" style={{ background: `radial-gradient(circle at 0% 50%, ${exp.color}10 0%, transparent 50%)` }} />
 
                                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3 relative z-10">
-                                    <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                                    <h3 className="text-lg font-bold flex items-center gap-2" style={{ color: "#E8E0FF" }}>
                                         <span className="text-xl group-hover:scale-125 transition-transform duration-300">{exp.emoji}</span>
                                         {exp.title}
                                     </h3>
@@ -68,12 +66,12 @@ export default function ExperienceTimeline() {
                                     </span>
                                 </div>
 
-                                <p className="text-sm mb-4 text-white/65 relative z-10">{exp.description}</p>
+                                <p className="text-sm mb-4 relative z-10" style={{ color: "#C8BFE8" }}>{exp.description}</p>
 
-                                {/* Energy Bar — cosmic style */}
+                                {/* Energy Bar */}
                                 <div className="space-y-1.5 relative z-10">
                                     <div className="flex justify-between text-xs">
-                                        <span className="text-white/50">Duration Intensity</span>
+                                        <span style={{ color: "#A8A0C0" }}>Duration Intensity</span>
                                         <span className="font-mono font-bold" style={{ color: exp.color }}>{exp.energy}%</span>
                                     </div>
                                     <div className="h-2 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.04)" }}>
@@ -83,12 +81,8 @@ export default function ExperienceTimeline() {
                                             viewport={{ once: true }}
                                             transition={{ duration: 1.2, delay: 0.3 + i * 0.15, ease: "easeOut" }}
                                             className="h-full rounded-full relative"
-                                            style={{
-                                                background: `linear-gradient(90deg, ${exp.color}, ${exp.color}80)`,
-                                                boxShadow: `0 0 12px ${exp.color}40`,
-                                            }}
+                                            style={{ background: `linear-gradient(90deg, ${exp.color}, ${exp.color}80)`, boxShadow: `0 0 12px ${exp.color}40` }}
                                         >
-                                            {/* Shimmer effect */}
                                             <div className="absolute inset-0 rounded-full" style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)", animation: "shimmer 2s ease-in-out infinite" }} />
                                         </motion.div>
                                     </div>
