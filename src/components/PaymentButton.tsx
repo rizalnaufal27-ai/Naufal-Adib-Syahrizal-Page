@@ -71,21 +71,40 @@ export default function PaymentButton({
             // Try Snap popup first, fall back to redirect
             if (window.snap) {
                 window.snap.pay(data.token, {
-                    onSuccess: async () => {
-                        // Auto-enable chat on successful down payment
-                        if (paymentType === "down_payment" && orderId) {
-                            try {
-                                await fetch("/api/orders/toggle-chat", {
-                                    method: "POST",
-                                    headers: { "Content-Type": "application/json" },
-                                    body: JSON.stringify({ order_id: orderId, enabled: true }),
-                                });
-                            } catch { /* ignore */ }
-                        }
+                    onSuccess: async (result) => {
+                        // Force a sync to midtrans to update DB instantly
+                        try {
+                            await fetch("/api/payment/sync", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({
+                                    order_id: result.order_id,
+                                    uuid_token: uuidToken,
+                                    payment_type: paymentType
+                                })
+                            });
+                        } catch { /* ignore */ }
+
                         onSuccess?.();
+                        router.refresh();
                     },
-                    onPending: () => {
-                        alert("Payment pending. Please complete your payment.");
+                    onPending: async (result) => {
+                        // Optional sync on pending just in case
+                        try {
+                            await fetch("/api/payment/sync", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({
+                                    order_id: result.order_id,
+                                    uuid_token: uuidToken,
+                                    payment_type: paymentType
+                                })
+                            });
+                        } catch { }
+
+                        alert("Payment pending. Please complete your payment then refresh the page.");
+                        onSuccess?.(); // fetchOrder so UI reflects 'pending' correctly
+                        router.refresh();
                     },
                     onError: () => {
                         alert("Payment failed. Please try again.");
