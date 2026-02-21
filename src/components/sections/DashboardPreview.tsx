@@ -61,7 +61,7 @@ export default function DashboardPreview() {
                             Active Orders
                         </h3>
                         <a
-                            href="/dashboard"
+                            href="/public/dashboard"
                             className="text-xs font-semibold px-4 py-2 rounded-lg transition-all duration-300 hover:-translate-y-[1px]"
                             style={{
                                 background: "rgba(59,130,246,0.1)",

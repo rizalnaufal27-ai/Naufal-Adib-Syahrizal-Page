@@ -255,24 +255,40 @@ export default function AdminPage() {
     // --- Login ---
     if (!authenticated) {
         return (
-            <div style={{ background: "#050505", minHeight: "100vh" }} className="flex items-center justify-center relative z-[100]">
-                <div className="agency-card p-8 w-full max-w-sm relative z-20">
-                    <h1 className="text-xl font-bold mb-6 text-center" style={{ color: "var(--color-text)" }}>Admin Access</h1>
-                    <div className="space-y-4">
+            <div
+                className="flex items-center justify-center min-h-screen relative z-[100] overflow-hidden"
+                style={{
+                    background: "radial-gradient(circle at top right, rgba(99,102,241,0.15), transparent 40%), radial-gradient(circle at bottom left, rgba(236,72,153,0.1), transparent 40%), #050505"
+                }}
+            >
+                {/* Decorative background blur */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
+
+                <div className="agency-card p-10 w-full max-w-sm relative z-20 shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 backdrop-blur-xl">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center mx-auto mb-6 shadow-lg shadow-blue-500/20">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                    </div>
+                    <h1 className="text-2xl font-bold mb-2 text-center" style={{ color: "var(--color-text)" }}>Admin Access</h1>
+                    <p className="text-sm text-center mb-8" style={{ color: "var(--color-text-muted)" }}>Secure portfolio workspace</p>
+
+                    <form onSubmit={(e) => { e.preventDefault(); handleLogin(); }} className="space-y-5">
                         <input
                             type="password"
+                            autoComplete="current-password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && handleLogin()}
                             placeholder="Enter admin password"
-                            className="w-full px-4 py-3 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500/30 relative z-30"
-                            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid var(--color-border)", color: "var(--color-text)" }}
+                            className="w-full px-4 py-3.5 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500/50 transition-all relative z-30 placeholder:opacity-50"
+                            style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.1)", color: "var(--color-text)" }}
                         />
-                        {authError && <p className="text-xs" style={{ color: "#EF4444" }}>{authError}</p>}
-                        <button onClick={handleLogin} className="w-full py-3 rounded-xl text-sm font-semibold text-white relative z-30" style={{ background: "linear-gradient(135deg, #3B82F6, #2563EB)" }}>
-                            Login
+                        {authError && <p className="text-xs text-center font-medium animate-pulse" style={{ color: "#EF4444" }}>{authError}</p>}
+                        <button type="submit" className="w-full py-3.5 rounded-xl text-sm font-semibold text-white relative z-30 transition-transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-blue-500/25" style={{ background: "linear-gradient(135deg, #3B82F6, #2563EB)" }}>
+                            Authenticate →
                         </button>
-                    </div>
+                    </form>
                 </div>
             </div>
         );

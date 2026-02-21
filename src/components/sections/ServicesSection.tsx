@@ -96,7 +96,7 @@ export default function ServicesSection({ onOpenPricing }: ServicesSectionProps)
                 {services.map((service, index) => (
                     <div
                         key={service.title}
-                        className="agency-card group cursor-pointer rounded-3xl transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(99,102,241,0.15)] border border-white/5 bg-[#111] backdrop-blur-lg p-6 relative overflow-hidden"
+                        className="agency-card group cursor-pointer rounded-3xl transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(99,102,241,0.15)] relative overflow-hidden"
                         onClick={onOpenPricing}
                         style={{
                             animationDelay: `${index * 100}ms`,

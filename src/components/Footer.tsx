@@ -1,18 +1,19 @@
 "use client";
 import React from "react";
+import { Instagram, Linkedin, Github, MessageCircle } from "lucide-react";
 
 const socialLinks = [
-    { name: "Instagram", href: "https://instagram.com/syahrizalnaufal07" },
-    { name: "LinkedIn", href: "https://www.linkedin.com/in/naufal-adib-4a6982347" },
-    { name: "GitHub", href: "https://github.com/rizalnaufal27-ai" },
-    { name: "WhatsApp", href: "https://wa.me/6285782074034" },
+    { name: "Instagram", href: "https://instagram.com/syahrizalnaufal07", icon: Instagram },
+    { name: "LinkedIn", href: "https://www.linkedin.com/in/naufal-adib-4a6982347", icon: Linkedin },
+    { name: "GitHub", href: "https://github.com/rizalnaufal27-ai", icon: Github },
+    { name: "WhatsApp", href: "https://wa.me/6285782074034", icon: MessageCircle },
 ];
 
 const menuLinks = [
     { name: "Home", href: "/" },
     { name: "Work", href: "/#portfolio" },
     { name: "Services", href: "/#services" },
-    { name: "Dashboard", href: "/dashboard" },
+    { name: "Dashboard", href: "/public/dashboard" },
 ];
 
 export default function Footer() {
@@ -32,13 +33,24 @@ export default function Footer() {
                         Let&apos;s work <br />
                         <span className="text-white/30">together.</span>
                     </h2>
-                    <a
-                        href="mailto:rizalnaufal27@gmail.com"
-                        className="inline-flex items-center gap-3 text-xl md:text-2xl border-b border-white/20 pb-1 hover:border-blue-400/80 hover:text-blue-400 hover:pl-2 hover:drop-shadow-[0_0_15px_rgba(96,165,250,0.6)] transition-all duration-500"
-                    >
-                        rizalnaufal27@gmail.com
-                        <span className="text-lg">↗</span>
-                    </a>
+                    <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
+                        <a
+                            href="mailto:rizalnaufal27@gmail.com"
+                            className="inline-flex items-center gap-3 text-xl md:text-2xl border-b border-white/20 pb-1 hover:border-blue-400/80 hover:text-blue-400 hover:pl-2 hover:drop-shadow-[0_0_15px_rgba(96,165,250,0.6)] transition-all duration-500"
+                        >
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                            rizalnaufal27@gmail.com
+                        </a>
+                        <a
+                            href="https://wa.me/6285782074034"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-3 text-xl md:text-2xl border-b border-white/20 pb-1 hover:border-green-400/80 hover:text-green-400 hover:pl-2 hover:drop-shadow-[0_0_15px_rgba(74,222,128,0.6)] transition-all duration-500"
+                        >
+                            <MessageCircle size={24} />
+                            WhatsApp Direct
+                        </a>
+                    </div>
                 </div>
 
                 {/* Grid Layout */}
@@ -48,14 +60,14 @@ export default function Footer() {
                     <div className="md:col-span-4 flex flex-col justify-between">
                         <div>
                             <h3 className="text-xl font-bold mb-4">Naufal Adib<span className="text-white/30">.</span></h3>
-                            <p className="text-white/40 text-sm max-w-xs leading-relaxed">
+                            <p className="text-white/60 text-sm max-w-xs leading-relaxed">
                                 Creating digital experiences that blend aesthetics with functionality.
                                 Based in Jakarta, Indonesia.
                             </p>
                         </div>
                         <div className="mt-12 md:mt-0">
-                            <p className="text-white/20 text-xs uppercase tracking-widest">
-                                © {currentYear} All Rights Reserved
+                            <p className="text-white/40 text-xs uppercase tracking-widest">
+                                &copy; {currentYear} Naufal Adib. All Rights Reserved
                             </p>
                         </div>
                     </div>
@@ -87,8 +99,11 @@ export default function Footer() {
                                         href={link.href}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="text-lg hover:text-blue-400 hover:drop-shadow-[0_0_10px_rgba(96,165,250,0.8)] transition-all duration-300 inline-flex items-center gap-2 group"
+                                        className="text-lg hover:text-blue-400 hover:drop-shadow-[0_0_10px_rgba(96,165,250,0.8)] transition-all duration-300 inline-flex items-center gap-3 group"
                                     >
+                                        <span className="text-white/50 group-hover:text-blue-400 transition-colors">
+                                            <link.icon size={18} />
+                                        </span>
                                         {link.name}
                                         <span className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500 text-xs">↗</span>
                                     </a>

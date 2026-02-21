@@ -61,9 +61,9 @@ export default function Navbar({ onOrderClick }: NavbarProps) {
                             <button
                                 key={item.label}
                                 onClick={() => handleClick(i, item.href)}
-                                className="relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300"
+                                className="relative px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-300"
                                 style={{
-                                    color: active === i ? "#fff" : "var(--color-text-muted)",
+                                    color: active === i ? "#fff" : "rgba(255, 255, 255, 0.75)",
                                     background: active === i ? "rgba(99,102,241,0.12)" : "transparent",
                                 }}
                             >

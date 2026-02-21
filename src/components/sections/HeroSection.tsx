@@ -88,8 +88,8 @@ export default function HeroSection({ onViewResume, onOrderClick }: HeroSectionP
           className="text-5xl md:text-7xl lg:text-8xl font-black text-center tracking-tighter leading-[0.9] mb-4"
           style={{ fontFamily: "var(--font-heading)" }}
         >
-          <span className="block text-transparent bg-clip-text bg-gradient-to-b from-white to-white/40 pb-2">Naufal Adib</span>
-          <span className="block text-transparent bg-clip-text bg-gradient-to-b from-white/80 to-white/20 text-3xl md:text-5xl lg:text-6xl font-bold tracking-normal">
+          <span className="block text-transparent bg-clip-text bg-gradient-to-b from-white to-white/70 pb-2 drop-shadow-sm">Naufal Adib</span>
+          <span className="block text-transparent bg-clip-text bg-gradient-to-l from-indigo-400 to-cyan-300 text-4xl md:text-5xl lg:text-6xl font-bold tracking-normal drop-shadow-md">
             Syahrizal
           </span>
         </motion.h1>
