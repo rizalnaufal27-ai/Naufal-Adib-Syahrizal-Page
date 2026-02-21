@@ -24,7 +24,8 @@
         "label": "My Services",
         "title": "What I Can Do for You",
         "desc": "From branding to digital presence, I offer complete creative solutions to elevate your brand.",
-        "get_quote": "Get Quote"
+        "get_quote": "Get Quote",
+        "startingFrom": "From {price}"
     },
     "Profile": {
         "label": "About Me",
@@ -64,6 +65,9 @@
         "status_heading": "Status",
         "availability": "Availability",
         "open_work": "Open for work",
+        "estimatedTotal": "Estimated Total",
+        "promoTitle": "First Project Promo (100% OFF)",
+        "promoDesc": "Bring your creative ideas to life with zero initial cost.",
         "timezone": "Timezone"
     }
 }

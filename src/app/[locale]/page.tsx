@@ -15,6 +15,7 @@ import Footer from "@/components/Footer";
 import Chatbot from "@/components/Chatbot";
 import OrderFormModal from "@/components/OrderFormModal";
 import FloatingOrderFab from "@/components/ui/floating-order-fab";
+import PromoCarousel from "@/components/PromoCarousel";
 
 // Lazy load heavy visual components
 const SpaceBubbles = dynamic(() => import("@/components/ui/space-bubbles"), {
@@ -64,6 +65,10 @@ export default function Home() {
       >
         <section id="home">
           <HeroSection onViewResume={handleViewResume} onOrderClick={handleOrderClick} />
+        </section>
+
+        <section className="relative z-10 w-full overflow-hidden" style={{ background: "linear-gradient(180deg, transparent 0%, rgba(5,5,16,0.8) 100%)" }}>
+          <PromoCarousel />
         </section>
 
         {/* Dark Cosmic Sections */}

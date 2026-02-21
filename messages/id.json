@@ -24,7 +24,8 @@
         "label": "Layanan Saya",
         "title": "Apa yang Bisa Saya Lakukan",
         "desc": "Dari branding hingga kehadiran digital, saya menawarkan solusi kreatif lengkap untuk meningkatkan merek Anda.",
-        "get_quote": "Dapatkan Penawaran"
+        "get_quote": "Dapatkan Penawaran",
+        "startingFrom": "Mulai {price}"
     },
     "Profile": {
         "label": "Tentang Saya",
@@ -64,6 +65,9 @@
         "status_heading": "Status",
         "availability": "Ketersediaan",
         "open_work": "Menerima proyek",
-        "timezone": "Zona Waktu"
+        "timezone": "Zona Waktu",
+        "estimatedTotal": "Estimasi Total",
+        "promoTitle": "Promo Proyek Pertama (Diskon 100%)",
+        "promoDesc": "Wujudkan ide kreatif Anda tanpa biaya awal."
     }
 }

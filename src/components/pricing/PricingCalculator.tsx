@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { usePricingStore, ServiceType } from "@/store/pricing-store";
 import { useTranslations } from "next-intl";
 
@@ -19,6 +19,7 @@ const services: { key: ServiceType; label: string; icon: string; desc: string }[
 export default function PricingCalculator({ onPriceCalculated }: PricingCalculatorProps) {
     const t = useTranslations("PricingCalculator");
     const s = usePricingStore();
+    const [isPromo, setIsPromo] = useState(true); // Default promo to true
 
     useEffect(() => {
         // Auto-detect currency
@@ -31,9 +32,9 @@ export default function PricingCalculator({ onPriceCalculated }: PricingCalculat
 
     useEffect(() => {
         if (s.service) {
-            onPriceCalculated(s.getTotalUSD(), s.getServiceLabel());
+            onPriceCalculated(isPromo ? 0 : s.getTotalUSD(), s.getServiceLabel());
         }
-    }, [s, onPriceCalculated]);
+    }, [s, isPromo, onPriceCalculated]);
 
     const cardStyle = (active: boolean) => ({
         background: active ? "rgba(99,102,241,0.08)" : "rgba(255,255,255,0.02)",
@@ -258,12 +259,27 @@ export default function PricingCalculator({ onPriceCalculated }: PricingCalculat
 
             {/* Price Summary */}
             {(s.getTotalUSD() > 0) && (
-                <div className="p-4 rounded-xl" style={{ background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.2)" }}>
-                    <div className="flex justify-between items-center">
-                        <span className="text-sm" style={{ color: "var(--color-text-muted)" }}>
-                            {t("estimatedTotal")}
-                        </span>
-                        <span className="text-xl font-bold" style={{ color: "#6366F1" }}>{s.formatPrice(s.getTotalUSD())}</span>
+                <div className="space-y-3 pt-4">
+                    <label className="flex items-center gap-3 p-4 rounded-xl cursor-pointer transition-all hover:bg-white/5" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid var(--color-border)" }}>
+                        <input type="checkbox" checked={isPromo} onChange={(e) => setIsPromo(e.target.checked)} className="w-5 h-5 accent-pink-500 rounded" />
+                        <div>
+                            <p className="text-sm font-bold text-white">{t("promoTitle")}</p>
+                            <p className="text-[11px] text-white/50">{t("promoDesc")}</p>
+                        </div>
+                    </label>
+
+                    <div className="p-4 rounded-xl" style={{ background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.2)" }}>
+                        <div className="flex justify-between items-center">
+                            <span className="text-sm" style={{ color: "var(--color-text-muted)" }}>
+                                {t("estimatedTotal")}
+                            </span>
+                            <div className="text-right">
+                                {isPromo && <span className="text-[11px] line-through opacity-50 block mb-0.5" style={{ color: "var(--color-text)" }}>{s.formatPrice(s.getTotalUSD())}</span>}
+                                <span className="text-xl md:text-2xl font-black" style={{ background: isPromo ? "linear-gradient(135deg, #EC4899, #8B5CF6)" : "linear-gradient(135deg, #fff, #a5b4fc)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                                    {isPromo ? s.formatPrice(0) : s.formatPrice(s.getTotalUSD())}
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}

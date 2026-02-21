@@ -1,0 +1,7 @@
+src/app/[locale]/resume/page.tsx(72,22): error TS2304: Cannot find name 't'.
+src/app/[locale]/resume/page.tsx(82,26): error TS2304: Cannot find name 't'.
+src/app/[locale]/resume/page.tsx(85,26): error TS2304: Cannot find name 't'.
+src/app/[locale]/resume/page.tsx(122,42): error TS2304: Cannot find name 't'.
+src/app/[locale]/resume/page.tsx(132,26): error TS2304: Cannot find name 't'.
+src/lib/midtrans.ts(1,28): error TS7016: Could not find a declaration file for module 'midtrans-client'. 'C:/Users/naufa/Desktop/porto/node_modules/midtrans-client/index.js' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/midtrans-client` if it exists or add a new declaration (.d.ts) file containing `declare module 'midtrans-client';`

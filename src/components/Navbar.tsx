@@ -73,9 +73,7 @@ export default function Navbar({ onOrderClick }: NavbarProps) {
                 <div className="flex items-center justify-between h-16 md:h-[72px]">
                     {/* Logo — click to go home */}
                     <button onClick={handleLogoClick} className="flex items-center gap-2 group">
-                        <span className="text-lg font-bold tracking-tight text-white group-hover:text-indigo-400 transition-colors">
-                            Naufal Adib<span className="text-white/40">.</span>
-                        </span>
+                        <img src="/images/ncs-logo.png" alt="NCS Logo" className="h-8 md:h-10 w-auto group-hover:scale-105 transition-transform" />
                     </button>
 
                     {/* Desktop Nav */}

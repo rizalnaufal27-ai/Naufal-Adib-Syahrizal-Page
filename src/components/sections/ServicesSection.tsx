@@ -18,12 +18,12 @@ const cardPop = {
 };
 
 const services = [
-    { title: "Graphic Design", description: "Logo, banner, poster, and complete brand identity packages. Clean, modern, impactful.", icon: Palette, color: "#8B5CF6", price: "Mulai Rp 75.000" },
-    { title: "Illustration", description: "Character illustration — half body, full body, and full render. Bring your characters to life.", icon: Sparkles, color: "#EC4899", price: "Mulai Rp 75.000" },
-    { title: "Photography", description: "Graduation, product, and event photography. Professional editing and retouching included.", icon: Camera, color: "#06B6D4", price: "Mulai Rp 150.000" },
-    { title: "Video Editing", description: "Professional post-production, color grading, motion graphics, transitions, and sound design.", icon: Film, color: "#F59E0B", price: "Mulai Rp 150.000" },
-    { title: "Web Design", description: "Modern, responsive website design with stunning UI/UX. Landing pages, portfolios, and business sites.", icon: Globe, color: "#22C55E", price: "Mulai Rp 350.000" },
-    { title: "App Development", description: "Custom mobile and web applications built with modern technologies. From concept to deployment.", icon: Smartphone, color: "#6366F1", price: "Mulai Rp 750.000" },
+    { title: "Graphic Design", description: "Logo, banner, poster, and complete brand identity packages. Clean, modern, impactful.", icon: Palette, color: "#8B5CF6", price: "Rp 75.000" },
+    { title: "Illustration", description: "Character illustration — half body, full body, and full render. Bring your characters to life.", icon: Sparkles, color: "#EC4899", price: "Rp 75.000" },
+    { title: "Photography", description: "Graduation, product, and event photography. Professional editing and retouching included.", icon: Camera, color: "#06B6D4", price: "Rp 150.000" },
+    { title: "Video Editing", description: "Professional post-production, color grading, motion graphics, transitions, and sound design.", icon: Film, color: "#F59E0B", price: "Rp 150.000" },
+    { title: "Web Design", description: "Modern, responsive website design with stunning UI/UX. Landing pages, portfolios, and business sites.", icon: Globe, color: "#22C55E", price: "Rp 350.000" },
+    { title: "App Development", description: "Custom mobile and web applications built with modern technologies. From concept to deployment.", icon: Smartphone, color: "#6366F1", price: "Rp 750.000" },
 ];
 
 export default function ServicesSection({ onOpenPricing }: ServicesSectionProps) {
@@ -81,7 +81,7 @@ export default function ServicesSection({ onOpenPricing }: ServicesSectionProps)
                             </p>
 
                             <div className="flex items-center justify-between pt-4 relative z-10" style={{ borderTop: `1px solid ${service.color}12` }}>
-                                <span className="text-sm font-bold" style={{ color: service.color }}>{service.price}</span>
+                                <span className="text-sm font-bold" style={{ color: service.color }}>{t("startingFrom", { price: service.price })}</span>
                                 <span className="text-xs font-semibold px-4 py-1.5 rounded-full transition-all duration-500 group-hover:px-5 group-hover:shadow-[0_0_20px_rgba(0,0,0,0.5)]"
                                     style={{ background: `${service.color}12`, color: service.color, border: `1px solid ${service.color}25` }}>
                                     {t("get_quote")}

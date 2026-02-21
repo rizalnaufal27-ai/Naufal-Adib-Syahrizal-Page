@@ -18,6 +18,7 @@ const items: CardStackItem[] = projects.map((project) => ({
 }));
 
 export default function ResumePage() {
+    const t = useTranslations("ResumePage");
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
     const [warpSpeed, setWarpSpeed] = useState(0.2); // State A: Idle (Slow loop)
     const [animationPhase, setAnimationPhase] = useState<'idle' | 'burst' | 'active'>('idle');
