@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -15,6 +16,7 @@ interface Order {
 }
 
 export default function FullPublicDashboard() {
+    const router = useRouter();
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -98,7 +100,7 @@ export default function FullPublicDashboard() {
                                                 key={order.id}
                                                 className="transition-colors hover:bg-white/[0.04] cursor-pointer group"
                                                 style={{ borderBottom: "1px solid var(--color-border)" }}
-                                                onClick={() => window.location.href = `/public/dashboard/${order.uuid_token}`}
+                                                onClick={() => router.push(`/public/dashboard/${order.uuid_token}`)}
                                             >
                                                 <td className="px-6 py-5 text-sm font-mono font-semibold" style={{ color: "var(--color-text)" }}>
                                                     #{order.order_number}

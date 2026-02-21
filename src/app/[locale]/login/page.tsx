@@ -1,8 +1,10 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth-store";
 
 export default function LoginPage() {
+    const router = useRouter();
     const [mode, setMode] = useState<"login" | "register">("login");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -22,7 +24,7 @@ export default function LoginPage() {
         try {
             if (mode === "login") {
                 await signIn(email, password);
-                window.location.href = "/";
+                router.push("/");
             } else {
                 await signUp(email, password, fullName);
                 setSuccess("Account created! Check your email to verify, then login.");
@@ -37,11 +39,10 @@ export default function LoginPage() {
     return (
         <div style={{ background: "#050505", minHeight: "100vh" }} className="flex items-center justify-center px-4">
             <div className="w-full max-w-md">
-                {/* Logo */}
                 <div className="text-center mb-8">
-                    <a href="/" className="text-2xl font-bold tracking-tight text-white">
+                    <button onClick={() => router.push("/")} className="text-2xl font-bold tracking-tight text-white hover:text-indigo-400 transition-colors">
                         Naufal Adib<span className="text-white/40">.</span>
-                    </a>
+                    </button>
                     <p className="text-sm mt-2" style={{ color: "var(--color-text-muted)" }}>
                         {mode === "login" ? "Sign in to your account" : "Create a new account"}
                     </p>
@@ -137,9 +138,9 @@ export default function LoginPage() {
 
                 {/* Back to home */}
                 <div className="text-center mt-6">
-                    <a href="/" className="text-xs hover:text-white transition-colors" style={{ color: "var(--color-text-muted)" }}>
+                    <button onClick={() => router.push("/")} className="text-xs hover:text-white transition-colors" style={{ color: "var(--color-text-muted)" }}>
                         ← Back to Home
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>

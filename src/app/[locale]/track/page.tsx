@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -17,6 +18,7 @@ interface Order {
 }
 
 export default function TrackProjectPage() {
+    const router = useRouter();
     const [email, setEmail] = useState("");
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(false);
@@ -144,7 +146,7 @@ export default function TrackProjectPage() {
                                                     background: "rgba(255,255,255,0.02)",
                                                     border: `1px solid ${isActive ? "rgba(99,102,241,0.15)" : "rgba(255,255,255,0.06)"}`,
                                                 }}
-                                                onClick={() => window.location.href = `/order/${order.uuid_token}`}
+                                                onClick={() => router.push(`/order/${order.uuid_token}`)}
                                             >
                                                 {/* Active indicator */}
                                                 {isActive && (

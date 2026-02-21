@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 declare global {
     interface Window {
@@ -34,6 +35,7 @@ export default function PaymentButton({
     label,
 }: PaymentButtonProps) {
     const [loading, setLoading] = useState(false);
+    const router = useRouter();
 
     const handlePay = async () => {
         setLoading(true);
@@ -62,7 +64,7 @@ export default function PaymentButton({
                     } catch { /* ignore */ }
                 }
                 onSuccess?.();
-                if (data.redirect_url) window.location.href = data.redirect_url;
+                if (data.redirect_url) router.push(data.redirect_url);
                 return;
             }
 
@@ -94,7 +96,7 @@ export default function PaymentButton({
                 });
             } else if (data.redirect_url) {
                 // Fallback: Snap.js not loaded (deployed host), redirect instead
-                window.location.href = data.redirect_url;
+                router.push(data.redirect_url);
             } else {
                 alert("Payment system is loading. Please try again in a moment.");
             }

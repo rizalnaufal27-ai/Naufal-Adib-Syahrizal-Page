@@ -1,7 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface NavbarProps {
     onOrderClick?: () => void;
@@ -13,6 +14,7 @@ export default function Navbar({ onOrderClick }: NavbarProps) {
     const [mobileOpen, setMobileOpen] = useState(false);
     const t = useTranslations("Navbar");
     const pathname = usePathname();
+    const router = useRouter();
 
     // Detect if we're on a sub-page (not the homepage)
     const isSubPage = (() => {
@@ -38,18 +40,18 @@ export default function Navbar({ onOrderClick }: NavbarProps) {
         setMobileOpen(false);
         if (isSubPage) {
             // On sub-pages, navigate to homepage with hash
-            window.location.href = `/${href}`;
+            router.push(`/${href}`);
         } else if (href.startsWith("#")) {
             const el = document.querySelector(href);
             if (el) el.scrollIntoView({ behavior: "smooth" });
         } else {
-            window.location.href = href;
+            router.push(href);
         }
     };
 
     const handleLogoClick = () => {
         if (isSubPage) {
-            window.location.href = "/";
+            router.push("/");
         } else {
             const el = document.querySelector("#home");
             if (el) el.scrollIntoView({ behavior: "smooth" });
@@ -78,8 +80,8 @@ export default function Navbar({ onOrderClick }: NavbarProps) {
                     {/* Desktop Nav */}
                     <div className="hidden md:flex items-center gap-1">
                         {isSubPage && (
-                            <a
-                                href="/public/dashboard"
+                            <button
+                                onClick={() => router.push("/public/dashboard")}
                                 className="relative px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-300"
                                 style={{
                                     color: pathname.includes("/dashboard") || pathname.includes("/track") || pathname.includes("/order") ? "#fff" : "rgba(255,255,255,0.5)",
@@ -87,7 +89,7 @@ export default function Navbar({ onOrderClick }: NavbarProps) {
                                 }}
                             >
                                 Dashboard
-                            </a>
+                            </button>
                         )}
                         {navItems.map((item, i) => (
                             <button
@@ -112,7 +114,7 @@ export default function Navbar({ onOrderClick }: NavbarProps) {
 
                     {/* CTA + Admin link + Mobile */}
                     <div className="flex items-center gap-3">
-                        <a
+                        <Link
                             href={`/${pathname.split("/")[1] || "en"}/consultation`}
                             target="_blank"
                             rel="noopener noreferrer"
@@ -121,8 +123,8 @@ export default function Navbar({ onOrderClick }: NavbarProps) {
                         >
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
                             Consultation
-                        </a>
-                        <a
+                        </Link>
+                        <Link
                             href="/admin"
                             target="_blank"
                             rel="noopener noreferrer"
@@ -130,7 +132,7 @@ export default function Navbar({ onOrderClick }: NavbarProps) {
                             style={{ color: "var(--color-text-muted)" }}
                         >
                             Admin
-                        </a>
+                        </Link>
 
                         {/* Mobile hamburger */}
                         <button
@@ -155,13 +157,13 @@ export default function Navbar({ onOrderClick }: NavbarProps) {
                 >
                     <div className="section-container py-4 space-y-1">
                         {isSubPage && (
-                            <a
-                                href="/public/dashboard"
+                            <button
+                                onClick={() => router.push("/public/dashboard")}
                                 className="block w-full text-left px-4 py-3 rounded-lg text-sm transition-all duration-200"
                                 style={{ color: pathname.includes("/dashboard") ? "#fff" : "var(--color-text-muted)", background: pathname.includes("/dashboard") ? "rgba(99,102,241,0.12)" : "transparent" }}
                             >
                                 Dashboard
-                            </a>
+                            </button>
                         )}
                         {navItems.map((item, i) => (
                             <button
@@ -176,7 +178,7 @@ export default function Navbar({ onOrderClick }: NavbarProps) {
                                 {item.label}
                             </button>
                         ))}
-                        <a
+                        <Link
                             href={`/${pathname.split("/")[1] || "en"}/consultation`}
                             target="_blank"
                             rel="noopener noreferrer"
@@ -184,8 +186,8 @@ export default function Navbar({ onOrderClick }: NavbarProps) {
                             style={{ background: "linear-gradient(135deg, rgba(236,72,153,0.2), rgba(139,92,246,0.2))" }}
                         >
                             Consultation
-                        </a>
-                        <a
+                        </Link>
+                        <Link
                             href="/admin"
                             target="_blank"
                             rel="noopener noreferrer"
@@ -193,7 +195,7 @@ export default function Navbar({ onOrderClick }: NavbarProps) {
                             style={{ color: "var(--color-text-muted)" }}
                         >
                             Admin
-                        </a>
+                        </Link>
                     </div>
                 </div>
             )}
