@@ -31,7 +31,7 @@ export default function ProfileSection() {
                         <div className="w-3 h-3 rounded-full shadow-[0_0_10px_rgba(139,92,246,0.6)]" style={{ background: "linear-gradient(135deg, #8B5CF6, #6366F1)" }} />
                         <h3 className="text-xl font-bold text-white">Multidisciplinary Visual Creator & Digital Strategist</h3>
                     </div>
-                    <p className="leading-relaxed text-lg text-white/50 relative z-10">
+                    <p className="leading-relaxed text-lg text-white/70 relative z-10">
                         I am a versatile creative professional specializing in bridging the gap between artistic vision and functional design. With expertise spanning <strong className="font-bold text-purple-300">Graphic Design, Illustration, Photography, Video Editing, Web Design, and App Development</strong>, I act as a one-stop creative partner for brands and individuals looking to elevate their visual identity.
                     </p>
                 </motion.div>
@@ -46,7 +46,7 @@ export default function ProfileSection() {
                     <p className="text-lg font-medium italic mb-3 relative z-10" style={{ background: "linear-gradient(90deg, #f472b6, #c084fc, #818cf8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                         To transform complex ideas into compelling visual stories that resonate.
                     </p>
-                    <p className="leading-relaxed text-white/50 relative z-10">
+                    <p className="leading-relaxed text-white/70 relative z-10">
                         My mission is to provide integrated visual solutions that don&apos;t just &ldquo;look good&rdquo; but drive engagement and communicate value. Whether it&apos;s through a meticulously crafted illustration, a high-impact brand identity, or a dynamic video sequence, I aim to help clients stand out in a crowded digital landscape through consistency and aesthetic excellence.
                     </p>
                 </motion.div>
@@ -77,7 +77,7 @@ export default function ProfileSection() {
                                     <span className="text-lg transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12">{item.emoji}</span>
                                     <h4 className="font-bold" style={{ color: item.color }}>{item.title}</h4>
                                 </div>
-                                <p className="text-sm text-white/40">{item.desc}</p>
+                                <p className="text-sm text-white/55">{item.desc}</p>
                             </motion.div>
                         ))}
                     </motion.div>

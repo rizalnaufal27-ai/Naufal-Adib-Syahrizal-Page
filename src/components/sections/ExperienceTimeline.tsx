@@ -68,12 +68,12 @@ export default function ExperienceTimeline() {
                                     </span>
                                 </div>
 
-                                <p className="text-sm mb-4 text-white/45 relative z-10">{exp.description}</p>
+                                <p className="text-sm mb-4 text-white/65 relative z-10">{exp.description}</p>
 
                                 {/* Energy Bar — cosmic style */}
                                 <div className="space-y-1.5 relative z-10">
                                     <div className="flex justify-between text-xs">
-                                        <span className="text-white/30">Duration Intensity</span>
+                                        <span className="text-white/50">Duration Intensity</span>
                                         <span className="font-mono font-bold" style={{ color: exp.color }}>{exp.energy}%</span>
                                     </div>
                                     <div className="h-2 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.04)" }}>

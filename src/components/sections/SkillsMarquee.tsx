@@ -40,7 +40,7 @@ export default function SkillsMarquee() {
                 <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }} className="text-center">
                     <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-[0.3em] mb-3" style={{ background: "linear-gradient(90deg, #c084fc, #818cf8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>✦ Toolkit</motion.p>
                     <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-black tracking-tight" style={{ background: "linear-gradient(135deg, #fff 0%, #e0e7ff 40%, #c084fc 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Skills & Tools</motion.h2>
-                    <motion.p variants={fadeUp} className="text-sm mt-4 max-w-md mx-auto text-white/40">Mastering the tools that bring creative visions to life</motion.p>
+                    <motion.p variants={fadeUp} className="text-sm mt-4 max-w-md mx-auto text-white/55">Mastering the tools that bring creative visions to life</motion.p>
                 </motion.div>
             </div>
 
@@ -89,7 +89,7 @@ export default function SkillsMarquee() {
 
                             {/* Name */}
                             <span className="text-xs font-semibold text-center whitespace-nowrap transition-all duration-300 relative z-10"
-                                style={{ color: hoveredIndex === i ? skill.color : "rgba(255,255,255,0.4)" }}>
+                                style={{ color: hoveredIndex === i ? skill.color : "rgba(255,255,255,0.55)" }}>
                                 {skill.name}
                             </span>
                         </motion.div>

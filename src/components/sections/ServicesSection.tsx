@@ -35,7 +35,7 @@ export default function ServicesSection({ onOpenPricing }: ServicesSectionProps)
                 <div className="text-center mb-16">
                     <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-[0.3em] mb-3" style={{ background: "linear-gradient(90deg, #c084fc, #818cf8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>✦ What I Offer</motion.p>
                     <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-black tracking-tight" style={{ background: "linear-gradient(135deg, #fff 0%, #e0e7ff 40%, #c084fc 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Services</motion.h2>
-                    <motion.p variants={fadeUp} className="text-sm mt-4 max-w-lg mx-auto text-white/40">
+                    <motion.p variants={fadeUp} className="text-sm mt-4 max-w-lg mx-auto text-white/55">
                         End-to-end creative solutions tailored to your brand. From design to development.
                     </motion.p>
                 </div>
@@ -64,7 +64,7 @@ export default function ServicesSection({ onOpenPricing }: ServicesSectionProps)
                             <h3 className="text-lg font-bold mb-2 text-white group-hover:text-purple-200 transition-colors duration-300">
                                 {service.title}
                             </h3>
-                            <p className="text-sm leading-relaxed mb-6 text-white/40 group-hover:text-white/55 transition-colors duration-300">
+                            <p className="text-sm leading-relaxed mb-6 text-white/60 group-hover:text-white/75 transition-colors duration-300">
                                 {service.description}
                             </p>
 

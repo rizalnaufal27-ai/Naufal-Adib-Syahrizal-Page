@@ -58,7 +58,7 @@ export default function DashboardPreview() {
                 <div className="text-center mb-16">
                     <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-[0.3em] mb-3" style={{ background: "linear-gradient(90deg, #c084fc, #818cf8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>✦ Transparency</motion.p>
                     <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-black tracking-tight" style={{ background: "linear-gradient(135deg, #fff 0%, #e0e7ff 40%, #c084fc 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Dashboard</motion.h2>
-                    <motion.p variants={fadeUp} className="text-sm mt-4 max-w-md mx-auto text-white/40">Track your order status in real-time. No login required.</motion.p>
+                    <motion.p variants={fadeUp} className="text-sm mt-4 max-w-md mx-auto text-white/55">Track your order status in real-time. No login required.</motion.p>
                 </div>
 
                 <motion.div variants={fadeUp} className="max-w-3xl mx-auto">
@@ -87,14 +87,14 @@ export default function DashboardPreview() {
                                 <thead>
                                     <tr style={{ borderBottom: "1px solid rgba(139,92,246,0.06)" }}>
                                         {["Order", "Service", "Status", "Progress"].map(h => (
-                                            <th key={h} className="text-left px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-purple-300/50">{h}</th>
+                                            <th key={h} className="text-left px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-purple-300/70">{h}</th>
                                         ))}
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {orders.length === 0 ? (
                                         <tr>
-                                            <td colSpan={4} className="px-6 py-12 text-center text-sm text-white/30">
+                                            <td colSpan={4} className="px-6 py-12 text-center text-sm text-white/50">
                                                 <div className="flex flex-col items-center gap-3">
                                                     <span className="text-3xl opacity-20">🌌</span>
                                                     No active orders
@@ -114,7 +114,7 @@ export default function DashboardPreview() {
                                                 style={{ borderBottom: "1px solid rgba(139,92,246,0.04)" }}
                                             >
                                                 <td className="px-6 py-4 text-sm font-mono font-bold text-purple-300">{order.id}</td>
-                                                <td className="px-6 py-4 text-sm text-white/50">{order.service}</td>
+                                                <td className="px-6 py-4 text-sm text-white/65">{order.service}</td>
                                                 <td className="px-6 py-4">
                                                     <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full uppercase" style={{ background: statusStyle.bg, color: statusStyle.color }}>
                                                         <span className="w-1.5 h-1.5 rounded-full" style={{ background: statusStyle.dot, boxShadow: statusStyle.glow }} />
@@ -136,7 +136,7 @@ export default function DashboardPreview() {
                                                                 }}
                                                             />
                                                         </div>
-                                                        <span className="text-xs font-mono font-bold min-w-[32px] text-right text-white/40">{order.progress}%</span>
+                                                        <span className="text-xs font-mono font-bold min-w-[32px] text-right text-white/55">{order.progress}%</span>
                                                     </div>
                                                 </td>
                                             </motion.tr>
