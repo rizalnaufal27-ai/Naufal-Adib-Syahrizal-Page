@@ -62,11 +62,11 @@ export default function DashboardPreview() {
                         </h3>
                         <a
                             href="/public/dashboard"
-                            className="text-xs font-semibold px-4 py-2 rounded-lg transition-all duration-300 hover:-translate-y-[1px]"
+                            className="relative z-10 text-xs font-semibold px-4 py-2 rounded-lg transition-all duration-300 hover:-translate-y-[1px] hover:shadow-md"
                             style={{
-                                background: "rgba(59,130,246,0.1)",
-                                color: "var(--color-primary)",
-                                border: "1px solid rgba(59,130,246,0.15)",
+                                background: "linear-gradient(135deg, #3B82F6, #6366F1)",
+                                color: "#fff",
+                                border: "none",
                             }}
                         >
                             View Full Dashboard →

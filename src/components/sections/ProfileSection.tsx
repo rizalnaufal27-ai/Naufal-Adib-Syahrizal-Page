@@ -18,7 +18,7 @@ export default function ProfileSection() {
                         </h3>
                     </div>
                     <p className="leading-relaxed text-lg" style={{ color: "var(--color-text-muted)" }}>
-                        I am a versatile creative professional specializing in bridging the gap between artistic vision and functional design. With expertise spanning <strong className="font-bold text-white/90">Graphic Design, Illustration, Photography, Video Editing, Web Design, and App Development</strong>, I act as a one-stop creative partner for brands and individuals looking to elevate their visual identity.
+                        I am a versatile creative professional specializing in bridging the gap between artistic vision and functional design. With expertise spanning <strong className="font-bold" style={{ color: "var(--color-text)" }}>Graphic Design, Illustration, Photography, Video Editing, Web Design, and App Development</strong>, I act as a one-stop creative partner for brands and individuals looking to elevate their visual identity.
                     </p>
                 </div>
 

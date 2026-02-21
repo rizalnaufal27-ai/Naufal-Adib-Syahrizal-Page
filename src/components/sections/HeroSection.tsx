@@ -1,6 +1,6 @@
 "use client";
-import { motion } from "framer-motion";
-import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import MagneticButton from "@/components/ui/magnetic-button";
 import SoftGlowBg from "@/components/ui/soft-glow-bg";
@@ -20,9 +20,24 @@ const fadeUp = {
   visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] as const } },
 };
 
+const taglines = [
+  "Helping brands stand out through high-end visuals",
+  "Crafting data-driven digital strategy for growth",
+  "Turning creative ideas into powerful brand stories",
+  "Building premium experiences that convert",
+];
+
 export default function HeroSection({ onViewResume, onOrderClick }: HeroSectionProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const [taglineIndex, setTaglineIndex] = useState(0);
   const t = useTranslations("Hero");
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTaglineIndex((prev) => (prev + 1) % taglines.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <section className="section-container min-h-screen flex items-center py-24 md:py-0 relative overflow-hidden">
@@ -82,30 +97,72 @@ export default function HeroSection({ onViewResume, onOrderClick }: HeroSectionP
           </div>
         </motion.div>
 
-        {/* Main Heading — staggered entrance */}
+        {/* Main Heading */}
         <motion.h1
           variants={fadeUp}
           className="text-5xl md:text-7xl lg:text-8xl font-black text-center tracking-tighter leading-[0.9] mb-4"
           style={{ fontFamily: "var(--font-heading)" }}
         >
-          <span className="block text-transparent bg-clip-text bg-gradient-to-b from-white to-white/70 pb-2 drop-shadow-sm">Naufal Adib</span>
-          <span className="block text-transparent bg-clip-text bg-gradient-to-l from-indigo-400 to-cyan-300 text-4xl md:text-5xl lg:text-6xl font-bold tracking-normal drop-shadow-md">
+          <span
+            className="block pb-2"
+            style={{
+              background: "linear-gradient(135deg, #ffffff 0%, #e0e7ff 50%, #a5b4fc 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              filter: "drop-shadow(0 0 30px rgba(165,180,252,0.3))",
+            }}
+          >
+            Naufal Adib
+          </span>
+          <span
+            className="block text-4xl md:text-5xl lg:text-6xl font-bold tracking-normal"
+            style={{
+              background: "linear-gradient(135deg, #818cf8 0%, #6366f1 40%, #06b6d4 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              filter: "drop-shadow(0 0 20px rgba(99,102,241,0.4))",
+            }}
+          >
             Syahrizal
           </span>
         </motion.h1>
 
-        {/* Tagline */}
-        <motion.p variants={fadeUp} className="text-sm md:text-base font-semibold uppercase tracking-[0.2em] text-indigo-400/80 mb-2">
-          Creative Design Studio
-        </motion.p>
-        <motion.p variants={fadeUp} className="text-base md:text-lg text-white/70 max-w-3xl text-center mb-6">
-          Helping brands stand out and convert through high-end visuals and data-driven digital strategy.
+        {/* Tagline — now says "Creative Designer" */}
+        <motion.p variants={fadeUp} className="text-sm md:text-base font-semibold uppercase tracking-[0.2em] text-indigo-400/80 mb-3">
+          Creative Designer
         </motion.p>
 
-        {/* Bio */}
-        <motion.p variants={fadeUp} className="text-lg md:text-xl text-center text-white/50 max-w-2xl leading-relaxed mb-10">
-          {t("bio")}
-        </motion.p>
+        {/* Animated rotating tagline */}
+        <motion.div variants={fadeUp} className="h-8 md:h-10 relative w-full max-w-xl overflow-hidden mb-6">
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={taglineIndex}
+              initial={{ opacity: 0, y: 20, filter: "blur(4px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              exit={{ opacity: 0, y: -20, filter: "blur(4px)" }}
+              transition={{ duration: 0.6, ease: "easeInOut" }}
+              className="absolute inset-0 text-base md:text-lg text-center font-medium"
+              style={{
+                background: "linear-gradient(90deg, rgba(255,255,255,0.9), rgba(165,180,252,0.8), rgba(6,182,212,0.8))",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              {taglines[taglineIndex]}
+            </motion.p>
+          </AnimatePresence>
+        </motion.div>
+
+        {/* Bio — justified with column */}
+        <motion.div variants={fadeUp} className="w-full max-w-2xl mb-10 px-4 md:px-0">
+          <div
+            className="rounded-2xl border border-white/10 bg-white/[0.02] backdrop-blur-sm p-6 md:p-8"
+          >
+            <p className="text-base md:text-lg text-white/50 leading-relaxed" style={{ textAlign: "justify" }}>
+              {t("bio")}
+            </p>
+          </div>
+        </motion.div>
 
         {/* Buttons */}
         <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4 items-center">
@@ -123,11 +180,11 @@ export default function HeroSection({ onViewResume, onOrderClick }: HeroSectionP
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                 <path d="M12 5v14M5 12h14" />
               </svg>
-              Place an Order
+              Order
             </span>
             {/* Glow behind button */}
             <span
-              className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"
+              className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"
               style={{ boxShadow: "0 0 40px rgba(99,102,241,0.5)" }}
             />
           </MagneticButton>

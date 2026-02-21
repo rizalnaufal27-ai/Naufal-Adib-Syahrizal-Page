@@ -13,6 +13,7 @@ const menuLinks = [
     { name: "Home", href: "/" },
     { name: "Work", href: "/#portfolio" },
     { name: "Services", href: "/#services" },
+    { name: "Track Project", href: "/track" },
     { name: "Dashboard", href: "/public/dashboard" },
 ];
 

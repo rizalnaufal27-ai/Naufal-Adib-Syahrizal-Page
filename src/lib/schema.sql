@@ -1,15 +1,14 @@
 -- ===================================================
--- Updated Schema for Orders with Payment Integration
+-- Master Schema – Consolidated (v1 + v2 + v4)
 -- ===================================================
 
 -- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- Drop existing orders table constraints if needed for migration
--- ALTER TABLE public.orders DROP CONSTRAINT IF EXISTS orders_down_payment_status_check;
--- ALTER TABLE public.orders DROP CONSTRAINT IF EXISTS orders_final_payment_status_check;
+-- ===================================================
+-- 1. Orders Table
+-- ===================================================
 
--- Original orders table (preserved)
 CREATE TABLE IF NOT EXISTS public.orders (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   order_number serial UNIQUE,
@@ -20,7 +19,7 @@ CREATE TABLE IF NOT EXISTS public.orders (
   updated_at timestamptz DEFAULT now()
 );
 
--- New columns for order details
+-- Order detail columns
 ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS customer_name text;
 ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS customer_email text;
 ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS description text;
@@ -46,8 +45,11 @@ ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS uuid_token uuid DEFAULT gen_r
 -- Chat enabled flag
 ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS chat_enabled boolean DEFAULT false;
 
+-- v4: Pricing details
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS pricing_details jsonb;
+
 -- ===================================================
--- Chat Messages Table
+-- 2. Chat Messages Table
 -- ===================================================
 
 CREATE TABLE IF NOT EXISTS public.order_chats (
@@ -59,33 +61,128 @@ CREATE TABLE IF NOT EXISTS public.order_chats (
 );
 
 -- ===================================================
--- Row Level Security
+-- 3. Profiles Table (RBAC)
 -- ===================================================
 
--- Orders: public read, auth write
+CREATE TABLE IF NOT EXISTS public.profiles (
+  id uuid REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
+  role text NOT NULL DEFAULT 'client' CHECK (role IN ('client', 'admin')),
+  full_name text,
+  created_at timestamptz DEFAULT now()
+);
+
+-- Auto-create profile on signup
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS trigger AS $$
+BEGIN
+  INSERT INTO public.profiles (id, full_name, role)
+  VALUES (NEW.id, NEW.raw_user_meta_data->>'full_name', 'client');
+  RETURN NEW;
+END;
+$$ language plpgsql security definer;
+
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- ===================================================
+-- 4. Pricing Config Table
+-- ===================================================
+
+CREATE TABLE IF NOT EXISTS public.pricing_config (
+  id text PRIMARY KEY,
+  service text NOT NULL,
+  label text NOT NULL,
+  price_usd numeric NOT NULL,
+  updated_at timestamptz DEFAULT now()
+);
+
+-- Seed default pricing
+INSERT INTO public.pricing_config (id, service, label, price_usd) VALUES
+  ('design_logo', 'Graphic Design', 'Logo Design', 5),
+  ('design_banner', 'Graphic Design', 'Banner Design', 5),
+  ('design_poster', 'Graphic Design', 'Poster Design', 5),
+  ('design_brand', 'Graphic Design', 'Brand Identity Package', 20),
+  ('illus_half', 'Illustration', 'Half Body', 5),
+  ('illus_full', 'Illustration', 'Full Body', 8),
+  ('illus_render', 'Illustration', 'Full Render', 12),
+  ('photo_package', 'Photography', 'Photography Package (2hrs)', 20),
+  ('photo_raw', 'Photography', 'RAW Files Add-on', 5),
+  ('photo_edit', 'Photography', 'Photo Editing (per complexity)', 1),
+  ('video_low', 'Video', 'Video Base (Low)', 10),
+  ('video_med', 'Video', 'Video Base (Medium)', 30),
+  ('video_high', 'Video', 'Video Base (High)', 50),
+  ('video_overtime', 'Video', 'Video Overtime (per min)', 2),
+  ('web_base', 'Web Design', 'Web Design Base (per page)', 25),
+  ('app_base', 'App Design', 'App Design Base (per flow)', 30)
+ON CONFLICT (id) DO NOTHING;
+
+-- ===================================================
+-- 5. Portfolio Items Table
+-- ===================================================
+
+CREATE TABLE IF NOT EXISTS public.portfolio_items (
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  title text NOT NULL,
+  description text,
+  service_type text NOT NULL,
+  tags text[] DEFAULT '{}',
+  image_url text,
+  is_published boolean DEFAULT true,
+  created_at timestamptz DEFAULT now(),
+  updated_at timestamptz DEFAULT now()
+);
+
+-- ===================================================
+-- 6. Row Level Security
+-- ===================================================
+
+-- Orders
 ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
-
 DROP POLICY IF EXISTS "Public can view orders" ON public.orders;
-CREATE POLICY "Public can view orders" ON public.orders
-  FOR SELECT USING (true);
-
+CREATE POLICY "Public can view orders" ON public.orders FOR SELECT USING (true);
 DROP POLICY IF EXISTS "Service role can manage orders" ON public.orders;
-CREATE POLICY "Service role can manage orders" ON public.orders
-  FOR ALL USING (true);
+CREATE POLICY "Service role can manage orders" ON public.orders FOR ALL USING (true);
 
--- Chats: public read/write (secured by UUID token at API level)
+-- Chats
 ALTER TABLE public.order_chats ENABLE ROW LEVEL SECURITY;
-
 DROP POLICY IF EXISTS "Public can view chats" ON public.order_chats;
-CREATE POLICY "Public can view chats" ON public.order_chats
-  FOR SELECT USING (true);
-
+CREATE POLICY "Public can view chats" ON public.order_chats FOR SELECT USING (true);
 DROP POLICY IF EXISTS "Public can insert chats" ON public.order_chats;
-CREATE POLICY "Public can insert chats" ON public.order_chats
-  FOR INSERT WITH CHECK (true);
+CREATE POLICY "Public can insert chats" ON public.order_chats FOR INSERT WITH CHECK (true);
+
+-- Profiles
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Users can read own profile" ON public.profiles;
+CREATE POLICY "Users can read own profile" ON public.profiles FOR SELECT USING (auth.uid() = id);
+DROP POLICY IF EXISTS "Admins can read all profiles" ON public.profiles;
+CREATE POLICY "Admins can read all profiles" ON public.profiles FOR SELECT USING (
+  EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
+);
+
+-- Pricing
+ALTER TABLE public.pricing_config ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Anyone can read pricing" ON public.pricing_config;
+CREATE POLICY "Anyone can read pricing" ON public.pricing_config FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Admins can update pricing" ON public.pricing_config;
+CREATE POLICY "Admins can update pricing" ON public.pricing_config FOR ALL USING (
+  EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
+);
+
+-- Portfolio
+ALTER TABLE public.portfolio_items ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Anyone can read published portfolio" ON public.portfolio_items;
+CREATE POLICY "Anyone can read published portfolio" ON public.portfolio_items FOR SELECT USING (is_published = true);
+DROP POLICY IF EXISTS "Admins can manage portfolio" ON public.portfolio_items;
+CREATE POLICY "Admins can manage portfolio" ON public.portfolio_items FOR ALL USING (
+  EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
+);
+DROP POLICY IF EXISTS "Public Read Portfolio" ON public.portfolio_items;
+CREATE POLICY "Public Read Portfolio" ON public.portfolio_items FOR SELECT USING (true);
 
 -- ===================================================
--- Indexes
+-- 7. Indexes
 -- ===================================================
 
 CREATE INDEX IF NOT EXISTS idx_orders_uuid_token ON public.orders(uuid_token);
@@ -93,7 +190,7 @@ CREATE INDEX IF NOT EXISTS idx_orders_status ON public.orders(status);
 CREATE INDEX IF NOT EXISTS idx_order_chats_order_id ON public.order_chats(order_id);
 
 -- ===================================================
--- Updated_at trigger
+-- 8. Triggers
 -- ===================================================
 
 CREATE OR REPLACE FUNCTION update_updated_at()
