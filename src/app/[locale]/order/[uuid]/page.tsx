@@ -24,6 +24,7 @@ interface Order {
     final_payment_amount: number;
     final_payment_status: string;
     evidence_links: Array<{ url: string; publicId: string; uploadedAt: string }>;
+    result_files: Array<{ name: string; url: string; type: string; size: number; uploadedAt: string }>;
     uuid_token: string;
     chat_enabled: boolean;
     created_at: string;
@@ -206,10 +207,10 @@ export default function UnifiedOrderPage() {
                                 <div
                                     key={i}
                                     className={`relative p-3 md:p-4 rounded-xl border transition-all duration-500 ${phase.status === "active"
-                                            ? "bg-indigo-500/10 border-indigo-500/30 shadow-lg shadow-indigo-500/10"
-                                            : phase.status === "completed"
-                                                ? "bg-green-500/5 border-green-500/20"
-                                                : "bg-white/[0.01] border-white/5 opacity-40"
+                                        ? "bg-indigo-500/10 border-indigo-500/30 shadow-lg shadow-indigo-500/10"
+                                        : phase.status === "completed"
+                                            ? "bg-green-500/5 border-green-500/20"
+                                            : "bg-white/[0.01] border-white/5 opacity-40"
                                         }`}
                                 >
                                     <div className="flex items-center gap-2 mb-1">
@@ -228,8 +229,8 @@ export default function UnifiedOrderPage() {
                                     {/* Mini progress */}
                                     <div className="h-0.5 bg-white/10 rounded-full overflow-hidden mt-2">
                                         <div className={`h-full transition-all duration-1000 rounded-full ${phase.status === "completed" ? "bg-green-500 w-full"
-                                                : phase.status === "active" ? "bg-indigo-500 w-1/2 animate-pulse"
-                                                    : "w-0"
+                                            : phase.status === "active" ? "bg-indigo-500 w-1/2 animate-pulse"
+                                                : "w-0"
                                             }`} />
                                     </div>
                                     {phase.status === "completed" && (
@@ -273,8 +274,8 @@ export default function UnifiedOrderPage() {
                         <div className="p-6 space-y-4">
                             {/* Down Payment Row */}
                             <div className={`p-4 rounded-xl border transition-all ${isDepositPaid
-                                    ? "border-green-500/20 bg-green-500/5"
-                                    : "border-indigo-500/20 bg-indigo-500/5"
+                                ? "border-green-500/20 bg-green-500/5"
+                                : "border-indigo-500/20 bg-indigo-500/5"
                                 }`}>
                                 <div className="flex items-center justify-between mb-2">
                                     <div className="flex items-center gap-2">
@@ -285,8 +286,8 @@ export default function UnifiedOrderPage() {
                                         <span className="font-semibold text-sm">Down Payment (20%)</span>
                                     </div>
                                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${isDepositPaid
-                                            ? "bg-green-500/10 text-green-400 border border-green-500/20"
-                                            : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
+                                        ? "bg-green-500/10 text-green-400 border border-green-500/20"
+                                        : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
                                         }`}>
                                         {isDepositPaid ? "Paid" : "Unpaid"}
                                     </span>
@@ -309,10 +310,10 @@ export default function UnifiedOrderPage() {
 
                             {/* Final Payment Row */}
                             <div className={`p-4 rounded-xl border transition-all ${isCompleted
-                                    ? "border-green-500/20 bg-green-500/5"
-                                    : !isDepositPaid
-                                        ? "border-white/5 bg-white/[0.01] opacity-40"
-                                        : "border-indigo-500/20 bg-indigo-500/5"
+                                ? "border-green-500/20 bg-green-500/5"
+                                : !isDepositPaid
+                                    ? "border-white/5 bg-white/[0.01] opacity-40"
+                                    : "border-indigo-500/20 bg-indigo-500/5"
                                 }`}>
                                 <div className="flex items-center justify-between mb-2">
                                     <div className="flex items-center gap-2">
@@ -325,10 +326,10 @@ export default function UnifiedOrderPage() {
                                         <span className="font-semibold text-sm">Final Payment (80%)</span>
                                     </div>
                                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${isCompleted
-                                            ? "bg-green-500/10 text-green-400 border border-green-500/20"
-                                            : !isDepositPaid
-                                                ? "bg-white/5 text-white/30 border border-white/10"
-                                                : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
+                                        ? "bg-green-500/10 text-green-400 border border-green-500/20"
+                                        : !isDepositPaid
+                                            ? "bg-white/5 text-white/30 border border-white/10"
+                                            : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
                                         }`}>
                                         {isCompleted ? "Paid" : !isDepositPaid ? "Locked" : "Unpaid"}
                                     </span>
@@ -451,6 +452,32 @@ export default function UnifiedOrderPage() {
                             </div>
                         </div>
                     </div>
+
+                    {/* Result Files Download */}
+                    {order.result_files && order.result_files.length > 0 && (
+                        <div className="rounded-2xl border border-green-500/20 bg-green-500/[0.03] p-6">
+                            <h3 className="text-xs font-bold text-green-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
+                                Project Results ({order.result_files.length} files)
+                            </h3>
+                            <div className="space-y-2">
+                                {order.result_files.map((f: { name: string; url: string; type: string; size: number; uploadedAt: string }, i: number) => (
+                                    <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-black/20 border border-white/[0.04]">
+                                        <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 text-lg bg-green-500/10">
+                                            {f.type?.includes("image") ? "🖼️" : f.type?.includes("video") ? "🎬" : f.type?.includes("pdf") ? "📄" : f.type?.includes("zip") || f.type?.includes("rar") ? "📦" : "📎"}
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-sm font-medium text-white truncate">{f.name}</p>
+                                            <p className="text-[10px] text-white/30">{(f.size / 1024 / 1024).toFixed(2)} MB</p>
+                                        </div>
+                                        <a href={f.url} target="_blank" rel="noopener noreferrer" download className="px-4 py-2 rounded-lg text-xs font-bold text-white transition-all hover:brightness-110" style={{ background: "linear-gradient(135deg, #22C55E, #16A34A)" }}>
+                                            Download
+                                        </a>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
                     {/* Milestone Logs */}
                     <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">

@@ -95,6 +95,30 @@ export async function POST(request: NextRequest) {
                 amount,
                 uuidToken: order.uuid_token,
             });
+
+            // Auto-create portfolio item on final payment completion
+            if (isFinalPayment) {
+                try {
+                    const { data: existing } = await supabase
+                        .from("portfolio_items")
+                        .select("id")
+                        .eq("title", `${order.service_type} — #${order.order_number}`)
+                        .maybeSingle();
+
+                    if (!existing) {
+                        await supabase.from("portfolio_items").insert({
+                            title: `${order.service_type} — #${order.order_number}`,
+                            description: order.description || `Completed ${order.service_type} project for ${order.customer_name}`,
+                            service_type: order.service_type,
+                            tags: [order.service_type.toLowerCase().replace(/\s+/g, "-")],
+                            image_url: order.evidence_links?.[0]?.url || "",
+                            is_published: true,
+                        });
+                    }
+                } catch (pfErr) {
+                    console.error("Auto-portfolio error (non-fatal):", pfErr);
+                }
+            }
         }
 
         return NextResponse.json({ status: "ok" });

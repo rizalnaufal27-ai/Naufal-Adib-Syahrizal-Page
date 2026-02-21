@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
+import { usePathname } from "next/navigation";
 
 interface NavbarProps {
     onOrderClick?: () => void;
@@ -11,6 +12,13 @@ export default function Navbar({ onOrderClick }: NavbarProps) {
     const [scrolled, setScrolled] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
     const t = useTranslations("Navbar");
+    const pathname = usePathname();
+
+    // Detect if we're on a sub-page (not the homepage)
+    const isSubPage = (() => {
+        const clean = pathname.replace(/^\/(en|id)/, "") || "/";
+        return clean !== "/" && clean !== "";
+    })();
 
     const navItems = [
         { label: t("home"), href: "#home" },
@@ -28,11 +36,23 @@ export default function Navbar({ onOrderClick }: NavbarProps) {
     const handleClick = (index: number, href: string) => {
         setActive(index);
         setMobileOpen(false);
-        if (href.startsWith("#")) {
+        if (isSubPage) {
+            // On sub-pages, navigate to homepage with hash
+            window.location.href = `/${href}`;
+        } else if (href.startsWith("#")) {
             const el = document.querySelector(href);
             if (el) el.scrollIntoView({ behavior: "smooth" });
         } else {
             window.location.href = href;
+        }
+    };
+
+    const handleLogoClick = () => {
+        if (isSubPage) {
+            window.location.href = "/";
+        } else {
+            const el = document.querySelector("#home");
+            if (el) el.scrollIntoView({ behavior: "smooth" });
         }
     };
 
@@ -48,27 +68,39 @@ export default function Navbar({ onOrderClick }: NavbarProps) {
         >
             <div className="section-container">
                 <div className="flex items-center justify-between h-16 md:h-[72px]">
-                    {/* Logo */}
-                    <a href="#home" className="flex items-center gap-2 group">
+                    {/* Logo — click to go home */}
+                    <button onClick={handleLogoClick} className="flex items-center gap-2 group">
                         <span className="text-lg font-bold tracking-tight text-white group-hover:text-indigo-400 transition-colors">
                             Naufal Adib<span className="text-white/40">.</span>
                         </span>
-                    </a>
+                    </button>
 
                     {/* Desktop Nav */}
                     <div className="hidden md:flex items-center gap-1">
+                        {isSubPage && (
+                            <a
+                                href="/public/dashboard"
+                                className="relative px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-300"
+                                style={{
+                                    color: pathname.includes("/dashboard") || pathname.includes("/track") || pathname.includes("/order") ? "#fff" : "rgba(255,255,255,0.5)",
+                                    background: pathname.includes("/dashboard") || pathname.includes("/track") || pathname.includes("/order") ? "rgba(99,102,241,0.12)" : "transparent",
+                                }}
+                            >
+                                Dashboard
+                            </a>
+                        )}
                         {navItems.map((item, i) => (
                             <button
                                 key={item.label}
                                 onClick={() => handleClick(i, item.href)}
                                 className="relative px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-300"
                                 style={{
-                                    color: active === i ? "#fff" : "rgba(255, 255, 255, 0.75)",
-                                    background: active === i ? "rgba(99,102,241,0.12)" : "transparent",
+                                    color: !isSubPage && active === i ? "#fff" : "rgba(255, 255, 255, 0.55)",
+                                    background: !isSubPage && active === i ? "rgba(99,102,241,0.12)" : "transparent",
                                 }}
                             >
                                 {item.label}
-                                {active === i && (
+                                {!isSubPage && active === i && (
                                     <span
                                         className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-[2px] rounded-full"
                                         style={{ background: "#6366F1" }}
@@ -80,7 +112,6 @@ export default function Navbar({ onOrderClick }: NavbarProps) {
 
                     {/* CTA + Admin link + Mobile */}
                     <div className="flex items-center gap-3">
-                        {/* Admin link */}
                         <a
                             href="/admin"
                             target="_blank"
@@ -90,8 +121,6 @@ export default function Navbar({ onOrderClick }: NavbarProps) {
                         >
                             Admin
                         </a>
-
-                        {/* Place an Order button removed - moved to FAB */}
 
                         {/* Mobile hamburger */}
                         <button
@@ -115,14 +144,23 @@ export default function Navbar({ onOrderClick }: NavbarProps) {
                     style={{ background: "rgba(5,5,5,0.98)", borderColor: "rgba(255,255,255,0.06)" }}
                 >
                     <div className="section-container py-4 space-y-1">
+                        {isSubPage && (
+                            <a
+                                href="/public/dashboard"
+                                className="block w-full text-left px-4 py-3 rounded-lg text-sm transition-all duration-200"
+                                style={{ color: pathname.includes("/dashboard") ? "#fff" : "var(--color-text-muted)", background: pathname.includes("/dashboard") ? "rgba(99,102,241,0.12)" : "transparent" }}
+                            >
+                                Dashboard
+                            </a>
+                        )}
                         {navItems.map((item, i) => (
                             <button
                                 key={item.label}
                                 onClick={() => handleClick(i, item.href)}
                                 className="w-full text-left px-4 py-3 rounded-lg text-sm transition-all duration-200"
                                 style={{
-                                    color: active === i ? "#fff" : "var(--color-text-muted)",
-                                    background: active === i ? "rgba(99,102,241,0.12)" : "transparent",
+                                    color: !isSubPage && active === i ? "#fff" : "var(--color-text-muted)",
+                                    background: !isSubPage && active === i ? "rgba(99,102,241,0.12)" : "transparent",
                                 }}
                             >
                                 {item.label}
@@ -137,7 +175,6 @@ export default function Navbar({ onOrderClick }: NavbarProps) {
                         >
                             Admin
                         </a>
-                        {/* Place an Order button removed - moved to FAB */}
                     </div>
                 </div>
             )}

@@ -9,9 +9,11 @@ interface Order {
     gross_amount: number; down_payment_amount: number; down_payment_status: string;
     final_payment_amount: number; final_payment_status: string;
     evidence_links: Array<{ url: string; publicId: string; uploadedAt: string }>;
+    result_files: Array<{ name: string; url: string; type: string; size: number; uploadedAt: string }>;
     uuid_token: string; chat_enabled: boolean; created_at: string; updated_at: string;
     pricing_details?: any;
 }
+interface ResultFile { name: string; url: string; type: string; size: number; uploadedAt: string; }
 interface ChatMsg { id: string; sender: "customer" | "admin"; message: string; created_at: string; }
 interface PricingItem { id: string; service: string; label: string; price_usd: number; }
 interface PortfolioItem { id: string; title: string; description: string; service_type: string; tags: string[]; image_url: string; is_published: boolean; }
@@ -49,7 +51,7 @@ export default function AdminPage() {
     const [loading, setLoading] = useState(false);
     const [selected, setSelected] = useState<Order | null>(null);
     const [activeChat, setActiveChat] = useState<Order | null>(null);
-    const [tab, setTab] = useState<"details" | "chat" | "evidence">("details");
+    const [tab, setTab] = useState<"details" | "chat" | "evidence" | "results">("details");
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
     // ─── Pricing ───
@@ -68,8 +70,10 @@ export default function AdminPage() {
     const [sending, setSending] = useState(false);
     const chatEnd = useRef<HTMLDivElement>(null);
 
-    // ─── Evidence ───
+    // ─── Evidence & Results ───
     const [uploading, setUploading] = useState(false);
+    const [resultUploading, setResultUploading] = useState(false);
+    const resultFileRef = useRef<HTMLInputElement>(null);
     const fileRef = useRef<HTMLInputElement>(null);
 
     // ─── Inline Edit ───
@@ -367,9 +371,10 @@ export default function AdminPage() {
 
                                         {/* Tabs */}
                                         <div className="flex gap-1 p-1 rounded-xl bg-white/[0.02] border border-white/[0.06]">
-                                            {(["details", "chat", "evidence"] as const).map((t) => (
+                                            {(["details", "chat", "evidence", "results"] as const).map((t) => (
                                                 <button key={t} onClick={() => setTab(t)} className={`flex-1 py-2 rounded-lg text-xs font-semibold capitalize transition-all ${tab === t ? "bg-blue-500/15 text-blue-400" : "text-white/30 hover:text-white/50"}`}>
                                                     {t}{t === "chat" && selected.chat_enabled && <span className="ml-1 w-1.5 h-1.5 rounded-full bg-green-400 inline-block" />}
+                                                    {t === "results" && (selected.result_files?.length || 0) > 0 && <span className="ml-1 text-[9px] px-1 rounded bg-green-500/20 text-green-400">{selected.result_files.length}</span>}
                                                 </button>
                                             ))}
                                         </div>
@@ -473,6 +478,61 @@ export default function AdminPage() {
                                                 )}
                                             </div>
                                         )}
+
+                                        {/* Tab: Results */}
+                                        {tab === "results" && (
+                                            <div className="rounded-2xl border border-white/[0.06] bg-white/[0.015] p-5 space-y-4">
+                                                <div className="flex items-center justify-between">
+                                                    <div>
+                                                        <h3 className="text-[10px] font-bold uppercase tracking-widest text-white/30">Project Results ({selected.result_files?.length || 0})</h3>
+                                                        <p className="text-[10px] text-white/20 mt-0.5">Upload deliverables for client download</p>
+                                                    </div>
+                                                    <label className="px-3 py-2 rounded-lg text-xs font-semibold cursor-pointer text-white flex items-center gap-1.5 hover:brightness-110" style={{ background: "linear-gradient(135deg, #22C55E, #16A34A)" }}>
+                                                        {Icons.upload} {resultUploading ? "Uploading..." : "Upload File"}
+                                                        <input ref={resultFileRef} type="file" className="hidden" onChange={async (e) => {
+                                                            const file = e.target.files?.[0];
+                                                            if (!file || !selected) return;
+                                                            setResultUploading(true);
+                                                            const fd = new FormData(); fd.append("file", file); fd.append("order_id", selected.id);
+                                                            const res = await fetch("/api/admin/results", { method: "POST", body: fd });
+                                                            const data = await res.json();
+                                                            if (data.success) {
+                                                                const { data: u } = await supabase.from("orders").select("*").eq("id", selected.id).single();
+                                                                if (u) { setSelected(u); fetchOrders(); }
+                                                            } else { alert("Upload failed: " + (data.error || "Unknown")); }
+                                                            setResultUploading(false);
+                                                            if (resultFileRef.current) resultFileRef.current.value = "";
+                                                        }} disabled={resultUploading} />
+                                                    </label>
+                                                </div>
+                                                {(!selected.result_files || selected.result_files.length === 0) ? (
+                                                    <div className="py-12 text-center">
+                                                        <div className="text-3xl mb-2 opacity-20">📦</div>
+                                                        <p className="text-sm text-white/20">No result files uploaded yet</p>
+                                                        <p className="text-[10px] text-white/10 mt-1">Upload deliverables for your client to download</p>
+                                                    </div>
+                                                ) : (
+                                                    <div className="space-y-2">
+                                                        {(selected.result_files as ResultFile[]).map((f, i) => (
+                                                            <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/[0.04] hover:border-white/[0.08] transition-all">
+                                                                <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 text-lg" style={{ background: "rgba(34,197,94,0.1)" }}>
+                                                                    {f.type?.includes("image") ? "🖼️" : f.type?.includes("video") ? "🎬" : f.type?.includes("pdf") ? "📄" : f.type?.includes("zip") || f.type?.includes("rar") ? "📦" : "📎"}
+                                                                </div>
+                                                                <div className="flex-1 min-w-0">
+                                                                    <p className="text-sm font-medium text-white truncate">{f.name}</p>
+                                                                    <p className="text-[10px] text-white/30">
+                                                                        {(f.size / 1024 / 1024).toFixed(2)} MB • {new Date(f.uploadedAt).toLocaleDateString("id-ID")}
+                                                                    </p>
+                                                                </div>
+                                                                <a href={f.url} target="_blank" rel="noopener noreferrer" download className="px-3 py-1.5 rounded-lg text-xs font-semibold text-green-400 border border-green-500/20 hover:bg-green-500/10 transition-all">
+                                                                    Download
+                                                                </a>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
                                     </div>
                                 )}
                             </div>
@@ -527,23 +587,61 @@ export default function AdminPage() {
 
                     {/* ═══ PRICING VIEW ═══ */}
                     {view === "pricing" && (
-                        <div className="p-6 max-w-3xl mx-auto space-y-4">
-                            <p className="text-xs text-white/30">Edit pricing items (saved to Supabase)</p>
-                            {pricing.map(item => (
-                                <div key={item.id} className="flex items-center gap-4 p-4 rounded-2xl bg-white/[0.015] border border-white/[0.06]">
-                                    <div className="flex-1"><p className="text-sm font-semibold text-white">{item.label}</p><p className="text-xs text-white/30">{item.service}</p></div>
-                                    {editingPrice === item.id ? (
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-xs text-white/30">$</span>
-                                            <input type="number" value={editPriceVal} onChange={e => setEditPriceVal(Number(e.target.value))} className="w-20 px-2 py-1 rounded-lg text-sm bg-black/30 border border-white/[0.06] text-white" />
-                                            <button onClick={async () => { await supabase.from("pricing_config").update({ price_usd: editPriceVal }).eq("id", item.id); setEditingPrice(null); const { data } = await supabase.from("pricing_config").select("*").order("service"); setPricing(data || []); }} className="px-3 py-1 rounded-lg text-xs font-medium bg-green-500/10 text-green-400">Save</button>
-                                            <button onClick={() => setEditingPrice(null)} className="px-3 py-1 rounded-lg text-xs text-white/30">Cancel</button>
+                        <div className="p-6 max-w-4xl mx-auto space-y-6">
+                            <div className="flex justify-between items-center">
+                                <div><p className="text-sm font-semibold text-white">Service Pricing</p><p className="text-xs text-white/30">Click any price to edit • All prices in USD</p></div>
+                            </div>
+                            <div className="rounded-2xl border border-white/[0.06] overflow-hidden">
+                                <table className="w-full">
+                                    <thead>
+                                        <tr style={{ background: "rgba(99,102,241,0.08)" }}>
+                                            <th className="text-left px-5 py-3 text-[10px] font-bold uppercase tracking-widest text-indigo-300">Service</th>
+                                            <th className="text-left px-5 py-3 text-[10px] font-bold uppercase tracking-widest text-indigo-300">Package / Tier</th>
+                                            <th className="text-right px-5 py-3 text-[10px] font-bold uppercase tracking-widest text-indigo-300">Price (USD)</th>
+                                            <th className="text-right px-5 py-3 text-[10px] font-bold uppercase tracking-widest text-indigo-300">Calculated (IDR)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {pricing.map((item, i) => {
+                                            const prevService = i > 0 ? pricing[i - 1].service : null;
+                                            const isNewGroup = item.service !== prevService;
+                                            return (
+                                                <tr key={item.id} className="transition-colors hover:bg-white/[0.02]" style={{ borderTop: isNewGroup && i > 0 ? "2px solid rgba(99,102,241,0.15)" : "1px solid rgba(255,255,255,0.03)" }}>
+                                                    <td className="px-5 py-3">{isNewGroup ? <span className="text-xs font-bold text-white">{item.service}</span> : <span className="text-xs text-white/20">↳</span>}</td>
+                                                    <td className="px-5 py-3 text-sm text-white/70">{item.label}</td>
+                                                    <td className="px-5 py-3 text-right">
+                                                        {editingPrice === item.id ? (
+                                                            <div className="flex items-center justify-end gap-1">
+                                                                <span className="text-xs text-white/30">$</span>
+                                                                <input type="number" value={editPriceVal} onChange={e => setEditPriceVal(Number(e.target.value))} className="w-16 px-2 py-1 rounded text-sm bg-black/30 border border-white/[0.06] text-white text-right" autoFocus />
+                                                                <button onClick={async () => { await supabase.from("pricing_config").update({ price_usd: editPriceVal }).eq("id", item.id); setEditingPrice(null); const { data } = await supabase.from("pricing_config").select("*").order("service"); setPricing(data || []); }} className="px-2 py-1 rounded text-[10px] font-bold bg-green-500/15 text-green-400">✓</button>
+                                                                <button onClick={() => setEditingPrice(null)} className="px-2 py-1 rounded text-[10px] text-white/30">✕</button>
+                                                            </div>
+                                                        ) : (
+                                                            <button onClick={() => { setEditingPrice(item.id); setEditPriceVal(item.price_usd); }} className="text-sm font-bold text-indigo-400 hover:text-indigo-300 transition-colors">${item.price_usd}</button>
+                                                        )}
+                                                    </td>
+                                                    <td className="px-5 py-3 text-right text-xs font-mono text-white/30">Rp {(item.price_usd * 16000).toLocaleString("id-ID")}</td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {/* Summary */}
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                {Array.from(new Set(pricing.map(p => p.service))).map(svc => {
+                                    const items = pricing.filter(p => p.service === svc);
+                                    const avgPrice = items.reduce((a, b) => a + b.price_usd, 0) / items.length;
+                                    return (
+                                        <div key={svc} className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06]">
+                                            <p className="text-[10px] font-bold uppercase tracking-widest text-white/30 mb-1">{svc}</p>
+                                            <p className="text-lg font-bold text-white">${items[0].price_usd}<span className="text-xs text-white/30 ml-1">min</span></p>
+                                            <p className="text-[10px] text-white/20">{items.length} tiers • avg ${avgPrice.toFixed(0)}</p>
                                         </div>
-                                    ) : (
-                                        <button onClick={() => { setEditingPrice(item.id); setEditPriceVal(item.price_usd); }} className="px-3 py-1 rounded-lg text-sm font-bold text-indigo-400 hover:bg-indigo-500/10 transition-all">${item.price_usd}</button>
-                                    )}
-                                </div>
-                            ))}
+                                    );
+                                })}
+                            </div>
                         </div>
                     )}
 
