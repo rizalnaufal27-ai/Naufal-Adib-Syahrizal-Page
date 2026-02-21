@@ -144,7 +144,7 @@ export default function TrackProjectPage() {
                                                     background: "rgba(255,255,255,0.02)",
                                                     border: `1px solid ${isActive ? "rgba(99,102,241,0.15)" : "rgba(255,255,255,0.06)"}`,
                                                 }}
-                                                onClick={() => window.open(`/public/dashboard/${order.uuid_token}`, "_blank")}
+                                                onClick={() => window.location.href = `/order/${order.uuid_token}`}
                                             >
                                                 {/* Active indicator */}
                                                 {isActive && (

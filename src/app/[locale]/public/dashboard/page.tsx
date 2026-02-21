@@ -11,6 +11,7 @@ interface Order {
     status: string;
     progress: number;
     created_at: string;
+    uuid_token: string;
 }
 
 export default function FullPublicDashboard() {
@@ -21,7 +22,7 @@ export default function FullPublicDashboard() {
         const fetchOrders = async () => {
             const { data } = await supabase
                 .from("orders")
-                .select("id, order_number, service_type, status, progress, created_at")
+                .select("id, order_number, service_type, status, progress, created_at, uuid_token")
                 .order("created_at", { ascending: false });
 
             if (data) {
@@ -80,12 +81,13 @@ export default function FullPublicDashboard() {
                                         <th className="text-left px-6 py-4 text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--color-text-muted)" }}>
                                             Progress
                                         </th>
+                                        <th className="px-4 py-4"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {orders.length === 0 ? (
                                         <tr>
-                                            <td colSpan={5} className="px-6 py-12 text-center text-sm" style={{ color: "var(--color-text-muted)" }}>
+                                            <td colSpan={6} className="px-6 py-12 text-center text-sm" style={{ color: "var(--color-text-muted)" }}>
                                                 No projects found.
                                             </td>
                                         </tr>
@@ -94,8 +96,9 @@ export default function FullPublicDashboard() {
                                         return (
                                             <tr
                                                 key={order.id}
-                                                className="transition-colors hover:bg-white/[0.02]"
+                                                className="transition-colors hover:bg-white/[0.04] cursor-pointer group"
                                                 style={{ borderBottom: "1px solid var(--color-border)" }}
+                                                onClick={() => window.location.href = `/public/dashboard/${order.uuid_token}`}
                                             >
                                                 <td className="px-6 py-5 text-sm font-mono font-semibold" style={{ color: "var(--color-text)" }}>
                                                     #{order.order_number}
@@ -135,6 +138,11 @@ export default function FullPublicDashboard() {
                                                             {order.progress}%
                                                         </span>
                                                     </div>
+                                                </td>
+                                                <td className="px-4 py-5">
+                                                    <span className="text-xs text-indigo-400/60 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                                        View →
+                                                    </span>
                                                 </td>
                                             </tr>
                                         );
