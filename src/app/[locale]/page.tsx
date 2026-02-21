@@ -66,12 +66,51 @@ export default function Home() {
           <HeroSection onViewResume={handleViewResume} onOrderClick={handleOrderClick} />
         </section>
 
-        {/* Light Background Sections */}
-        <div className="light-mode bg-white relative z-10 pb-20">
+        {/* Dark Cosmic Sections */}
+        <div className="relative z-10 pb-20" style={{ background: "linear-gradient(180deg, #050510 0%, #0a0a1f 15%, #080818 30%, #0c0820 50%, #0a0a1a 70%, #060612 85%, #050510 100%)" }}>
+
+          {/* ═══ Section Divider: Hero → Profile ═══ */}
+          <div className="relative h-24 overflow-hidden">
+            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(139,92,246,0.4), rgba(192,132,252,0.6), rgba(139,92,246,0.4), transparent)" }} />
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full" style={{ background: "#c084fc", boxShadow: "0 0 20px rgba(192,132,252,0.8), 0 0 60px rgba(192,132,252,0.3)", animation: "glowPulse 3s ease-in-out infinite" }} />
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full border border-dashed" style={{ borderColor: "rgba(192,132,252,0.2)", animation: "orbitalSpin 8s linear infinite" }} />
+          </div>
+
           <section id="profile"><ProfileSection /></section>
+
+          {/* ═══ Section Divider ═══ */}
+          <div className="relative h-20 overflow-hidden">
+            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-px" style={{ background: "linear-gradient(90deg, transparent 5%, rgba(236,72,153,0.3) 30%, rgba(139,92,246,0.4) 50%, rgba(99,102,241,0.3) 70%, transparent 95%)" }} />
+            <div className="absolute left-[30%] top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full" style={{ background: "#ec4899", boxShadow: "0 0 10px rgba(236,72,153,0.6)", animation: "cosmicFloat 6s ease-in-out infinite" }} />
+            <div className="absolute left-[70%] top-1/2 -translate-y-1/2 w-1 h-1 rounded-full" style={{ background: "#818cf8", boxShadow: "0 0 8px rgba(129,140,248,0.5)", animation: "cosmicFloat 8s ease-in-out infinite reverse" }} />
+          </div>
+
           <section id="services"><ServicesSection onOpenPricing={handleOrderClick} /></section>
+
+          {/* ═══ Section Divider ═══ */}
+          <div className="relative h-20 overflow-hidden">
+            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(139,92,246,0.3), rgba(6,182,212,0.3), transparent)" }} />
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex gap-2 items-center">
+              {[0, 1, 2].map(i => <div key={i} className="w-1 h-1 rounded-full" style={{ background: "rgba(192,132,252,0.5)", animation: `glowPulse ${2 + i * 0.5}s ease-in-out infinite`, animationDelay: `${i * 0.3}s` }} />)}
+            </div>
+          </div>
+
           <section id="experience"><ExperienceTimeline /></section>
+
+          {/* ═══ Section Divider ═══ */}
+          <div className="relative h-20 overflow-hidden">
+            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(236,72,153,0.25), rgba(139,92,246,0.35), rgba(99,102,241,0.25), transparent)" }} />
+            <div className="absolute right-[35%] top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full" style={{ background: "#a78bfa", boxShadow: "0 0 12px rgba(167,139,250,0.6)", animation: "cosmicFloat 7s ease-in-out infinite" }} />
+          </div>
+
           <section id="skills"><SkillsMarquee /></section>
+
+          {/* ═══ Section Divider ═══ */}
+          <div className="relative h-20 overflow-hidden">
+            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(139,92,246,0.3), rgba(192,132,252,0.4), rgba(139,92,246,0.3), transparent)" }} />
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full" style={{ background: "#8b5cf6", boxShadow: "0 0 15px rgba(139,92,246,0.7), 0 0 40px rgba(139,92,246,0.2)", animation: "glowPulse 3s ease-in-out infinite" }} />
+          </div>
+
           <section id="dashboard"><DashboardPreview /></section>
         </div>
       </main>
