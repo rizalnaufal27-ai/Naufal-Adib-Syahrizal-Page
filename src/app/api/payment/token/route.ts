@@ -60,11 +60,11 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: "Invalid payment_type" }, { status: 400 });
         }
 
-        // TEST MODE BYPASS: auto-approve $0 payments
-        if (amount === 0 && process.env.NEXT_PUBLIC_APP_MODE === "test") {
+        // AUTO-COMPLETE: $0 payments bypass Midtrans entirely
+        if (amount <= 0) {
             const updateField: Record<string, unknown> = payment_type === "down_payment"
                 ? { down_payment_status: "paid", status: "processing", chat_enabled: true, midtrans_order_id: orderId }
-                : { final_payment_status: "paid", status: "completed", midtrans_order_id: orderId };
+                : { final_payment_status: "paid", status: "done", progress: 100, midtrans_order_id: orderId };
 
             await supabase
                 .from("orders")
@@ -76,11 +76,6 @@ export async function POST(request: NextRequest) {
                 bypass: true,
                 redirect_url: `/order/${order.uuid_token}`
             });
-        }
-
-        // Midtrans requires amount > 0
-        if (amount <= 0) {
-            return NextResponse.json({ error: "Payment amount must be greater than 0" }, { status: 400 });
         }
 
         // Create Midtrans Snap transaction
