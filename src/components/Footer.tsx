@@ -2,6 +2,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Instagram, Linkedin, Github, MessageCircle } from "lucide-react";
+import Link from "next/link";
 
 const socialLinks = [
     { name: "Instagram", href: "https://instagram.com/syahrizalnaufal07", icon: Instagram, color: "#E1306C" },
@@ -108,9 +109,9 @@ export default function Footer() {
                         <ul className="space-y-4">
                             {menuLinks.map((link) => (
                                 <li key={link.name}>
-                                    <a href={link.href} className="text-lg text-white/60 hover:text-purple-300 hover:drop-shadow-[0_0_10px_rgba(192,132,252,0.6)] hover:pl-1 transition-all duration-300 inline-block">
+                                    <Link href={link.href} className="text-lg text-white/60 hover:text-purple-300 hover:drop-shadow-[0_0_10px_rgba(192,132,252,0.6)] hover:pl-1 transition-all duration-300 inline-block">
                                         {link.name}
-                                    </a>
+                                    </Link>
                                 </li>
                             ))}
                         </ul>

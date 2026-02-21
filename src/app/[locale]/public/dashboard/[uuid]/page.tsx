@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { CheckCircle2, Circle, Clock, Code2, Database, Layout, Palette, ShieldCheck, Zap } from "lucide-react";
+import Link from "next/link";
 
 interface Order {
     id: string;
@@ -104,8 +105,8 @@ export default function PublicDashboardPage() {
                         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                             {phases.map((phase, i) => (
                                 <div key={i} className={`relative p-4 rounded-xl border transition-all ${phase.status === "active" ? "bg-indigo-500/10 border-indigo-500/30 shadow-lg shadow-indigo-500/10" :
-                                        phase.status === "completed" ? "bg-green-500/5 border-green-500/20" :
-                                            "bg-white/[0.02] border-white/5 opacity-50"
+                                    phase.status === "completed" ? "bg-green-500/5 border-green-500/20" :
+                                        "bg-white/[0.02] border-white/5 opacity-50"
                                     }`}>
                                     <div className="text-xs font-bold uppercase tracking-wider mb-2 opacity-70">
                                         Step 0{i + 1}
@@ -113,7 +114,7 @@ export default function PublicDashboardPage() {
                                     <div className="font-semibold text-sm mb-3">{phase.name}</div>
                                     <div className="h-1 bg-white/10 rounded-full overflow-hidden">
                                         <div className={`h-full transition-all duration-1000 ${phase.status === "completed" ? "bg-green-500 w-full" :
-                                                phase.status === "active" ? "bg-indigo-500 w-1/2 animate-pulse" : "w-0"
+                                            phase.status === "active" ? "bg-indigo-500 w-1/2 animate-pulse" : "w-0"
                                             }`} />
                                     </div>
                                     {phase.status === "completed" && (
@@ -184,9 +185,9 @@ export default function PublicDashboardPage() {
                     {/* CTA */}
                     <div className="rounded-2xl bg-gradient-to-br from-indigo-900/20 to-purple-900/20 border border-indigo-500/20 p-6 text-center">
                         <p className="text-sm font-medium mb-3">Like what you see?</p>
-                        <a href="/" target="_blank" className="block w-full py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold transition-colors">
+                        <Link href="/" target="_blank" className="block w-full py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold transition-colors">
                             Start Your Project
-                        </a>
+                        </Link>
                     </div>
 
                 </div>

@@ -1,7 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { supabase } from "@/lib/supabase";
+import Link from "next/link";
 
 interface Order {
     id: string;
@@ -72,9 +74,9 @@ export default function DashboardPreview() {
                                 <span className="w-2 h-2 rounded-full bg-purple-500 shadow-[0_0_8px_rgba(139,92,246,0.6)]" />
                                 Active Orders
                             </h3>
-                            <a href="/public/dashboard" className="relative z-10 text-xs font-semibold px-4 py-2 rounded-lg transition-all duration-300 hover:-translate-y-[1px] hover:shadow-[0_0_25px_rgba(139,92,246,0.3)]" style={{ background: "linear-gradient(135deg, #7c3aed, #6366F1)", color: "#fff" }}>
+                            <Link href="/public/dashboard" className="relative z-10 text-xs font-semibold px-4 py-2 rounded-lg transition-all duration-300 hover:-translate-y-[1px] hover:shadow-[0_0_25px_rgba(139,92,246,0.3)]" style={{ background: "linear-gradient(135deg, #7c3aed, #6366F1)", color: "#fff" }}>
                                 View Full Dashboard ✦
-                            </a>
+                            </Link>
                         </div>
 
                         {/* Table */}
