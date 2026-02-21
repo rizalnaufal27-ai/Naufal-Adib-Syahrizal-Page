@@ -106,7 +106,7 @@ export default function OrderFormModal({ isOpen, onClose }: OrderFormModalProps)
                     {step === "pricing" && (
                         <>
                             <PricingCalculator onPriceCalculated={handlePriceCalculated} />
-                            {(totalUSD > 0) && (
+                            {(serviceLabel !== "") && (
                                 <button
                                     onClick={() => setStep("details")}
                                     className="w-full mt-5 py-3 rounded-xl text-sm font-semibold text-white transition-all"

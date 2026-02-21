@@ -65,9 +65,140 @@
         "status_heading": "Status",
         "availability": "Ketersediaan",
         "open_work": "Menerima proyek",
-        "timezone": "Zona Waktu",
+        "timezone": "Zona Waktu"
+    },
+    "PricingCalculator": {
+        "chooseService": "Pilih Layanan",
+        "configureOrder": "Konfigurasi opsi pesanan Anda",
         "estimatedTotal": "Estimasi Total",
         "promoTitle": "Promo Proyek Pertama (Diskon 100%)",
-        "promoDesc": "Wujudkan ide kreatif Anda tanpa biaya awal."
+        "promoDesc": "Wujudkan ide kreatif Anda tanpa biaya awal.",
+        "services": {
+            "design": {
+                "label": "Desain Grafis",
+                "desc": "Logo, Spanduk, Poster, Merek"
+            },
+            "illustration": {
+                "label": "Ilustrasi",
+                "desc": "Setengah Badan, Seluruh Tubuh, Render"
+            },
+            "photo": {
+                "label": "Fotografi",
+                "desc": "Jabodetabek • Pengeditan"
+            },
+            "video": {
+                "label": "Produksi Video",
+                "desc": "Pengeditan + Pascaproduksi"
+            },
+            "web": {
+                "label": "Desain Web",
+                "desc": "Responsif + CMS + API"
+            },
+            "app": {
+                "label": "Desain Aplikasi",
+                "desc": "UX, Prototipe, Logika"
+            }
+        },
+        "design": {
+            "select": "Pilih Opsi Desain",
+            "items": {
+                "logo": "Desain Logo",
+                "banner": "Desain Spanduk",
+                "poster": "Desain Poster",
+                "brand": "Paket Merek"
+            }
+        },
+        "illustration": {
+            "char": "kar",
+            "characters": "Karakter",
+            "types": {
+                "half": "Setengah Badan",
+                "full": "Seluruh Tubuh",
+                "render": "Render Penuh"
+            }
+        },
+        "photo": {
+            "modes": {
+                "package": "Paket Penuh",
+                "edit": "Hanya Edit"
+            },
+            "locationPlaceholder": "Lokasi Acara (cth. Jakarta)",
+            "available": "Lokasi dalam Jabodetabek (Tanpa biaya transport)",
+            "notAvailable": "Lokasi luar Jabodetabek (Dikenakan biaya transport)",
+            "addRaw": "Tambah file RAW (+ {price})",
+            "complexity": "Tingkat Kompleksitas Pengeditan"
+        },
+        "video": {
+            "duration": "Durasi",
+            "min": "mnt",
+            "base": "dasar",
+            "complexity": {
+                "low": "Potongan Sederhana",
+                "med": "Edit Standar",
+                "high": "VFX Kompleks"
+            }
+        },
+        "web": {
+            "pages": "Jumlah Halaman",
+            "responsive": "Desain Responsif",
+            "interactivity": "Interaktivitas & CMS",
+            "responsiveModes": {
+                "basic": "Hanya Desktop",
+                "full": "Sepenuhnya Responsif"
+            },
+            "interactivityModes": {
+                "static": "Statis",
+                "dynamic": "Dinamis",
+                "cms": "Dengan CMS"
+            }
+        },
+        "app": {
+            "userFlows": "Alur Pengguna / Layar",
+            "prototypeDepth": "Kedalaman Prototipe",
+            "systemLogic": "Logika Sistem",
+            "prototypeModes": {
+                "lofi": "Tampilan Dasar",
+                "hifi": "Detail Tinggi"
+            },
+            "logicModes": {
+                "simple": "Sederhana",
+                "moderate": "Database",
+                "complex": "Sistem Penuh"
+            }
+        }
+    },
+    "OrderForm": {
+        "steps": {
+            "pricing": "Kalkulator Harga",
+            "details": "Detail Anda",
+            "review": "Tinjau Pesanan",
+            "success": "Berhasil!"
+        },
+        "continue": "Lanjutkan →",
+        "fields": {
+            "name": "Nama Lengkap",
+            "email": "Alamat Email",
+            "description": "Deskripsi Proyek (Opsional)"
+        },
+        "actions": {
+            "back": "Kembali",
+            "review": "Tinjau Pesanan",
+            "placeOrder": "Buat Pesanan",
+            "placingOrder": "Membuat Pesanan...",
+            "copy": "Salin",
+            "openProject": "Buka Portal Proyek",
+            "close": "Tutup"
+        },
+        "review": {
+            "service": "Layanan",
+            "estimatedPrice": "Estimasi Harga",
+            "downPayment": "Estimasi Uang Muka (20%)",
+            "finalPayment": "Estimasi Pelunasan (80%)"
+        },
+        "success": {
+            "title": "Pesanan #{orderNumber} Dibuat!",
+            "subtitle": "Pesanan Anda telah dicatat. Kami akan segera menghubungi Anda.",
+            "privateLink": "Simpan tautan pribadi ini untuk melacak proyek Anda:"
+        }
     }
 }

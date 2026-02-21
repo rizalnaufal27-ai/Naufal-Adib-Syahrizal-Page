@@ -34,13 +34,13 @@ export default function PromoCarousel() {
                     {promos.map((promo) => (
                         <div
                             key={promo.id}
-                            className="snap-center shrink-0 w-[85vw] md:w-[60vw] max-w-4xl relative group"
+                            className="snap-center shrink-0 h-[280px] sm:h-[350px] md:h-[450px] relative group"
                         >
-                            <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-pink-500/20 rounded-2xl md:rounded-3xl blur-xl group-hover:opacity-100 opacity-60 transition-opacity duration-500" />
+                            <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-pink-500/20 rounded-2xl md:rounded-3xl blur-xl group-hover:opacity-100 opacity-60 transition-opacity duration-500 pointer-events-none" />
                             <img
                                 src={promo.src}
                                 alt={promo.alt}
-                                className="w-full aspect-[4/3] md:aspect-[16/9] object-cover rounded-2xl md:rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-white/10 relative z-10 transition-transform duration-500 group-hover:scale-[1.02]"
+                                className="h-full w-auto object-contain rounded-2xl md:rounded-3xl border border-white/10 relative z-10 transition-transform duration-500 group-hover:scale-[1.02]"
                             />
                         </div>
                     ))}

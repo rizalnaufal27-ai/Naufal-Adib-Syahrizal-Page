@@ -65,9 +65,140 @@
         "status_heading": "Status",
         "availability": "Availability",
         "open_work": "Open for work",
+        "timezone": "Timezone"
+    },
+    "PricingCalculator": {
+        "chooseService": "Choose a Service",
+        "configureOrder": "Configure your order options",
         "estimatedTotal": "Estimated Total",
         "promoTitle": "First Project Promo (100% OFF)",
         "promoDesc": "Bring your creative ideas to life with zero initial cost.",
-        "timezone": "Timezone"
+        "services": {
+            "design": {
+                "label": "Graphic Design",
+                "desc": "Logo, Banner, Poster, Brand"
+            },
+            "illustration": {
+                "label": "Illustration",
+                "desc": "Half Body, Full Body, Render"
+            },
+            "photo": {
+                "label": "Photography",
+                "desc": "Jabodetabek • Editing"
+            },
+            "video": {
+                "label": "Video Production",
+                "desc": "Editing + Post-Production"
+            },
+            "web": {
+                "label": "Web Design",
+                "desc": "Responsive + CMS + API"
+            },
+            "app": {
+                "label": "App Design",
+                "desc": "UX, Prototype, Logic"
+            }
+        },
+        "design": {
+            "select": "Select Design Options",
+            "items": {
+                "logo": "Logo Design",
+                "banner": "Banner Design",
+                "poster": "Poster Design",
+                "brand": "Brand Package"
+            }
+        },
+        "illustration": {
+            "char": "char",
+            "characters": "Characters",
+            "types": {
+                "half": "Half Body",
+                "full": "Full Body",
+                "render": "Full Render"
+            }
+        },
+        "photo": {
+            "modes": {
+                "package": "Full Package",
+                "edit": "Editing Only"
+            },
+            "locationPlaceholder": "Event Location (e.g. Jakarta)",
+            "available": "Location is within Jabodetabek (No transport fee)",
+            "notAvailable": "Location outside Jabodetabek (Transport fee applies)",
+            "addRaw": "Add RAW files (+ {price})",
+            "complexity": "Editing Complexity Level"
+        },
+        "video": {
+            "duration": "Duration",
+            "min": "min",
+            "base": "base",
+            "complexity": {
+                "low": "Simple Cuts",
+                "med": "Standard Edit",
+                "high": "Complex VFX"
+            }
+        },
+        "web": {
+            "pages": "Number of Pages",
+            "responsive": "Responsive Design",
+            "interactivity": "Interactivity & CMS",
+            "responsiveModes": {
+                "basic": "Desktop Only",
+                "full": "Fully Responsive"
+            },
+            "interactivityModes": {
+                "static": "Static",
+                "dynamic": "Dynamic",
+                "cms": "With CMS"
+            }
+        },
+        "app": {
+            "userFlows": "User Flows / Screens",
+            "prototypeDepth": "Prototype Depth",
+            "systemLogic": "System Logic",
+            "prototypeModes": {
+                "lofi": "Wireframes",
+                "hifi": "High-Fidelity"
+            },
+            "logicModes": {
+                "simple": "Simple",
+                "moderate": "Database",
+                "complex": "Full System"
+            }
+        }
+    },
+    "OrderForm": {
+        "steps": {
+            "pricing": "Pricing Calculator",
+            "details": "Your Details",
+            "review": "Review Order",
+            "success": "Success!"
+        },
+        "continue": "Continue →",
+        "fields": {
+            "name": "Full Name",
+            "email": "Email Address",
+            "description": "Project Description (Optional)"
+        },
+        "actions": {
+            "back": "Back",
+            "review": "Review Order",
+            "placeOrder": "Place Order",
+            "placingOrder": "Placing Order...",
+            "copy": "Copy",
+            "openProject": "Open Project Portal",
+            "close": "Close"
+        },
+        "review": {
+            "service": "Service",
+            "estimatedPrice": "Estimated Price",
+            "downPayment": "Estimated Down Payment (20%)",
+            "finalPayment": "Estimated Final Payment (80%)"
+        },
+        "success": {
+            "title": "Order #{orderNumber} Placed!",
+            "subtitle": "Your order has been recorded. We will contact you soon.",
+            "privateLink": "Save this private link to track your project:"
+        }
     }
 }
