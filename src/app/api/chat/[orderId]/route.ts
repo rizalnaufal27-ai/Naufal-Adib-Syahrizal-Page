@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { sendAdminChatNotification } from "@/lib/email";
 
 // GET: Fetch chat messages for an order
 export async function GET(
@@ -92,6 +93,28 @@ export async function POST(
 
         if (error) {
             return NextResponse.json({ error: "Failed to send message" }, { status: 500 });
+        }
+
+        // Send email notification to admin if client sent the message
+        if (sender === "customer") {
+            try {
+                const { data: orderDetails } = await supabase
+                    .from("orders")
+                    .select("customer_name, order_number, service_type")
+                    .eq("id", orderId)
+                    .single();
+
+                if (orderDetails) {
+                    await sendAdminChatNotification({
+                        customerName: orderDetails.customer_name,
+                        orderNumber: orderDetails.order_number,
+                        message,
+                        serviceType: orderDetails.service_type,
+                    });
+                }
+            } catch (emailErr) {
+                console.error("Failed to send admin chat notification:", emailErr);
+            }
         }
 
         return NextResponse.json({ success: true, message: data });
