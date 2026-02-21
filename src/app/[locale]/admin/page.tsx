@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import PricingCalculator from "@/components/pricing/PricingCalculator";
 
@@ -39,6 +39,37 @@ const Icons = {
 // ─── Colors ───
 const statusColor = (s: string) => ({ pending: "#EAB308", processing: "#3B82F6", done: "#22C55E", cancelled: "#EF4444", paid: "#22C55E", unpaid: "#EF4444" }[s] || "#6B7280");
 const fmt = (n: number) => `Rp ${(n || 0).toLocaleString("id-ID")}`;
+
+// ═══════════════════════════════════════════
+//  CHAT BUBBLE COMPONENT
+// ═══════════════════════════════════════════
+const ChatBubble = ({ m, name }: { m: ChatMsg; name: string }) => (
+    <div className={`flex ${m.sender === "admin" ? "justify-end" : "justify-start"}`}>
+        <div className="max-w-[75%] rounded-2xl px-4 py-2.5" style={{
+            background: m.sender === "admin" ? "linear-gradient(135deg, #3B82F6, #2563EB)" : "rgba(255,255,255,0.06)",
+            borderBottomRightRadius: m.sender === "admin" ? "6px" : "16px",
+            borderBottomLeftRadius: m.sender === "customer" ? "6px" : "16px",
+        }}>
+            <p className="text-[10px] font-semibold mb-0.5" style={{ color: m.sender === "admin" ? "rgba(255,255,255,0.7)" : "#6366F1" }}>
+                {m.sender === "admin" ? "You" : name}
+            </p>
+            {m.message.startsWith("[FILE]") ? (
+                <a href={m.message.split("|").slice(1).join("|")} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 p-2 rounded-lg mt-0.5 hover:brightness-110 transition-all shadow-sm" style={{ background: m.sender === "admin" ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.08)" }}>
+                    <div className="p-1.5 rounded-md" style={{ background: "rgba(255,255,255,0.1)" }}>{Icons.copy}</div>
+                    <div className="flex flex-col">
+                        <span className="text-xs font-semibold truncate max-w-[140px]" style={{ color: m.sender === "admin" ? "#fff" : "var(--color-text)" }}>{m.message.slice(6).split("|")[0]}</span>
+                        <span className="text-[9px]" style={{ color: m.sender === "admin" ? "rgba(255,255,255,0.6)" : "var(--color-text-muted)" }}>Attachment Click to view</span>
+                    </div>
+                </a>
+            ) : (
+                <p className="text-sm" style={{ color: m.sender === "admin" ? "#fff" : "#e5e7eb" }}>{m.message}</p>
+            )}
+            <p className="text-[10px] mt-1" style={{ color: m.sender === "admin" ? "rgba(255,255,255,0.5)" : "#6b7280" }}>
+                {new Date(m.created_at).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}
+            </p>
+        </div>
+    </div>
+);
 
 export default function AdminPage() {
     // ─── Auth ───
@@ -200,7 +231,7 @@ export default function AdminPage() {
     // ═══════════════════════════════════════════
     //  SIDEBAR NAV ITEMS
     // ═══════════════════════════════════════════
-    const navItems: { key: AdminView; label: string; icon: JSX.Element; count?: number; section?: string }[] = [
+    const navItems: { key: AdminView; label: string; icon: React.ReactNode; count?: number; section?: string }[] = [
         { key: "orders", label: "Orders", icon: Icons.orders, count: orders.length, section: "Management" },
         { key: "pricing", label: "Pricing", icon: Icons.pricing, section: "Management" },
         { key: "portfolio", label: "Portfolio", icon: Icons.portfolio, count: portfolio.length, section: "Management" },
@@ -212,51 +243,6 @@ export default function AdminPage() {
         if (v === "pricing") supabase.from("pricing_config").select("*").order("service").then(({ data }) => setPricing(data || []));
         if (v === "portfolio") supabase.from("portfolio_items").select("*").order("created_at", { ascending: false }).then(({ data }) => setPortfolio(data || []));
     };
-
-    // ═══════════════════════════════════════════
-    //  CHAT BUBBLE COMPONENT
-    // ═══════════════════════════════════════════
-    const ChatBubble = ({ m, name }: { m: ChatMsg; name: string }) => (
-        <div className={`flex ${m.sender === "admin" ? "justify-end" : "justify-start"}`}>
-            <div className="max-w-[75%] rounded-2xl px-4 py-2.5" style={{
-                background: m.sender === "admin" ? "linear-gradient(135deg, #3B82F6, #2563EB)" : "rgba(255,255,255,0.06)",
-                borderBottomRightRadius: m.sender === "admin" ? "6px" : "16px",
-                borderBottomLeftRadius: m.sender === "customer" ? "6px" : "16px",
-            }}>
-                <p className="text-[10px] font-semibold mb-0.5" style={{ color: m.sender === "admin" ? "rgba(255,255,255,0.7)" : "#6366F1" }}>
-                    {m.sender === "admin" ? "You" : name}
-                </p>
-                {m.message.startsWith("[FILE]") ? (
-                    <a href={m.message.split("|").slice(1).join("|")} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 p-2 rounded-lg mt-0.5 hover:brightness-110 transition-all shadow-sm" style={{ background: m.sender === "admin" ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.08)" }}>
-                        <div className="p-1.5 rounded-md" style={{ background: "rgba(255,255,255,0.1)" }}>{Icons.copy}</div>
-                        <div className="flex flex-col">
-                            <span className="text-xs font-semibold truncate max-w-[140px]" style={{ color: m.sender === "admin" ? "#fff" : "var(--color-text)" }}>{m.message.slice(6).split("|")[0]}</span>
-                            <span className="text-[9px]" style={{ color: m.sender === "admin" ? "rgba(255,255,255,0.6)" : "var(--color-text-muted)" }}>Attachment Click to view</span>
-                        </div>
-                    </a>
-                ) : (
-                    <p className="text-sm" style={{ color: m.sender === "admin" ? "#fff" : "#e5e7eb" }}>{m.message}</p>
-                )}
-                <p className="text-[10px] mt-1" style={{ color: m.sender === "admin" ? "rgba(255,255,255,0.5)" : "#6b7280" }}>
-                    {new Date(m.created_at).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}
-                </p>
-            </div>
-        </div>
-    );
-
-    // ═══════════════════════════════════════════
-    //  CHAT INPUT BAR
-    // ═══════════════════════════════════════════
-    const ChatInputBar = () => (
-        <div className="p-3 flex gap-2 border-t border-white/[0.06] bg-[#0a0a0a] items-center">
-            <input type="file" className="hidden" ref={chatFileRef} onChange={handleChatUpload} />
-            <button onClick={() => chatFileRef.current?.click()} disabled={chatUploading} className="p-2.5 rounded-xl text-white/40 hover:text-white hover:bg-white/10 transition-all" title="Attach Document">
-                {chatUploading ? <div className="animate-spin">{Icons.refresh}</div> : Icons.upload}
-            </button>
-            <input type="text" value={chatInput} onChange={(e) => setChatInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && (e.preventDefault(), sendMsg())} placeholder="Type a message..." className="flex-1 px-4 py-2.5 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500/30 bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/20" />
-            <button onClick={sendMsg} disabled={!chatInput.trim() || sending} className="px-4 py-2.5 rounded-xl text-white disabled:opacity-40 transition-all hover:brightness-110" style={{ background: "linear-gradient(135deg, #3B82F6, #2563EB)" }}>{Icons.send}</button>
-        </div>
-    );
 
     // ═══════════════════════════════════════════
     //  STATUS BADGE
@@ -314,7 +300,7 @@ export default function AdminPage() {
                             </button>
                         );
                         return acc;
-                    }, [] as JSX.Element[])}
+                    }, [] as React.ReactNode[])}
                 </nav>
 
                 {/* Bottom Actions */}
@@ -481,7 +467,14 @@ export default function AdminPage() {
                                                                 : msgs.map(m => <ChatBubble key={m.id} m={m} name={selected.customer_name || "Customer"} />)}
                                                             <div ref={chatEnd} />
                                                         </div>
-                                                        <ChatInputBar />
+                                                        <div className="p-3 flex gap-2 border-t border-white/[0.06] bg-[#0a0a0a] items-center">
+                                                            <input type="file" className="hidden" ref={chatFileRef} onChange={handleChatUpload} />
+                                                            <button onClick={() => chatFileRef.current?.click()} disabled={chatUploading} className="p-2.5 rounded-xl text-white/40 hover:text-white hover:bg-white/10 transition-all" title="Attach Document">
+                                                                {chatUploading ? <div className="animate-spin">{Icons.refresh}</div> : Icons.upload}
+                                                            </button>
+                                                            <input type="text" value={chatInput} onChange={(e) => setChatInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && (e.preventDefault(), sendMsg())} placeholder="Type a message..." className="flex-1 px-4 py-2.5 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500/30 bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/20" />
+                                                            <button onClick={sendMsg} disabled={!chatInput.trim() || sending} className="px-4 py-2.5 rounded-xl text-white disabled:opacity-40 transition-all hover:brightness-110" style={{ background: "linear-gradient(135deg, #3B82F6, #2563EB)" }}>{Icons.send}</button>
+                                                        </div>
                                                     </>
                                                 )}
                                             </div>
@@ -611,7 +604,14 @@ export default function AdminPage() {
                                                 : msgs.map(m => <ChatBubble key={m.id} m={m} name={activeChat.customer_name || "Customer"} />)}
                                             <div ref={chatEnd} />
                                         </div>
-                                        <ChatInputBar />
+                                        <div className="p-3 flex gap-2 border-t border-white/[0.06] bg-[#0a0a0a] items-center">
+                                            <input type="file" className="hidden" ref={chatFileRef} onChange={handleChatUpload} />
+                                            <button onClick={() => chatFileRef.current?.click()} disabled={chatUploading} className="p-2.5 rounded-xl text-white/40 hover:text-white hover:bg-white/10 transition-all" title="Attach Document">
+                                                {chatUploading ? <div className="animate-spin">{Icons.refresh}</div> : Icons.upload}
+                                            </button>
+                                            <input type="text" value={chatInput} onChange={(e) => setChatInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && (e.preventDefault(), sendMsg())} placeholder="Type a message..." className="flex-1 px-4 py-2.5 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500/30 bg-white/[0.04] border border-white/[0.08] text-white placeholder:text-white/20" />
+                                            <button onClick={sendMsg} disabled={!chatInput.trim() || sending} className="px-4 py-2.5 rounded-xl text-white disabled:opacity-40 transition-all hover:brightness-110" style={{ background: "linear-gradient(135deg, #3B82F6, #2563EB)" }}>{Icons.send}</button>
+                                        </div>
                                     </>
                                 )}
                             </div>

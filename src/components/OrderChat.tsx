@@ -46,9 +46,16 @@ export default function OrderChat({ orderId, uuidToken, chatEnabled }: OrderChat
         };
     }, [chatEnabled, isOpen, fetchMessages]);
 
+    const isInitialMount = useRef(true);
+
     useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [messages]);
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+        } else {
+            // Scroll to bottom on new message
+            messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [messages.length]);
 
     const handleSend = async () => {
         if (!newMessage.trim() || sending) return;

@@ -1,80 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState, useEffect } from "react";
 import { Volume2, VolumeX, Music } from "lucide-react";
+import { useAudio } from "./AudioContext";
 
 export default function SpaceAmbience() {
-    const [isPlaying, setIsPlaying] = useState(false);
-    const audioRef = useRef<HTMLAudioElement | null>(null);
-    const [hasInteracted, setHasInteracted] = useState(false);
-
-    // Initialize Audio
-    useEffect(() => {
-        // Create audio element programmatically to keep DOM clean
-        const audio = new Audio("/audio/freesound_community-peaceful-24736.mp3");
-        audio.loop = true;
-        audio.volume = 0.4;
-        audioRef.current = audio;
-
-        // Cleanup
-        return () => {
-            audio.pause();
-            audio.src = "";
-        };
-    }, []);
-
-    const toggleAudio = () => {
-        if (!audioRef.current) return;
-
-        if (isPlaying) {
-            audioRef.current.pause();
-            setIsPlaying(false);
-        } else {
-            // Play
-            audioRef.current.play().then(() => {
-                setIsPlaying(true);
-            }).catch(err => {
-                console.error("Audio play failed:", err);
-                // If file missing, maybe show a toast or just fail silently
-            });
-        }
-    };
-
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file && audioRef.current) {
-            const url = URL.createObjectURL(file);
-            audioRef.current.src = url;
-            audioRef.current.play().then(() => setIsPlaying(true)).catch(console.error);
-            setHasInteracted(true);
-        }
-    };
-
-    // Auto-start on first interaction
-    useEffect(() => {
-        const handleInteraction = () => {
-            if (!hasInteracted && audioRef.current) {
-                setHasInteracted(true);
-                // Attempt auto-play if user clicks
-                audioRef.current.play().then(() => {
-                    setIsPlaying(true);
-                }).catch(() => {
-                    // Autoplay might strictly block even after click if context wrong, but usually click is fine
-                });
-            }
-        };
-
-        if (!hasInteracted) {
-            document.addEventListener('click', handleInteraction, { once: true });
-        }
-
-        return () => {
-            document.removeEventListener('click', handleInteraction);
-        };
-    }, [hasInteracted]);
-
-    // Prevent Hydration Mismatch
+    const { isPlaying, toggleAudio, handleFileChange } = useAudio();
     const [isMounted, setIsMounted] = useState(false);
+
     useEffect(() => { setIsMounted(true); }, []);
 
     if (!isMounted) return null;
