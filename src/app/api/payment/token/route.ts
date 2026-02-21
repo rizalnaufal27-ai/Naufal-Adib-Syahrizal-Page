@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
-import { createSnapTransaction } from "@/lib/midtrans";
+import { createSnapTransaction, coreApi } from "@/lib/midtrans";
+import { sendPaymentConfirmation } from "@/lib/email";
 
 export async function POST(request: NextRequest) {
     try {
@@ -35,12 +36,23 @@ export async function POST(request: NextRequest) {
             }
             amount = order.down_payment_amount;
             itemName = `Down Payment (20%) - ${order.service_type} #${order.order_number}`;
-            // Reuse existing midtrans_order_id if it was a DP and is still pending
+
+            // Check if existing token was actually paid but webhook missed it
             if (order.midtrans_order_id && order.midtrans_order_id.startsWith("DP-") && order.down_payment_status === "pending") {
-                orderId = order.midtrans_order_id;
-            } else {
-                orderId = `DP-${order.order_number}-${Date.now()}`;
+                try {
+                    const statusRes = await coreApi.transaction.status(order.midtrans_order_id);
+                    if (statusRes.transaction_status === "capture" || statusRes.transaction_status === "settlement") {
+                        const newStatus = (statusRes.fraud_status === "accept" || !statusRes.fraud_status) ? "paid" : "pending";
+                        if (newStatus === "paid") {
+                            await supabase.from("orders").update({ down_payment_status: "paid", status: "processing", chat_enabled: true }).eq("id", order.id);
+                            await sendPaymentConfirmation({ to: order.customer_email, customerName: order.customer_name, orderNumber: order.order_number, paymentType: "down_payment", amount, uuidToken: order.uuid_token });
+                            return NextResponse.json({ success: true, bypass: true, redirect_url: `/order/${order.uuid_token}` });
+                        }
+                    }
+                } catch { /* Ignore status check errors */ }
             }
+            // Generate a fresh orderId to avoid midtrans duplicate ID conflicts
+            orderId = `DP-${order.order_number}-${Date.now()}`;
         } else if (payment_type === "final_payment") {
             if (order.final_payment_status === "paid") {
                 return NextResponse.json({ error: "Final payment already paid" }, { status: 400 });
@@ -50,12 +62,23 @@ export async function POST(request: NextRequest) {
             }
             amount = order.final_payment_amount;
             itemName = `Final Payment (80%) - ${order.service_type} #${order.order_number}`;
-            // Reuse existing midtrans_order_id if it was a FP and is still pending
+
+            // Check if existing token was actually paid but webhook missed it
             if (order.midtrans_order_id && order.midtrans_order_id.startsWith("FP-") && order.final_payment_status === "pending") {
-                orderId = order.midtrans_order_id;
-            } else {
-                orderId = `FP-${order.order_number}-${Date.now()}`;
+                try {
+                    const statusRes = await coreApi.transaction.status(order.midtrans_order_id);
+                    if (statusRes.transaction_status === "capture" || statusRes.transaction_status === "settlement") {
+                        const newStatus = (statusRes.fraud_status === "accept" || !statusRes.fraud_status) ? "paid" : "pending";
+                        if (newStatus === "paid") {
+                            await supabase.from("orders").update({ final_payment_status: "paid", status: "done", progress: 100, chat_enabled: false }).eq("id", order.id);
+                            await sendPaymentConfirmation({ to: order.customer_email, customerName: order.customer_name, orderNumber: order.order_number, paymentType: "final_payment", amount, uuidToken: order.uuid_token });
+                            return NextResponse.json({ success: true, bypass: true, redirect_url: `/order/${order.uuid_token}` });
+                        }
+                    }
+                } catch { /* Ignore status check errors */ }
             }
+            // Generate a fresh orderId to avoid duplicate conflicts
+            orderId = `FP-${order.order_number}-${Date.now()}`;
         } else {
             return NextResponse.json({ error: "Invalid payment_type" }, { status: 400 });
         }

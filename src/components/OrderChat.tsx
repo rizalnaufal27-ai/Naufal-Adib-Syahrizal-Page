@@ -18,8 +18,10 @@ export default function OrderChat({ orderId, uuidToken, chatEnabled }: OrderChat
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [newMessage, setNewMessage] = useState("");
     const [sending, setSending] = useState(false);
+    const [uploading, setUploading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
     const fetchMessages = useCallback(async () => {
@@ -72,6 +74,34 @@ export default function OrderChat({ orderId, uuidToken, chatEnabled }: OrderChat
             // Handle error silently
         } finally {
             setSending(false);
+        }
+    };
+
+    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file || uploading) return;
+
+        setUploading(true);
+        try {
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("sender", "customer");
+            formData.append("uuid_token", uuidToken);
+
+            const res = await fetch(`/api/chat/${orderId}/upload`, {
+                method: "POST",
+                body: formData,
+            });
+
+            const data = await res.json();
+            if (data.success) {
+                fetchMessages();
+            }
+        } catch {
+            // Handle error silently
+        } finally {
+            setUploading(false);
+            if (fileInputRef.current) fileInputRef.current.value = "";
         }
     };
 
@@ -171,9 +201,31 @@ export default function OrderChat({ orderId, uuidToken, chatEnabled }: OrderChat
                                             borderBottomLeftRadius: msg.sender === "admin" ? "6px" : "16px",
                                         }}
                                     >
-                                        <p className="text-sm" style={{ color: msg.sender === "customer" ? "#fff" : "var(--color-text)" }}>
-                                            {msg.message}
-                                        </p>
+                                        {msg.message.startsWith("[FILE]") ? (
+                                            <a
+                                                href={msg.message.split("|").slice(1).join("|")}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-2 p-2 rounded-lg mt-0.5 hover:brightness-110 transition-all shadow-sm"
+                                                style={{ background: msg.sender === "customer" ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.08)" }}
+                                            >
+                                                <div className="p-1.5 rounded-md" style={{ background: "rgba(255,255,255,0.1)" }}>
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                        <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+                                                    </svg>
+                                                </div>
+                                                <div className="flex flex-col">
+                                                    <span className="text-xs font-semibold truncate max-w-[140px]" style={{ color: msg.sender === "customer" ? "#fff" : "var(--color-text)" }}>
+                                                        {msg.message.slice(6).split("|")[0]}
+                                                    </span>
+                                                    <span className="text-[9px]" style={{ color: msg.sender === "customer" ? "rgba(255,255,255,0.6)" : "var(--color-text-muted)" }}>Attachment Click to view</span>
+                                                </div>
+                                            </a>
+                                        ) : (
+                                            <p className="text-sm break-words" style={{ color: msg.sender === "customer" ? "#fff" : "var(--color-text)" }}>
+                                                {msg.message}
+                                            </p>
+                                        )}
                                         <p
                                             className="text-[10px] mt-1"
                                             style={{ color: msg.sender === "customer" ? "rgba(255,255,255,0.6)" : "var(--color-text-muted)" }}
@@ -188,7 +240,25 @@ export default function OrderChat({ orderId, uuidToken, chatEnabled }: OrderChat
                     </div>
 
                     {/* Input */}
-                    <div className="p-3 flex gap-2 relative z-20" style={{ borderTop: "1px solid var(--color-border)" }}>
+                    <div className="p-3 flex gap-2 relative z-20 items-center" style={{ borderTop: "1px solid var(--color-border)" }}>
+                        <input type="file" ref={fileInputRef} hidden onChange={handleFileUpload} />
+                        <button
+                            onClick={() => fileInputRef.current?.click()}
+                            disabled={uploading}
+                            className="p-2.5 rounded-xl transition-all hover:bg-white/10"
+                            style={{ color: "var(--color-text-muted)" }}
+                            title="Attach Document"
+                        >
+                            {uploading ? (
+                                <svg className="animate-spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                    <circle cx="12" cy="12" r="10" strokeOpacity="0.3" /><path d="M12 2a10 10 0 0 1 10 10" />
+                                </svg>
+                            ) : (
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+                                </svg>
+                            )}
+                        </button>
                         <input
                             type="text"
                             value={newMessage}

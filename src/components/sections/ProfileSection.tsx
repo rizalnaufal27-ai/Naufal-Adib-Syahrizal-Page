@@ -40,7 +40,7 @@ export default function ProfileSection() {
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" style={{ background: "radial-gradient(circle at 20% 50%, rgba(139,92,246,0.08) 0%, transparent 50%)" }} />
                     <div className="flex items-center gap-3 mb-4 relative z-10">
                         <div className="w-3 h-3 rounded-full shadow-[0_0_10px_rgba(139,92,246,0.6)]" style={{ background: "linear-gradient(135deg, #8B5CF6, #6366F1)" }} />
-                        <h3 className="text-xl font-bold" style={{ color: "#E8E0FF" }}>Visi</h3>
+                        <h3 className="text-xl font-bold" style={{ color: "#E8E0FF" }}>Vision</h3>
                     </div>
                     <p className="leading-relaxed text-lg relative z-10 text-justify" style={{ color: "#C8BFE8" }}>
                         I am a versatile creative professional specializing in bridging the gap between artistic vision and functional design. With expertise spanning <strong className="font-bold" style={{ color: "#D4ADFC" }}>Graphic Design, Illustration, Photography, Video Editing, Web Design, and App Development</strong>, I act as a one-stop creative partner for brands and individuals looking to elevate their visual identity.
@@ -52,7 +52,7 @@ export default function ProfileSection() {
                     <div className="absolute top-0 right-0 w-48 h-48 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(236,72,153,0.08) 0%, transparent 60%)", filter: "blur(40px)", animation: "nebulaPulse 10s ease-in-out infinite" }} />
                     <div className="flex items-center gap-3 mb-4 relative z-10">
                         <div className="w-3 h-3 rounded-full shadow-[0_0_10px_rgba(236,72,153,0.6)]" style={{ background: "linear-gradient(135deg, #EC4899, #8B5CF6)" }} />
-                        <h3 className="text-xl font-bold" style={{ color: "#E8E0FF" }}>Misi</h3>
+                        <h3 className="text-xl font-bold" style={{ color: "#E8E0FF" }}>Mision</h3>
                     </div>
                     <p className="text-lg font-medium italic mb-3 relative z-10 text-justify" style={{ background: "linear-gradient(90deg, #f9a8d4, #d8b4fe, #a5b4fc)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                         To transform complex ideas into compelling visual stories that resonate.

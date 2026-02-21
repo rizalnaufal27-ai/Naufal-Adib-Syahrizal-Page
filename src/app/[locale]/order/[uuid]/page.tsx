@@ -115,6 +115,7 @@ export default function UnifiedOrderPage() {
     );
 
     // === Phase Logic ===
+    const isConsultation = order.service_type === "Consultation";
     const isDepositPaid = order.down_payment_status === "paid";
     const isCompleted = order.final_payment_status === "paid";
 
@@ -198,50 +199,52 @@ export default function UnifiedOrderPage() {
             </header>
 
             {/* ============ WORKFLOW PROGRESS BAR ============ */}
-            <div className="border-b border-white/5 bg-white/[0.01]">
-                <div className="max-w-6xl mx-auto px-4 md:px-6 py-6">
-                    <div className="grid grid-cols-4 gap-2 md:gap-4">
-                        {phases.map((phase, i) => {
-                            const PhaseIcon = phase.icon;
-                            return (
-                                <div
-                                    key={i}
-                                    className={`relative p-3 md:p-4 rounded-xl border transition-all duration-500 ${phase.status === "active"
-                                        ? "bg-indigo-500/10 border-indigo-500/30 shadow-lg shadow-indigo-500/10"
-                                        : phase.status === "completed"
-                                            ? "bg-green-500/5 border-green-500/20"
-                                            : "bg-white/[0.01] border-white/5 opacity-40"
-                                        }`}
-                                >
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <PhaseIcon size={14} className={
-                                            phase.status === "completed" ? "text-green-400"
-                                                : phase.status === "active" ? "text-indigo-400"
-                                                    : "text-white/30"
-                                        } />
-                                        <span className="text-[10px] font-bold uppercase tracking-wider text-white/40">
-                                            Step {i + 1}
-                                        </span>
-                                    </div>
-                                    <div className="font-semibold text-xs md:text-sm mb-2">{phase.name}</div>
-                                    <div className="text-[10px] text-white/40">{phase.detail}</div>
+            {!isConsultation && (
+                <div className="border-b border-white/5 bg-white/[0.01]">
+                    <div className="max-w-6xl mx-auto px-4 md:px-6 py-6">
+                        <div className="grid grid-cols-4 gap-2 md:gap-4">
+                            {phases.map((phase, i) => {
+                                const PhaseIcon = phase.icon;
+                                return (
+                                    <div
+                                        key={i}
+                                        className={`relative p-3 md:p-4 rounded-xl border transition-all duration-500 ${phase.status === "active"
+                                            ? "bg-indigo-500/10 border-indigo-500/30 shadow-lg shadow-indigo-500/10"
+                                            : phase.status === "completed"
+                                                ? "bg-green-500/5 border-green-500/20"
+                                                : "bg-white/[0.01] border-white/5 opacity-40"
+                                            }`}
+                                    >
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <PhaseIcon size={14} className={
+                                                phase.status === "completed" ? "text-green-400"
+                                                    : phase.status === "active" ? "text-indigo-400"
+                                                        : "text-white/30"
+                                            } />
+                                            <span className="text-[10px] font-bold uppercase tracking-wider text-white/40">
+                                                Step {i + 1}
+                                            </span>
+                                        </div>
+                                        <div className="font-semibold text-xs md:text-sm mb-2">{phase.name}</div>
+                                        <div className="text-[10px] text-white/40">{phase.detail}</div>
 
-                                    {/* Mini progress */}
-                                    <div className="h-0.5 bg-white/10 rounded-full overflow-hidden mt-2">
-                                        <div className={`h-full transition-all duration-1000 rounded-full ${phase.status === "completed" ? "bg-green-500 w-full"
-                                            : phase.status === "active" ? "bg-indigo-500 w-1/2 animate-pulse"
-                                                : "w-0"
-                                            }`} />
+                                        {/* Mini progress */}
+                                        <div className="h-0.5 bg-white/10 rounded-full overflow-hidden mt-2">
+                                            <div className={`h-full transition-all duration-1000 rounded-full ${phase.status === "completed" ? "bg-green-500 w-full"
+                                                : phase.status === "active" ? "bg-indigo-500 w-1/2 animate-pulse"
+                                                    : "w-0"
+                                                }`} />
+                                        </div>
+                                        {phase.status === "completed" && (
+                                            <div className="absolute top-2 right-2 text-green-500"><CheckCircle2 size={12} /></div>
+                                        )}
                                     </div>
-                                    {phase.status === "completed" && (
-                                        <div className="absolute top-2 right-2 text-green-500"><CheckCircle2 size={12} /></div>
-                                    )}
-                                </div>
-                            );
-                        })}
+                                );
+                            })}
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
 
             {/* ============ MAIN CONTENT — 2 COLUMN ============ */}
             <div className="max-w-6xl mx-auto px-4 md:px-6 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -250,110 +253,114 @@ export default function UnifiedOrderPage() {
                 <div className="lg:col-span-2 space-y-6">
 
                     {/* Project Overview */}
-                    <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
-                        <h2 className="text-sm font-bold flex items-center gap-2 mb-3 text-white/80">
-                            <ShieldCheck size={16} className="text-indigo-400" />
-                            Project Overview
-                        </h2>
-                        <p className="text-sm text-white/40 leading-relaxed">
-                            {order.description || "No public description available."}
-                        </p>
-                    </div>
+                    {!isConsultation && (
+                        <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
+                            <h2 className="text-sm font-bold flex items-center gap-2 mb-3 text-white/80">
+                                <ShieldCheck size={16} className="text-indigo-400" />
+                                Project Overview
+                            </h2>
+                            <p className="text-sm text-white/40 leading-relaxed">
+                                {order.description || "No public description available."}
+                            </p>
+                        </div>
+                    )}
 
                     {/* ──── PAYMENT SECTION ──── */}
-                    <div className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
-                        <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-white/[0.01]">
-                            <h2 className="text-sm font-bold flex items-center gap-2 text-white/80">
-                                <CreditCard size={16} className="text-indigo-400" />
-                                Payment Status
-                            </h2>
-                            <span className="font-mono text-sm font-bold text-indigo-400">
-                                Rp {order.gross_amount?.toLocaleString("id-ID") || 0}
-                            </span>
-                        </div>
-                        <div className="p-6 space-y-4">
-                            {/* Down Payment Row */}
-                            <div className={`p-4 rounded-xl border transition-all ${isDepositPaid
-                                ? "border-green-500/20 bg-green-500/5"
-                                : "border-indigo-500/20 bg-indigo-500/5"
-                                }`}>
-                                <div className="flex items-center justify-between mb-2">
-                                    <div className="flex items-center gap-2">
-                                        {isDepositPaid
-                                            ? <CheckCircle2 size={16} className="text-green-400" />
-                                            : <Clock size={16} className="text-indigo-400 animate-pulse" />
-                                        }
-                                        <span className="font-semibold text-sm">Down Payment (20%)</span>
-                                    </div>
-                                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${isDepositPaid
-                                        ? "bg-green-500/10 text-green-400 border border-green-500/20"
-                                        : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
-                                        }`}>
-                                        {isDepositPaid ? "Paid" : "Unpaid"}
-                                    </span>
-                                </div>
-                                <div className="flex items-center justify-between mt-3">
-                                    <span className="font-mono text-sm text-white/60">
-                                        Rp {order.down_payment_amount?.toLocaleString("id-ID") || 0}
-                                    </span>
-                                    {!isDepositPaid && (
-                                        <PaymentButton
-                                            uuidToken={order.uuid_token}
-                                            orderId={order.id}
-                                            paymentType="down_payment"
-                                            amount={order.down_payment_amount}
-                                            onSuccess={fetchOrder}
-                                        />
-                                    )}
-                                </div>
+                    {!isConsultation && (
+                        <div className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
+                            <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-white/[0.01]">
+                                <h2 className="text-sm font-bold flex items-center gap-2 text-white/80">
+                                    <CreditCard size={16} className="text-indigo-400" />
+                                    Payment Status
+                                </h2>
+                                <span className="font-mono text-sm font-bold text-indigo-400">
+                                    Rp {order.gross_amount?.toLocaleString("id-ID") || 0}
+                                </span>
                             </div>
-
-                            {/* Final Payment Row */}
-                            <div className={`p-4 rounded-xl border transition-all ${isCompleted
-                                ? "border-green-500/20 bg-green-500/5"
-                                : !isDepositPaid
-                                    ? "border-white/5 bg-white/[0.01] opacity-40"
+                            <div className="p-6 space-y-4">
+                                {/* Down Payment Row */}
+                                <div className={`p-4 rounded-xl border transition-all ${isDepositPaid
+                                    ? "border-green-500/20 bg-green-500/5"
                                     : "border-indigo-500/20 bg-indigo-500/5"
-                                }`}>
-                                <div className="flex items-center justify-between mb-2">
-                                    <div className="flex items-center gap-2">
-                                        {isCompleted
-                                            ? <CheckCircle2 size={16} className="text-green-400" />
-                                            : !isDepositPaid
-                                                ? <Lock size={16} className="text-white/30" />
-                                                : <Clock size={16} className="text-indigo-400" />
-                                        }
-                                        <span className="font-semibold text-sm">Final Payment (80%)</span>
-                                    </div>
-                                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${isCompleted
-                                        ? "bg-green-500/10 text-green-400 border border-green-500/20"
-                                        : !isDepositPaid
-                                            ? "bg-white/5 text-white/30 border border-white/10"
+                                    }`}>
+                                    <div className="flex items-center justify-between mb-2">
+                                        <div className="flex items-center gap-2">
+                                            {isDepositPaid
+                                                ? <CheckCircle2 size={16} className="text-green-400" />
+                                                : <Clock size={16} className="text-indigo-400 animate-pulse" />
+                                            }
+                                            <span className="font-semibold text-sm">Down Payment (20%)</span>
+                                        </div>
+                                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${isDepositPaid
+                                            ? "bg-green-500/10 text-green-400 border border-green-500/20"
                                             : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
-                                        }`}>
-                                        {isCompleted ? "Paid" : !isDepositPaid ? "Locked" : "Unpaid"}
-                                    </span>
+                                            }`}>
+                                            {isDepositPaid ? "Paid" : "Unpaid"}
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center justify-between mt-3">
+                                        <span className="font-mono text-sm text-white/60">
+                                            Rp {order.down_payment_amount?.toLocaleString("id-ID") || 0}
+                                        </span>
+                                        {!isDepositPaid && (
+                                            <PaymentButton
+                                                uuidToken={order.uuid_token}
+                                                orderId={order.id}
+                                                paymentType="down_payment"
+                                                amount={order.down_payment_amount}
+                                                onSuccess={fetchOrder}
+                                            />
+                                        )}
+                                    </div>
                                 </div>
-                                <div className="flex items-center justify-between mt-3">
-                                    <span className="font-mono text-sm text-white/60">
-                                        Rp {order.final_payment_amount?.toLocaleString("id-ID") || 0}
-                                    </span>
-                                    {isDepositPaid && !isCompleted && (
-                                        <PaymentButton
-                                            uuidToken={order.uuid_token}
-                                            paymentType="final_payment"
-                                            amount={order.final_payment_amount}
-                                            onSuccess={fetchOrder}
-                                            label="Pay Now"
-                                        />
-                                    )}
+
+                                {/* Final Payment Row */}
+                                <div className={`p-4 rounded-xl border transition-all ${isCompleted
+                                    ? "border-green-500/20 bg-green-500/5"
+                                    : !isDepositPaid
+                                        ? "border-white/5 bg-white/[0.01] opacity-40"
+                                        : "border-indigo-500/20 bg-indigo-500/5"
+                                    }`}>
+                                    <div className="flex items-center justify-between mb-2">
+                                        <div className="flex items-center gap-2">
+                                            {isCompleted
+                                                ? <CheckCircle2 size={16} className="text-green-400" />
+                                                : !isDepositPaid
+                                                    ? <Lock size={16} className="text-white/30" />
+                                                    : <Clock size={16} className="text-indigo-400" />
+                                            }
+                                            <span className="font-semibold text-sm">Final Payment (80%)</span>
+                                        </div>
+                                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${isCompleted
+                                            ? "bg-green-500/10 text-green-400 border border-green-500/20"
+                                            : !isDepositPaid
+                                                ? "bg-white/5 text-white/30 border border-white/10"
+                                                : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
+                                            }`}>
+                                            {isCompleted ? "Paid" : !isDepositPaid ? "Locked" : "Unpaid"}
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center justify-between mt-3">
+                                        <span className="font-mono text-sm text-white/60">
+                                            Rp {order.final_payment_amount?.toLocaleString("id-ID") || 0}
+                                        </span>
+                                        {isDepositPaid && !isCompleted && (
+                                            <PaymentButton
+                                                uuidToken={order.uuid_token}
+                                                paymentType="final_payment"
+                                                amount={order.final_payment_amount}
+                                                onSuccess={fetchOrder}
+                                                label="Pay Now"
+                                            />
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    )}
 
                     {/* ──── PROGRESS + CHAT ──── */}
-                    {isDepositPaid && (
+                    {!isConsultation && isDepositPaid && (
                         <div className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
                             <div className="px-6 py-4 border-b border-white/5 bg-white/[0.01]">
                                 <h2 className="text-sm font-bold flex items-center gap-2 text-white/80">
@@ -420,6 +427,23 @@ export default function UnifiedOrderPage() {
                                         </div>
                                     )}
                                 </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {isConsultation && (
+                        <div className="rounded-2xl border border-pink-500/20 bg-white/[0.02] overflow-hidden shadow-[0_0_30px_rgba(236,72,153,0.05)]">
+                            <div className="px-6 py-4 border-b border-white/5 bg-gradient-to-r from-pink-500/10 to-indigo-500/10 backdrop-blur-md">
+                                <h2 className="text-sm font-bold flex items-center gap-2 text-white">
+                                    <MessageSquare size={16} className="text-pink-400" />
+                                    Private Consultation Room
+                                </h2>
+                                <p className="text-[10px] text-white/50 mt-1">
+                                    Discuss your project details with the admin in real-time.
+                                </p>
+                            </div>
+                            <div className="h-[500px] border-t border-white/5 bg-[#0a0a0a]">
+                                <OrderChat orderId={order.id} uuidToken={order.uuid_token} chatEnabled={true} />
                             </div>
                         </div>
                     )}
