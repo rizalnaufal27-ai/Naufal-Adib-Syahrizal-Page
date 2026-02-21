@@ -98,10 +98,10 @@ export default function SkillsMarquee() {
             </div>
 
             {/* Cosmic Marquee strip */}
-            <div className="relative mt-14">
-                <div className="flex gap-10 py-4" style={{ animation: "marquee 30s linear infinite", width: "max-content" }}>
+            <div className="relative mt-14 overflow-visible">
+                <div className="flex gap-12 py-6 overflow-visible" style={{ animation: "marquee 30s linear infinite", width: "max-content" }}>
                     {[...skills, ...skills, ...skills, ...skills].map((skill, i) => (
-                        <span key={`m-${i}`} className="text-xs font-mono uppercase tracking-[0.2em] whitespace-nowrap flex items-center gap-2" style={{ color: `${skill.color}50` }}>
+                        <span key={`m-${i}`} className="text-sm font-bold uppercase tracking-[0.2em] whitespace-nowrap flex items-center gap-3" style={{ color: `${skill.color}80` }}>
                             <span className="w-1 h-1 rounded-full" style={{ background: `${skill.color}40` }} />
                             {skill.name}
                         </span>

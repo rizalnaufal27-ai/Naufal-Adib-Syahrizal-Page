@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/lib/supabase";
+import PricingCalculator from "@/components/pricing/PricingCalculator";
 
 // ─── Interfaces ───
 interface Order {
@@ -58,6 +59,7 @@ export default function AdminPage() {
     const [pricing, setPricing] = useState<PricingItem[]>([]);
     const [editingPrice, setEditingPrice] = useState<string | null>(null);
     const [editPriceVal, setEditPriceVal] = useState(0);
+    const [calcResult, setCalcResult] = useState({ usd: 0, label: "" });
 
     // ─── Portfolio ───
     const [portfolio, setPortfolio] = useState<PortfolioItem[]>([]);
@@ -587,9 +589,28 @@ export default function AdminPage() {
 
                     {/* ═══ PRICING VIEW ═══ */}
                     {view === "pricing" && (
-                        <div className="p-6 max-w-4xl mx-auto space-y-6">
+                        <div className="p-6 max-w-5xl mx-auto space-y-8">
+
+                            {/* Calculator Section */}
+                            <div className="rounded-2xl border border-white/[0.06] bg-white/[0.015] p-6 lg:flex gap-8">
+                                <div className="lg:w-full">
+                                    <h2 className="text-lg font-bold text-white mb-2">Price Estimator</h2>
+                                    <p className="text-xs text-white/40 mb-6">Quickly calculate prices for client inquiries using the public calculator.</p>
+                                    <div className="bg-black/20 p-4 rounded-xl border border-white/[0.04]">
+                                        <PricingCalculator onPriceCalculated={(usd, label) => setCalcResult({ usd, label })} />
+                                    </div>
+                                    {calcResult.usd > 0 && (
+                                        <div className="mt-4 flex gap-2">
+                                            <button onClick={() => navigator.clipboard.writeText(`Estimated price for ${calcResult.label}: $${calcResult.usd} (Rp ${(calcResult.usd * 16000).toLocaleString("id-ID")})`)} className="px-4 py-2 rounded-lg text-xs font-semibold text-white bg-white/10 hover:bg-white/20 transition-all flex items-center gap-2">
+                                                {Icons.copy} Copy Quote Text
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
                             <div className="flex justify-between items-center">
-                                <div><p className="text-sm font-semibold text-white">Service Pricing</p><p className="text-xs text-white/30">Click any price to edit • All prices in USD</p></div>
+                                <div><p className="text-sm font-semibold text-white">Database Base Rates</p><p className="text-xs text-white/30">Click any price to edit • All prices in USD</p></div>
                             </div>
                             <div className="rounded-2xl border border-white/[0.06] overflow-hidden">
                                 <table className="w-full">

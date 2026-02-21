@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Volume2, VolumeX } from "lucide-react";
+import { Volume2, VolumeX, Music } from "lucide-react";
 
 export default function SpaceAmbience() {
     const [isPlaying, setIsPlaying] = useState(false);
@@ -40,6 +40,16 @@ export default function SpaceAmbience() {
         }
     };
 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file && audioRef.current) {
+            const url = URL.createObjectURL(file);
+            audioRef.current.src = url;
+            audioRef.current.play().then(() => setIsPlaying(true)).catch(console.error);
+            setHasInteracted(true);
+        }
+    };
+
     // Auto-start on first interaction
     useEffect(() => {
         const handleInteraction = () => {
@@ -71,6 +81,12 @@ export default function SpaceAmbience() {
 
     return (
         <div className="fixed bottom-8 left-8 z-[10000] flex items-center gap-4 opacity-100 transition-opacity duration-500 pointer-events-auto">
+            {/* Custom Music Upload */}
+            <label className="cursor-pointer text-white/30 hover:text-white/80 transition-colors flex items-center justify-center bg-white/5 border border-white/10 rounded-full w-8 h-8 hover:bg-white/10" title="Change Music">
+                <Music className="w-3.5 h-3.5" />
+                <input type="file" accept="audio/*" className="hidden" onChange={handleFileChange} />
+            </label>
+
             {/* Text Label */}
             <span
                 className={`text-[10px] uppercase tracking-[0.2em] font-medium transition-colors duration-500 ${isPlaying ? 'text-blue-400 drop-shadow-[0_0_8px_rgba(59,130,246,0.8)]' : 'text-white/30'}`}

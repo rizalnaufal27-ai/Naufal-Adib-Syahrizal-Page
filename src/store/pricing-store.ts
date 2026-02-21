@@ -117,7 +117,6 @@ export const usePricingStore = create<PricingState>((set, get) => ({
     setCurrency: (c) => set({ currency: c, rate: c === "IDR" ? 15500 : 1 }),
 
     getTotalUSD: () => {
-        if (process.env.NEXT_PUBLIC_APP_MODE === "test") return 0;
         const s = get();
         switch (s.service) {
             case "design": {

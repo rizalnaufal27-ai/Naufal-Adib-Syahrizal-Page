@@ -255,12 +255,11 @@ export default function PricingCalculator({ onPriceCalculated }: PricingCalculat
             )}
 
             {/* Price Summary */}
-            {(s.getTotalUSD() > 0 || process.env.NEXT_PUBLIC_APP_MODE === "test") && (
+            {(s.getTotalUSD() > 0) && (
                 <div className="p-4 rounded-xl" style={{ background: "rgba(99,102,241,0.06)", border: "1px solid rgba(99,102,241,0.2)" }}>
                     <div className="flex justify-between items-center">
                         <span className="text-sm" style={{ color: "var(--color-text-muted)" }}>
                             Estimated Total
-                            {process.env.NEXT_PUBLIC_APP_MODE === "test" && <span className="ml-2 text-[10px] bg-yellow-500/20 text-yellow-500 px-1.5 py-0.5 rounded border border-yellow-500/30">TEST MODE</span>}
                         </span>
                         <span className="text-xl font-bold" style={{ color: "#6366F1" }}>{s.formatPrice(s.getTotalUSD())}</span>
                     </div>

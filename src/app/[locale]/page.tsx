@@ -67,7 +67,9 @@ export default function Home() {
         </section>
 
         {/* Dark Cosmic Sections */}
-        <div className="relative z-10 pb-20" style={{ background: "linear-gradient(180deg, #050510 0%, #0a0a1f 15%, #080818 30%, #0c0820 50%, #0a0a1a 70%, #060612 85%, #050510 100%)" }}>
+        <div className="relative z-10 pb-20 bg-black overflow-hidden" style={{ background: "linear-gradient(180deg, #050510 0%, #0a0a1f 15%, #080818 30%, #0c0820 50%, #0a0a1a 70%, #060612 85%, #050510 100%)" }}>
+          {/* Abstract Painting Background Layer */}
+          <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.25]" style={{ backgroundImage: "url('/images/abstract-bg.png')", backgroundSize: "cover", backgroundPosition: "center top", backgroundAttachment: "fixed", mixBlendMode: "overlay" }} />
 
           {/* ═══ Section Divider: Hero → Profile ═══ */}
           <div className="relative h-24 overflow-hidden">

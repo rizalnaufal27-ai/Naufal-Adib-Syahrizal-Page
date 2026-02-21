@@ -1,16 +1,17 @@
 "use client";
 import { motion } from "framer-motion";
+import { Palette, Camera, Film, BookOpen } from "lucide-react";
 
 const experiences = [
-    { title: "Freelance Graphic Design", duration: "3 Months", energy: 25, description: "Logo design, branding materials, and visual identity projects for various clients.", color: "#8B5CF6", emoji: "🎨" },
-    { title: "Freelance Photography", duration: "1 Year", energy: 100, description: "Graduation, product, and event photography. Professional photo editing and retouching.", color: "#EC4899", emoji: "📷" },
-    { title: "Freelance Video Editing", duration: "1 Month", energy: 8, description: "Video post-production, color grading, motion graphics, and content creation.", color: "#06B6D4", emoji: "🎬" },
-    { title: "Teacher at SMKN 47 JKT", duration: "3 Months", energy: 25, description: "Teaching multimedia and design fundamentals to vocational school students.", color: "#22C55E", emoji: "📚" },
+    { title: "Freelance Graphic Design", duration: "3 Months", energy: 25, description: "Logo design, branding materials, and visual identity projects for various clients.", color: "#8B5CF6", icon: Palette },
+    { title: "Freelance Photography", duration: "1 Year", energy: 100, description: "Graduation, product, and event photography. Professional photo editing and retouching.", color: "#EC4899", icon: Camera },
+    { title: "Freelance Video Editing", duration: "1 Month", energy: 8, description: "Video post-production, color grading, motion graphics, and content creation.", color: "#06B6D4", icon: Film },
+    { title: "Teacher at SMKN 47 JKT", duration: "3 Months", energy: 25, description: "Teaching multimedia and design fundamentals to vocational school students.", color: "#22C55E", icon: BookOpen },
 ];
 
 const fadeSlide = {
     hidden: { opacity: 0, x: -30, filter: "blur(6px)" },
-    visible: { opacity: 1, x: 0, filter: "blur(0px)", transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] } },
+    visible: { opacity: 1, x: 0, filter: "blur(0px)", transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] as const } },
 };
 
 const fadeUp = {
@@ -58,7 +59,9 @@ export default function ExperienceTimeline() {
 
                                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3 relative z-10">
                                     <h3 className="text-lg font-bold flex items-center gap-2" style={{ color: "#E8E0FF" }}>
-                                        <span className="text-xl group-hover:scale-125 transition-transform duration-300">{exp.emoji}</span>
+                                        <motion.div animate={{ rotate: [0, 5, -5, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}>
+                                            <exp.icon className="w-6 h-6 group-hover:scale-125 transition-transform duration-300" style={{ color: exp.color }} />
+                                        </motion.div>
                                         {exp.title}
                                     </h3>
                                     <span className="text-xs font-semibold px-3 py-1 rounded-full w-fit" style={{ background: `${exp.color}12`, color: exp.color, border: `1px solid ${exp.color}25` }}>

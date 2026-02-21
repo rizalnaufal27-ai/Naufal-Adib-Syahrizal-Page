@@ -1,5 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
+import { Palette, Sparkles, Camera, Film, Globe, Smartphone } from "lucide-react";
 
 interface ServicesSectionProps {
     onOpenPricing: () => void;
@@ -7,21 +8,21 @@ interface ServicesSectionProps {
 
 const fadeUp = {
     hidden: { opacity: 0, y: 40, filter: "blur(6px)" },
-    visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] } },
+    visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] as const } },
 };
 
 const cardPop = {
     hidden: { opacity: 0, y: 50, scale: 0.92 },
-    visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] } },
+    visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] as const } },
 };
 
 const services = [
-    { title: "Graphic Design", description: "Logo, banner, poster, and complete brand identity packages. Clean, modern, impactful.", emoji: "🎨", color: "#8B5CF6", price: "From $5" },
-    { title: "Illustration", description: "Character illustration — half body, full body, and full render. Bring your characters to life.", emoji: "✦", color: "#EC4899", price: "From $5" },
-    { title: "Photography", description: "Graduation, product, and event photography. Professional editing and retouching included.", emoji: "📷", color: "#06B6D4", price: "From $1" },
-    { title: "Video Editing", description: "Professional post-production, color grading, motion graphics, transitions, and sound design.", emoji: "🎬", color: "#F59E0B", price: "From $10" },
-    { title: "Web Design", description: "Modern, responsive website design with stunning UI/UX. Landing pages, portfolios, and business sites.", emoji: "🌐", color: "#22C55E", price: "From $25" },
-    { title: "App Development", description: "Custom mobile and web applications built with modern technologies. From concept to deployment.", emoji: "📱", color: "#6366F1", price: "From $50" },
+    { title: "Graphic Design", description: "Logo, banner, poster, and complete brand identity packages. Clean, modern, impactful.", icon: Palette, color: "#8B5CF6", price: "From $5" },
+    { title: "Illustration", description: "Character illustration — half body, full body, and full render. Bring your characters to life.", icon: Sparkles, color: "#EC4899", price: "From $5" },
+    { title: "Photography", description: "Graduation, product, and event photography. Professional editing and retouching included.", icon: Camera, color: "#06B6D4", price: "From $1" },
+    { title: "Video Editing", description: "Professional post-production, color grading, motion graphics, transitions, and sound design.", icon: Film, color: "#F59E0B", price: "From $10" },
+    { title: "Web Design", description: "Modern, responsive website design with stunning UI/UX. Landing pages, portfolios, and business sites.", icon: Globe, color: "#22C55E", price: "From $25" },
+    { title: "App Development", description: "Custom mobile and web applications built with modern technologies. From concept to deployment.", icon: Smartphone, color: "#6366F1", price: "From $50" },
 ];
 
 export default function ServicesSection({ onOpenPricing }: ServicesSectionProps) {
@@ -56,10 +57,18 @@ export default function ServicesSection({ onOpenPricing }: ServicesSectionProps)
                             {/* Cosmic particle on hover */}
                             <div className="absolute top-4 right-4 w-2 h-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-700" style={{ background: service.color, boxShadow: `0 0 15px ${service.color}`, animation: "cosmicFloat 8s ease-in-out infinite" }} />
 
-                            {/* Emoji icon */}
-                            <div className="text-4xl mb-5 transition-all duration-500 group-hover:scale-110 group-hover:drop-shadow-[0_0_20px_rgba(139,92,246,0.5)] will-change-transform" style={{ filter: "drop-shadow(0 0 8px rgba(0,0,0,0.3))" }}>
-                                {service.emoji}
-                            </div>
+                            {/* Animated icon */}
+                            <motion.div
+                                className="mb-5 w-fit rounded-xl p-3"
+                                style={{ background: `${service.color}15` }}
+                                animate={{ y: [0, -6, 0] }}
+                                transition={{ duration: 3 + index * 0.2, repeat: Infinity, ease: "easeInOut" }}
+                            >
+                                <service.icon
+                                    className="w-8 h-8 transition-transform duration-500 group-hover:scale-125 group-hover:rotate-12"
+                                    style={{ color: service.color, filter: `drop-shadow(0 0 10px ${service.color}60)` }}
+                                />
+                            </motion.div>
 
                             <h3 className="text-lg font-bold mb-2 transition-colors duration-300" style={{ color: "#E8E0FF" }}>
                                 {service.title}
