@@ -45,6 +45,9 @@ ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS uuid_token uuid DEFAULT gen_r
 -- Chat enabled flag
 ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS chat_enabled boolean DEFAULT false;
 
+-- Midtrans order ID (stores the generated DP-/FP- order ID for transaction lookup)
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS midtrans_order_id text;
+
 -- v4: Pricing details
 ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS pricing_details jsonb;
 

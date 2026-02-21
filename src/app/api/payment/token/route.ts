@@ -35,7 +35,12 @@ export async function POST(request: NextRequest) {
             }
             amount = order.down_payment_amount;
             itemName = `Down Payment (20%) - ${order.service_type} #${order.order_number}`;
-            orderId = `DP-${order.order_number}-${Date.now()}`;
+            // Reuse existing midtrans_order_id if it was a DP and is still pending
+            if (order.midtrans_order_id && order.midtrans_order_id.startsWith("DP-") && order.down_payment_status === "pending") {
+                orderId = order.midtrans_order_id;
+            } else {
+                orderId = `DP-${order.order_number}-${Date.now()}`;
+            }
         } else if (payment_type === "final_payment") {
             if (order.final_payment_status === "paid") {
                 return NextResponse.json({ error: "Final payment already paid" }, { status: 400 });
@@ -45,23 +50,21 @@ export async function POST(request: NextRequest) {
             }
             amount = order.final_payment_amount;
             itemName = `Final Payment (80%) - ${order.service_type} #${order.order_number}`;
-            orderId = `FP-${order.order_number}-${Date.now()}`;
+            // Reuse existing midtrans_order_id if it was a FP and is still pending
+            if (order.midtrans_order_id && order.midtrans_order_id.startsWith("FP-") && order.final_payment_status === "pending") {
+                orderId = order.midtrans_order_id;
+            } else {
+                orderId = `FP-${order.order_number}-${Date.now()}`;
+            }
         } else {
             return NextResponse.json({ error: "Invalid payment_type" }, { status: 400 });
         }
 
-        // Create Midtrans Snap transaction
-        let token = "";
-        let redirect_url = "";
-        let bypass = false;
-
-        // TEST MODE BYPASS
+        // TEST MODE BYPASS: auto-approve $0 payments
         if (amount === 0 && process.env.NEXT_PUBLIC_APP_MODE === "test") {
-            bypass = true;
-            // Auto-update status
-            const updateField: any = payment_type === "down_payment"
-                ? { down_payment_status: "paid", status: "processing", chat_enabled: true }
-                : { final_payment_status: "paid", status: "completed" };
+            const updateField: Record<string, unknown> = payment_type === "down_payment"
+                ? { down_payment_status: "paid", status: "processing", chat_enabled: true, midtrans_order_id: orderId }
+                : { final_payment_status: "paid", status: "completed", midtrans_order_id: orderId };
 
             await supabase
                 .from("orders")
@@ -75,32 +78,44 @@ export async function POST(request: NextRequest) {
             });
         }
 
+        // Midtrans requires amount > 0
+        if (amount <= 0) {
+            return NextResponse.json({ error: "Payment amount must be greater than 0" }, { status: 400 });
+        }
+
+        // Create Midtrans Snap transaction
         const snapRes = await createSnapTransaction({
             orderId,
             amount,
-            customerName: order.customer_name,
-            customerEmail: order.customer_email,
+            customerName: order.customer_name || "Customer",
+            customerEmail: order.customer_email || "noemail@example.com",
             itemName,
         });
-        token = snapRes.token;
-        redirect_url = snapRes.redirect_url;
 
-        // Update order payment status to pending and store midtrans_order_id
-        const updateField: any = payment_type === "down_payment"
-            ? { down_payment_status: "pending" }
-            : { final_payment_status: "pending" };
+        // Store the midtrans_order_id and update payment status to pending
+        const updateField: Record<string, unknown> = {
+            midtrans_order_id: orderId,
+        };
 
-        updateField.midtrans_order_id = orderId;
+        if (payment_type === "down_payment") {
+            updateField.down_payment_status = "pending";
+        } else {
+            updateField.final_payment_status = "pending";
+        }
 
-        await supabase
+        const { error: updateError } = await supabase
             .from("orders")
             .update(updateField)
             .eq("id", order.id);
 
+        if (updateError) {
+            console.error("Failed to update order with midtrans_order_id:", updateError);
+        }
+
         return NextResponse.json({
             success: true,
-            token,
-            redirect_url,
+            token: snapRes.token,
+            redirect_url: snapRes.redirect_url,
         });
     } catch (err) {
         console.error("Payment token error:", err);
