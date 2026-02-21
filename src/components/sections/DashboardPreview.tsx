@@ -20,6 +20,7 @@ const fadeUp = {
 
 export default function DashboardPreview() {
     const [orders, setOrders] = useState<Order[]>([]);
+    const t = useTranslations("Dashboard");
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -58,9 +59,9 @@ export default function DashboardPreview() {
 
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}>
                 <div className="text-center mb-16">
-                    <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-[0.3em] mb-3" style={{ background: "linear-gradient(90deg, #c084fc, #818cf8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>✦ Transparency</motion.p>
-                    <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-black tracking-tight" style={{ background: "linear-gradient(135deg, #fff 0%, #e0e7ff 40%, #c084fc 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Dashboard</motion.h2>
-                    <motion.p variants={fadeUp} className="text-sm mt-4 max-w-md mx-auto" style={{ color: "#B8B0D0" }}>Track your order status in real-time. No login required.</motion.p>
+                    <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-[0.3em] mb-3" style={{ background: "linear-gradient(90deg, #c084fc, #818cf8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>✦ {t("label")}</motion.p>
+                    <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-black tracking-tight" style={{ background: "linear-gradient(135deg, #fff 0%, #e0e7ff 40%, #c084fc 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{t("title")}</motion.h2>
+                    <motion.p variants={fadeUp} className="text-sm mt-4 max-w-md mx-auto" style={{ color: "#B8B0D0" }}>{t("desc")}</motion.p>
                 </div>
 
                 <motion.div variants={fadeUp} className="max-w-3xl mx-auto">
@@ -72,10 +73,10 @@ export default function DashboardPreview() {
                         <div className="px-6 py-5 flex items-center justify-between" style={{ borderBottom: "1px solid rgba(139,92,246,0.08)" }}>
                             <h3 className="text-sm font-semibold flex items-center gap-2" style={{ color: "#E8E0FF" }}>
                                 <span className="w-2 h-2 rounded-full bg-purple-500 shadow-[0_0_8px_rgba(139,92,246,0.6)]" />
-                                Active Orders
+                                {t("active_orders")}
                             </h3>
                             <Link href="/public/dashboard" className="relative z-10 text-xs font-semibold px-4 py-2 rounded-lg transition-all duration-300 hover:-translate-y-[1px] hover:shadow-[0_0_25px_rgba(139,92,246,0.3)]" style={{ background: "linear-gradient(135deg, #7c3aed, #6366F1)", color: "#fff" }}>
-                                View Full Dashboard ✦
+                                {t("view_full")}
                             </Link>
                         </div>
 
@@ -84,7 +85,7 @@ export default function DashboardPreview() {
                             <table className="w-full">
                                 <thead>
                                     <tr style={{ borderBottom: "1px solid rgba(139,92,246,0.06)" }}>
-                                        {["Order", "Service", "Status", "Progress"].map(h => (
+                                        {[t("columns.order"), t("columns.service"), t("columns.status"), t("columns.progress")].map(h => (
                                             <th key={h} className="text-left px-6 py-3 text-[10px] font-bold uppercase tracking-widest" style={{ color: "#A8A0C8" }}>{h}</th>
                                         ))}
                                     </tr>
@@ -95,7 +96,7 @@ export default function DashboardPreview() {
                                             <td colSpan={4} className="px-6 py-12 text-center text-sm" style={{ color: "#B8B0D0" }}>
                                                 <div className="flex flex-col items-center gap-3">
                                                     <span className="text-3xl opacity-30">🌌</span>
-                                                    No active orders
+                                                    {t("no_active")}
                                                 </div>
                                             </td>
                                         </tr>

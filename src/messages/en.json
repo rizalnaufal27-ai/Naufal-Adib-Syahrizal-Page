@@ -1,0 +1,80 @@
+{
+    "Navigation": {
+        "home": "Home",
+        "about": "About",
+        "work": "Work",
+        "services": "Services",
+        "track": "Track Project",
+        "contact": "Contact",
+        "dashboard": "Dashboard",
+        "consultation": "Consultation",
+        "admin": "Admin"
+    },
+    "Hero": {
+        "available": "Available for freelance",
+        "cta": {
+            "order": "Order",
+            "resume": "View Resume",
+            "contact": "Contact Me"
+        },
+        "bio": "I'm a multidisciplinary designer and full-stack developer specializing in creating digital experiences. I bring digital products to life through a combination of design, technology, and empathy."
+    },
+    "Profile": {
+        "label": "Creative Profile",
+        "vision_title": "Vision",
+        "vision_desc": "I am a versatile creative professional specializing in bridging the gap between artistic vision and functional design. With expertise spanning <strong class=\"font-bold\" style=\"color: #D4ADFC\">Graphic Design, Illustration, Photography, Video Editing, Web Design, and App Development</strong>, I act as a one-stop creative partner for brands and individuals looking to elevate their visual identity.",
+        "mision_title": "Mission",
+        "mision_quote": "To transform complex ideas into compelling visual stories that resonate.",
+        "mision_desc": "My mission is to provide integrated visual solutions that don't just \"look good\" but drive engagement and communicate value. Whether it's through a meticulously crafted illustration, a high-impact brand identity, or a dynamic video sequence, I aim to help clients stand out in a crowded digital landscape through consistency and aesthetic excellence.",
+        "deliverables_title": "Deliverables"
+    },
+    "Services": {
+        "label": "What I Offer",
+        "title": "Services",
+        "desc": "End-to-end creative solutions tailored to your brand. From design to development.",
+        "get_quote": "Get Quote ✦"
+    },
+    "Skills": {
+        "label": "Toolkit",
+        "title": "Skills & Tools",
+        "desc": "Mastering the tools that bring creative visions to life"
+    },
+    "Portfolio": {
+        "label": "Selected Works",
+        "title": "Portfolio",
+        "desc": "Browse through recent projects across design, illustration, and development.",
+        "empty": "No projects found in this category.",
+        "click_view": "Click to view"
+    },
+    "Experience": {
+        "label": "Journey",
+        "title": "Experience",
+        "duration_intensity": "Duration Intensity"
+    },
+    "Dashboard": {
+        "label": "Transparency",
+        "title": "Dashboard",
+        "desc": "Track your order status in real-time. No login required.",
+        "active_orders": "Active Orders",
+        "view_full": "View Full Dashboard ✦",
+        "columns": {
+            "order": "Order",
+            "service": "Service",
+            "status": "Status",
+            "progress": "Progress"
+        },
+        "no_active": "No active orders"
+    },
+    "Footer": {
+        "heading1": "Let's work",
+        "heading2": "together.",
+        "bio": "Creating cosmic digital experiences that blend aesthetics with functionality. Based in Jakarta, Indonesia. ✦",
+        "rights": "All Rights Reserved",
+        "menu": "Menu",
+        "socials": "Socials",
+        "status_heading": "Status",
+        "availability": "Availability",
+        "open_work": "Open for work",
+        "timezone": "Time Zone"
+    }
+}

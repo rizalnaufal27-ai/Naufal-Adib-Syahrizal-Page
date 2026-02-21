@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { Palette, Camera, Film, BookOpen } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 const experiences = [
     { title: "Freelance Graphic Design", duration: "3 Months", energy: 25, description: "Logo design, branding materials, and visual identity projects for various clients.", color: "#8B5CF6", icon: Palette },
@@ -20,14 +21,16 @@ const fadeUp = {
 };
 
 export default function ExperienceTimeline() {
+    const t = useTranslations("Experience");
+
     return (
         <div className="section-container py-28 relative overflow-hidden">
             {/* Cosmic ambient */}
             <div className="absolute top-[30%] left-[-8%] w-[30%] h-[40%] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 70%)", filter: "blur(80px)", animation: "nebulaPulse 14s ease-in-out infinite" }} />
 
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }} className="text-center mb-16">
-                <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-[0.3em] mb-3" style={{ background: "linear-gradient(90deg, #c084fc, #818cf8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>✦ Journey</motion.p>
-                <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-black tracking-tight" style={{ background: "linear-gradient(135deg, #fff 0%, #e0e7ff 40%, #c084fc 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Experience</motion.h2>
+                <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-[0.3em] mb-3" style={{ background: "linear-gradient(90deg, #c084fc, #818cf8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>✦ {t("label")}</motion.p>
+                <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-black tracking-tight" style={{ background: "linear-gradient(135deg, #fff 0%, #e0e7ff 40%, #c084fc 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{t("title")}</motion.h2>
             </motion.div>
 
             <div className="relative max-w-2xl mx-auto">
@@ -74,7 +77,7 @@ export default function ExperienceTimeline() {
                                 {/* Energy Bar */}
                                 <div className="space-y-1.5 relative z-10">
                                     <div className="flex justify-between text-xs">
-                                        <span style={{ color: "#A8A0C0" }}>Duration Intensity</span>
+                                        <span style={{ color: "#A8A0C0" }}>{t("duration_intensity")}</span>
                                         <span className="font-mono font-bold" style={{ color: exp.color }}>{exp.energy}%</span>
                                     </div>
                                     <div className="h-2 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.04)" }}>

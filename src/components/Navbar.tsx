@@ -1,8 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "@/i18n/routing";
 import Link from "next/link";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 interface NavbarProps {
     onOrderClick?: () => void;
@@ -40,12 +41,12 @@ export default function Navbar({ onOrderClick }: NavbarProps) {
         setMobileOpen(false);
         if (isSubPage) {
             // On sub-pages, navigate to homepage with hash
-            router.push(`/${href}`);
+            router.push(`/${href}` as any);
         } else if (href.startsWith("#")) {
             const el = document.querySelector(href);
             if (el) el.scrollIntoView({ behavior: "smooth" });
         } else {
-            router.push(href);
+            router.push(href as any);
         }
     };
 
@@ -134,6 +135,11 @@ export default function Navbar({ onOrderClick }: NavbarProps) {
                             Admin
                         </Link>
 
+                        {/* Language Switcher */}
+                        <div className="hidden md:block">
+                            <LanguageSwitcher />
+                        </div>
+
                         {/* Mobile hamburger */}
                         <button
                             onClick={() => setMobileOpen(!mobileOpen)}
@@ -196,6 +202,10 @@ export default function Navbar({ onOrderClick }: NavbarProps) {
                         >
                             Admin
                         </Link>
+                        <div className="px-4 py-2 flex items-center justify-between">
+                            <span className="text-sm" style={{ color: "var(--color-text-muted)" }}>Language</span>
+                            <LanguageSwitcher />
+                        </div>
                     </div>
                 </div>
             )}

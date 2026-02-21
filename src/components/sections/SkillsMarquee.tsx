@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 const skills = [
     { name: "Photoshop", color: "#31A8FF", abbr: "Ps", bgColor: "#001E36" },
@@ -30,6 +31,7 @@ const skillPop = {
 
 export default function SkillsMarquee() {
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+    const t = useTranslations("Skills");
 
     return (
         <div className="py-28 overflow-hidden relative">
@@ -38,9 +40,9 @@ export default function SkillsMarquee() {
 
             <div className="section-container mb-16">
                 <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }} className="text-center">
-                    <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-[0.3em] mb-3" style={{ background: "linear-gradient(90deg, #c084fc, #818cf8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>✦ Toolkit</motion.p>
-                    <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-black tracking-tight" style={{ background: "linear-gradient(135deg, #fff 0%, #e0e7ff 40%, #c084fc 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Skills & Tools</motion.h2>
-                    <motion.p variants={fadeUp} className="text-sm mt-4 max-w-md mx-auto" style={{ color: "#B8B0D0" }}>Mastering the tools that bring creative visions to life</motion.p>
+                    <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-[0.3em] mb-3" style={{ background: "linear-gradient(90deg, #c084fc, #818cf8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>✦ {t("label")}</motion.p>
+                    <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-black tracking-tight" style={{ background: "linear-gradient(135deg, #fff 0%, #e0e7ff 40%, #c084fc 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{t("title")}</motion.h2>
+                    <motion.p variants={fadeUp} className="text-sm mt-4 max-w-md mx-auto" style={{ color: "#B8B0D0" }}>{t("desc")}</motion.p>
                 </motion.div>
             </div>
 
@@ -110,6 +112,6 @@ export default function SkillsMarquee() {
                 <div className="absolute left-0 top-0 bottom-0 w-32 z-10 pointer-events-none" style={{ background: "linear-gradient(to right, var(--color-bg), transparent)" }} />
                 <div className="absolute right-0 top-0 bottom-0 w-32 z-10 pointer-events-none" style={{ background: "linear-gradient(to left, var(--color-bg), transparent)" }} />
             </div>
-        </div>
+        </div >
     );
 }

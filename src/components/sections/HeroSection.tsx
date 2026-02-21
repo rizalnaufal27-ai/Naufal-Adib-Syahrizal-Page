@@ -250,7 +250,7 @@ export default function HeroSection({ onViewResume, onOrderClick }: HeroSectionP
           >
             <span className="flex items-center gap-2">
               <span className="text-lg">✦</span>
-              Order
+              {t("cta.order")}
             </span>
             <span
               className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"

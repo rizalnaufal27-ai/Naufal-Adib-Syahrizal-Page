@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { Palette, Sparkles, Camera, Film, Globe, Smartphone } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface ServicesSectionProps {
     onOpenPricing: () => void;
@@ -26,6 +27,8 @@ const services = [
 ];
 
 export default function ServicesSection({ onOpenPricing }: ServicesSectionProps) {
+    const t = useTranslations("Services");
+
     return (
         <div className="section-container py-28 relative overflow-hidden">
             {/* Cosmic ambient */}
@@ -34,10 +37,10 @@ export default function ServicesSection({ onOpenPricing }: ServicesSectionProps)
 
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}>
                 <div className="text-center mb-16">
-                    <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-[0.3em] mb-3" style={{ background: "linear-gradient(90deg, #c084fc, #818cf8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>✦ What I Offer</motion.p>
-                    <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-black tracking-tight" style={{ background: "linear-gradient(135deg, #fff 0%, #e0e7ff 40%, #c084fc 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Services</motion.h2>
+                    <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-[0.3em] mb-3" style={{ background: "linear-gradient(90deg, #c084fc, #818cf8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>✦ {t("label")}</motion.p>
+                    <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-black tracking-tight" style={{ background: "linear-gradient(135deg, #fff 0%, #e0e7ff 40%, #c084fc 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{t("title")}</motion.h2>
                     <motion.p variants={fadeUp} className="text-sm mt-4 max-w-lg mx-auto" style={{ color: "#B8B0D0" }}>
-                        End-to-end creative solutions tailored to your brand. From design to development.
+                        {t("desc")}
                     </motion.p>
                 </div>
 
@@ -77,12 +80,11 @@ export default function ServicesSection({ onOpenPricing }: ServicesSectionProps)
                                 {service.description}
                             </p>
 
-                            {/* Footer */}
                             <div className="flex items-center justify-between pt-4 relative z-10" style={{ borderTop: `1px solid ${service.color}12` }}>
                                 <span className="text-sm font-bold" style={{ color: service.color }}>{service.price}</span>
                                 <span className="text-xs font-semibold px-4 py-1.5 rounded-full transition-all duration-500 group-hover:px-5 group-hover:shadow-[0_0_20px_rgba(0,0,0,0.5)]"
                                     style={{ background: `${service.color}12`, color: service.color, border: `1px solid ${service.color}25` }}>
-                                    Get Quote ✦
+                                    {t("get_quote")}
                                 </span>
                             </div>
                         </motion.div>

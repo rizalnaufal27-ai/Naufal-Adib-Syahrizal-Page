@@ -1,8 +1,8 @@
 "use client";
-import React from "react";
 import { motion } from "framer-motion";
 import { Instagram, Linkedin, Github, MessageCircle } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 const socialLinks = [
     { name: "Instagram", href: "https://instagram.com/syahrizalnaufal07", icon: Instagram, color: "#E1306C" },
@@ -26,6 +26,7 @@ const fadeUp = {
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
+    const t = useTranslations("Footer");
 
     return (
         <footer className="relative bg-[#050505] text-white pt-28 pb-12 overflow-hidden">
@@ -52,10 +53,10 @@ export default function Footer() {
                 <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.12 } } }} className="mb-32">
                     <motion.h2 variants={fadeUp} className="text-5xl md:text-8xl font-bold tracking-tighter mb-8 max-w-4xl">
                         <span style={{ background: "linear-gradient(135deg, #fff 0%, #e0e7ff 50%, #c084fc 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-                            Let&apos;s work
+                            {t("heading1")}
                         </span>
                         <br />
-                        <span className="text-white/20">together.</span>
+                        <span className="text-white/20">{t("heading2")}</span>
                     </motion.h2>
                     <motion.div variants={fadeUp} className="flex flex-col md:flex-row items-start md:items-center gap-6">
                         <a
@@ -92,20 +93,19 @@ export default function Footer() {
                                 <span className="text-purple-500/30">.</span>
                             </h3>
                             <p className="text-white/40 text-sm max-w-xs leading-relaxed">
-                                Creating cosmic digital experiences that blend aesthetics with functionality.
-                                Based in Jakarta, Indonesia. ✦
+                                {t("bio")}
                             </p>
                         </div>
                         <div className="mt-12 md:mt-0">
                             <p className="text-white/25 text-xs uppercase tracking-widest">
-                                &copy; {currentYear} Naufal Adib. All Rights Reserved
+                                &copy; {currentYear} Naufal Adib. {t("rights")}
                             </p>
                         </div>
                     </motion.div>
 
                     {/* Navigation */}
                     <motion.div variants={fadeUp} className="md:col-span-3">
-                        <h4 className="text-xs font-bold text-purple-400/50 uppercase tracking-widest mb-6">Menu</h4>
+                        <h4 className="text-xs font-bold text-purple-400/50 uppercase tracking-widest mb-6">{t("menu")}</h4>
                         <ul className="space-y-4">
                             {menuLinks.map((link) => (
                                 <li key={link.name}>
@@ -119,7 +119,7 @@ export default function Footer() {
 
                     {/* Social Links */}
                     <motion.div variants={fadeUp} className="md:col-span-3">
-                        <h4 className="text-xs font-bold text-purple-400/50 uppercase tracking-widest mb-6">Socials</h4>
+                        <h4 className="text-xs font-bold text-purple-400/50 uppercase tracking-widest mb-6">{t("socials")}</h4>
                         <ul className="space-y-4">
                             {socialLinks.map((link) => (
                                 <li key={link.name}>
@@ -137,20 +137,20 @@ export default function Footer() {
 
                     {/* Status */}
                     <motion.div variants={fadeUp} className="md:col-span-2">
-                        <h4 className="text-xs font-bold text-purple-400/50 uppercase tracking-widest mb-6">Status</h4>
+                        <h4 className="text-xs font-bold text-purple-400/50 uppercase tracking-widest mb-6">{t("status_heading")}</h4>
                         <div className="space-y-6">
                             <div>
-                                <p className="text-white/35 text-sm mb-1">Availability</p>
+                                <p className="text-white/35 text-sm mb-1">{t("availability")}</p>
                                 <div className="flex items-center gap-2">
                                     <span className="relative flex h-2.5 w-2.5">
                                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                                         <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]"></span>
                                     </span>
-                                    <span className="text-sm font-medium text-green-300/80">Open for work</span>
+                                    <span className="text-sm font-medium text-green-300/80">{t("open_work")}</span>
                                 </div>
                             </div>
                             <div>
-                                <p className="text-white/35 text-sm mb-1">Time Zone</p>
+                                <p className="text-white/35 text-sm mb-1">{t("timezone")}</p>
                                 <p className="text-sm font-medium text-white/60">GMT+7 Jakarta 🌏</p>
                             </div>
                         </div>

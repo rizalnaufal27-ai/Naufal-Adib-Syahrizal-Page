@@ -1,0 +1,80 @@
+{
+    "Navigation": {
+        "home": "Beranda",
+        "about": "Tentang",
+        "work": "Karya",
+        "services": "Layanan",
+        "track": "Lacak Proyek",
+        "contact": "Kontak",
+        "dashboard": "Dasbor",
+        "consultation": "Konsultasi",
+        "admin": "Admin"
+    },
+    "Hero": {
+        "available": "Tersedia untuk freelance",
+        "cta": {
+            "order": "Pesan",
+            "resume": "Lihat CV",
+            "contact": "Hubungi Saya"
+        },
+        "bio": "Saya seorang desainer multidisiplin dan pengembang full-stack yang berspesialisasi dalam menciptakan pengalaman digital. Saya menghidupkan produk digital melalui perpaduan desain, teknologi, dan empati."
+    },
+    "Profile": {
+        "label": "Profil Kreatif",
+        "vision_title": "Visi",
+        "vision_desc": "Saya adalah seorang profesional kreatif serba bisa yang berspesialisasi dalam menjembatani jarak antara visi artistik dan desain fungsional. Dengan keahlian di bidang <strong class=\"font-bold\" style=\"color: #D4ADFC\">Desain Grafis, Ilustrasi, Fotografi, Edit Video, Desain Web, dan Pengembangan Aplikasi</strong>, saya bertindak sebagai mitra kreatif lengkap untuk merek dan individu yang ingin meningkatkan identitas visual mereka.",
+        "mision_title": "Misi",
+        "mision_quote": "Mengubah ide canggih menjadi cerita visual menarik yang beresonansi.",
+        "mision_desc": "Misi saya adalah memberikan solusi visual terpadu yang tidak hanya \"terlihat bagus\" namun mendorong keterlibatan dan mengomunikasikan nilai. Baik itu melalui ilustrasi yang dibuat dengan cermat, identitas merek berdampak tinggi, atau video yang dinamis, saya bertujuan membantu klien menonjol di ranah digital melalui konsistensi dan keunggulan visual.",
+        "deliverables_title": "Hasil Karya"
+    },
+    "Services": {
+        "label": "Tawaran Saya",
+        "title": "Layanan",
+        "desc": "Solusi kreatif ujung-ke-ujung yang disesuaikan untuk merek Anda. Dari desain hingga pengembangan.",
+        "get_quote": "Lihat Harga ✦"
+    },
+    "Skills": {
+        "label": "Peralatan",
+        "title": "Keahlian & Alat",
+        "desc": "Menguasai perangkat lunak untuk wujudkan visi kreatif menjadi nyata"
+    },
+    "Portfolio": {
+        "label": "Karya Pilihan",
+        "title": "Portofolio",
+        "desc": "Jelajahi proyek terbaru seputar desain, ilustrasi, dan pengembangan aplikasi.",
+        "empty": "Tidak ada proyek yang ditemukan pada kategori ini.",
+        "click_view": "Klik untuk melihat"
+    },
+    "Experience": {
+        "label": "Perjalanan",
+        "title": "Pengalaman",
+        "duration_intensity": "Intensitas Durasi"
+    },
+    "Dashboard": {
+        "label": "Transparansi",
+        "title": "Dasbor",
+        "desc": "Lacak status pesanan Anda secara real-time. Tidak perlu login.",
+        "active_orders": "Pesanan Aktif",
+        "view_full": "Lihat Dasbor Penuh ✦",
+        "columns": {
+            "order": "Pesanan",
+            "service": "Layanan",
+            "status": "Status",
+            "progress": "Progres"
+        },
+        "no_active": "Tidak ada pesanan aktif"
+    },
+    "Footer": {
+        "heading1": "Mari bekerja",
+        "heading2": "bersama.",
+        "bio": "Menciptakan pengalaman digital kosmik yang memadukan estetika dengan fungsionalitas. Berbasis di Jakarta, Indonesia. ✦",
+        "rights": "Hak Cipta Dilindungi",
+        "menu": "Menu",
+        "socials": "Sosial",
+        "status_heading": "Status",
+        "availability": "Ketersediaan",
+        "open_work": "Terbuka untuk pekerjaan",
+        "timezone": "Zona Waktu"
+    }
+}
