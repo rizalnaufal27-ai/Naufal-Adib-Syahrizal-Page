@@ -1,9 +1,9 @@
 {
     "Hero": {
         "available": "Available for work",
-        "university": "Universitas Indraprasta PGRI — Visual Communication Design Student",
         "bio": "I am a final semester student at Indraprasta PGRI University, majoring in Visual Communication Design. Combining concept-based ideas with visual storytelling to create meaningful and impactful creative works across graphic design, illustration, photography, and video editing.",
         "cta": {
+            "order": "Start a Project",
             "resume": "View Resume",
             "contact": "Get in Touch"
         }
@@ -14,5 +14,56 @@
         "work": "Work",
         "services": "Services",
         "contact": "Contact"
+    },
+    "Skills": {
+        "label": "Skills & Tools",
+        "title": "My Superpowers",
+        "desc": "The creative arsenal I use to bring ideas to life."
+    },
+    "Services": {
+        "label": "My Services",
+        "title": "What I Can Do for You",
+        "desc": "From branding to digital presence, I offer complete creative solutions to elevate your brand.",
+        "get_quote": "Get Quote"
+    },
+    "Profile": {
+        "label": "About Me",
+        "vision_title": "Vision",
+        "vision_desc": "To be a leading creative innovator who merges strategic thinking with compelling visual design.",
+        "mision_title": "Mission",
+        "mision_quote": "\"Design is not just what it looks like, it's how it works.\"",
+        "mision_desc": "Delivering high-quality, impactful creative solutions that help brands communicate their message effectively through design, photography, and video.",
+        "deliverables_title": "Deliverables"
+    },
+    "Experience": {
+        "label": "My Journey",
+        "title": "Experience & Education",
+        "duration_intensity": "Duration & Intensity"
+    },
+    "Dashboard": {
+        "label": "Client Portal",
+        "title": "Project Dashboard",
+        "desc": "Track your ongoing project status and recent updates in real-time.",
+        "active_orders": "Active Orders",
+        "view_full": "View Full Dashboard",
+        "columns": {
+            "order": "Order ID",
+            "service": "Service",
+            "status": "Status",
+            "progress": "Progress"
+        },
+        "no_active": "No active orders right now."
+    },
+    "Footer": {
+        "heading1": "Let's create something",
+        "heading2": "amazing together.",
+        "bio": "Creative Designer & Visual Communicator specializing in branding, illustration, and digital experiences.",
+        "rights": "All rights reserved.",
+        "menu": "Menu",
+        "socials": "Socials",
+        "status_heading": "Status",
+        "availability": "Availability",
+        "open_work": "Open for work",
+        "timezone": "Timezone"
     }
 }

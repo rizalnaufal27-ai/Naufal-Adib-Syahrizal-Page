@@ -1,9 +1,9 @@
 {
     "Hero": {
         "available": "Tersedia untuk proyek",
-        "university": "Universitas Indraprasta PGRI — Mahasiswa Desain Komunikasi Visual",
         "bio": "Saya adalah mahasiswa semester akhir di Universitas Indraprasta PGRI, jurusan Desain Komunikasi Visual. Menggabungkan ide berbasis konsep dengan penceritaan visual untuk menciptakan karya kreatif yang bermakna dan berdampak di bidang desain grafis, ilustrasi, fotografi, dan pengeditan video.",
         "cta": {
+            "order": "Mulai Proyek",
             "resume": "Lihat Resume",
             "contact": "Hubungi Saya"
         }
@@ -14,5 +14,56 @@
         "work": "Karya",
         "services": "Layanan",
         "contact": "Kontak"
+    },
+    "Skills": {
+        "label": "Keahlian & Alat",
+        "title": "Kemampuan Saya",
+        "desc": "Alat-alat kreatif yang saya gunakan untuk mewujudkan ide menjadi nyata."
+    },
+    "Services": {
+        "label": "Layanan Saya",
+        "title": "Apa yang Bisa Saya Lakukan",
+        "desc": "Dari branding hingga kehadiran digital, saya menawarkan solusi kreatif lengkap untuk meningkatkan merek Anda.",
+        "get_quote": "Dapatkan Penawaran"
+    },
+    "Profile": {
+        "label": "Tentang Saya",
+        "vision_title": "Visi",
+        "vision_desc": "Menjadi inovator kreatif terkemuka yang menggabungkan pemikiran strategis dengan desain visual yang menarik.",
+        "mision_title": "Misi",
+        "mision_quote": "\"Desain bukan hanya tentang bagaimana kelihatannya, tapi bagaimana itu berfungsi.\"",
+        "mision_desc": "Memberikan solusi kreatif yang berdampak tinggi dan berkualitas untuk membantu merek mengomunikasikan pesan mereka secara efektif melalui desain, fotografi, dan video.",
+        "deliverables_title": "Hasil Karya"
+    },
+    "Experience": {
+        "label": "Perjalanan Saya",
+        "title": "Pengalaman & Pendidikan",
+        "duration_intensity": "Durasi & Intensitas"
+    },
+    "Dashboard": {
+        "label": "Portal Klien",
+        "title": "Dasbor Proyek",
+        "desc": "Lacak status proyek Anda yang sedang berjalan dan pembaruan terkini secara real-time.",
+        "active_orders": "Pesanan Aktif",
+        "view_full": "Lihat Dasbor Lengkap",
+        "columns": {
+            "order": "ID Pesanan",
+            "service": "Layanan",
+            "status": "Status",
+            "progress": "Kemajuan"
+        },
+        "no_active": "Tidak ada pesanan aktif saat ini."
+    },
+    "Footer": {
+        "heading1": "Mari ciptakan sesuatu yang",
+        "heading2": "luar biasa bersama-sama.",
+        "bio": "Desainer Kreatif & Komunikator Visual yang berspesialisasi dalam branding, ilustrasi, dan pengalaman digital.",
+        "rights": "Hak cipta dilindungi.",
+        "menu": "Menu",
+        "socials": "Sosial",
+        "status_heading": "Status",
+        "availability": "Ketersediaan",
+        "open_work": "Menerima proyek",
+        "timezone": "Zona Waktu"
     }
 }
