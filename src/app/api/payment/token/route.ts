@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
             // Check if existing token was actually paid but webhook missed it
             if (order.midtrans_order_id && order.midtrans_order_id.startsWith("DP-") && order.down_payment_status === "pending") {
                 try {
-                    const statusRes = await coreApi.transaction.status(order.midtrans_order_id);
+                    const statusRes = await (coreApi as any).transaction.status(order.midtrans_order_id);
                     if (statusRes.transaction_status === "capture" || statusRes.transaction_status === "settlement") {
                         const newStatus = (statusRes.fraud_status === "accept" || !statusRes.fraud_status) ? "paid" : "pending";
                         if (newStatus === "paid") {
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
             // Check if existing token was actually paid but webhook missed it
             if (order.midtrans_order_id && order.midtrans_order_id.startsWith("FP-") && order.final_payment_status === "pending") {
                 try {
-                    const statusRes = await coreApi.transaction.status(order.midtrans_order_id);
+                    const statusRes = await (coreApi as any).transaction.status(order.midtrans_order_id);
                     if (statusRes.transaction_status === "capture" || statusRes.transaction_status === "settlement") {
                         const newStatus = (statusRes.fraud_status === "accept" || !statusRes.fraud_status) ? "paid" : "pending";
                         if (newStatus === "paid") {

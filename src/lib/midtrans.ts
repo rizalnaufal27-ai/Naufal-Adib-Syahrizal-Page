@@ -56,7 +56,7 @@ export async function createSnapTransaction(params: {
  * Verify notification signature from Midtrans webhook
  */
 export async function verifyNotification(notificationBody: Record<string, unknown>) {
-    const statusResponse = await coreApi.transaction.notification(notificationBody);
+    const statusResponse = await (coreApi as any).transaction.notification(notificationBody);
     return {
         orderId: statusResponse.order_id as string,
         transactionStatus: statusResponse.transaction_status as string,

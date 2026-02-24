@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Verify status with Midtrans
-        const statusRes = await coreApi.transaction.status(order_id);
+        const statusRes = await (coreApi as any).transaction.status(order_id);
 
         const transactionStatus = statusRes.transaction_status;
         const fraudStatus = statusRes.fraud_status;

@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
         }
 
         if (transactionIdToCheck) {
-            const statusResponse = await coreApi.transaction.status(transactionIdToCheck);
+            const statusResponse = await (coreApi as any).transaction.status(transactionIdToCheck);
             const { transaction_status, fraud_status, transaction_id } = statusResponse;
 
             let newStatus = "pending";

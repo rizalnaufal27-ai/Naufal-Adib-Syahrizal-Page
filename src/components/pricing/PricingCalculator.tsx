@@ -93,6 +93,7 @@ export default function PricingCalculator({ onPriceCalculated }: PricingCalculat
                     <div className="grid grid-cols-2 gap-2">
                         {[
                             { id: "logo", label: "Logo Design", price: 5 },
+                            { id: "bookCover", label: "Book Cover", price: 5 },
                             { id: "banner", label: "Banner Design", price: 5 },
                             { id: "poster", label: "Poster Design", price: 5 },
                             { id: "brand", label: "Brand Package", price: 20 },

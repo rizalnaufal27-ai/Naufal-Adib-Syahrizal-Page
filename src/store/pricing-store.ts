@@ -122,6 +122,7 @@ export const usePricingStore = create<PricingState>((set, get) => ({
             case "design": {
                 let total = 0;
                 if (s.designItems.includes("logo")) total += 5;
+                if (s.designItems.includes("bookCover")) total += 5;
                 if (s.designItems.includes("banner")) total += 5;
                 if (s.designItems.includes("poster")) total += 5;
                 if (s.designItems.includes("brand")) total += 20;

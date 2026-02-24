@@ -13,6 +13,7 @@ interface Order {
     result_files: Array<{ name: string; url: string; type: string; size: number; uploadedAt: string }>;
     uuid_token: string; chat_enabled: boolean; created_at: string; updated_at: string;
     pricing_details?: any;
+    admin_notes?: string;
 }
 interface ResultFile { name: string; url: string; type: string; size: number; uploadedAt: string; }
 interface ChatMsg { id: string; sender: "customer" | "admin"; message: string; created_at: string; }
@@ -426,7 +427,7 @@ export default function AdminPage() {
                                                         <h3 className="text-[10px] font-bold uppercase tracking-widest text-white/30">Payment</h3>
                                                         <button onClick={async () => { try { const res = await fetch("/api/payment/check-status", { method: "POST", body: JSON.stringify({ orderId: selected.id }) }); const data = await res.json(); if (data.updated) { const { data: u } = await supabase.from("orders").select("*").eq("id", selected.id).single(); if (u) { setSelected(u); fetchOrders(); } alert("Synced: " + data.status); } else alert("No change: " + (data.status || data.error)); } catch { alert("Error"); } }} className="text-[10px] px-2 py-1 rounded text-white/30 hover:text-white/60 border border-white/[0.06] transition-all">Sync</button>
                                                     </div>
-                                                    <div className="flex justify-between text-sm"><span className="text-white/40">Total</span><span className="font-bold text-white">{fmt(selected.gross_amount)}</span></div>
+                                                    <div className="flex justify-between text-sm"><span className="text-white/40">Total</span><div className="flex items-center gap-2">{selected.gross_amount === 0 && <span className="text-[10px] px-1.5 py-0.5 rounded bg-pink-500/20 text-pink-400 font-bold uppercase tracking-wider">100% Promo</span>}<span className="font-bold text-white">{fmt(selected.gross_amount)}</span></div></div>
                                                     {selected.pricing_details && typeof selected.pricing_details === 'object' && (
                                                         <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.04]">
                                                             <h4 className="text-[10px] font-bold uppercase tracking-widest text-white/20 mb-2">Pricing Config</h4>
@@ -448,6 +449,21 @@ export default function AdminPage() {
                                                         <input readOnly value={`${typeof window !== "undefined" ? window.location.origin : ""}/order/${selected.uuid_token}`} className="flex-1 px-3 py-2 rounded-lg text-xs font-mono bg-white/[0.04] border border-white/[0.06] text-white/40 outline-none" />
                                                         <button onClick={() => navigator.clipboard.writeText(`${window.location.origin}/order/${selected.uuid_token}`)} className="px-3 py-2 rounded-lg text-xs font-semibold text-blue-400 border border-blue-500/20 hover:bg-blue-500/10 transition-all flex items-center gap-1.5">{Icons.copy} Copy</button>
                                                     </div>
+                                                </div>
+
+                                                {/* Admin Notes */}
+                                                <div className="rounded-2xl border border-white/[0.06] bg-white/[0.015] p-5">
+                                                    <div className="flex items-center justify-between mb-3">
+                                                        <h3 className="text-[10px] font-bold uppercase tracking-widest text-white/30">Admin Notes</h3>
+                                                        <button onClick={() => updateOrder("admin_notes", selected.admin_notes)} className="text-[10px] px-3 py-1.5 rounded-lg font-semibold text-white transition-all hover:brightness-110" style={{ background: "linear-gradient(135deg, #3B82F6, #2563EB)" }}>Save Notes</button>
+                                                    </div>
+                                                    <textarea
+                                                        value={selected.admin_notes || ""}
+                                                        onChange={(e) => setSelected({ ...selected, admin_notes: e.target.value })}
+                                                        placeholder="Private notes (links, internal info)..."
+                                                        className="w-full px-3 py-2.5 rounded-lg text-sm bg-white/[0.04] border border-white/[0.06] text-white outline-none resize-none focus:ring-1 focus:ring-blue-500/50"
+                                                        rows={4}
+                                                    />
                                                 </div>
                                             </div>
                                         )}

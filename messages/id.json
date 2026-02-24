@@ -103,6 +103,7 @@
             "select": "Pilih Opsi Desain",
             "items": {
                 "logo": "Desain Logo",
+                "bookCover": "Desain Sampul Buku",
                 "banner": "Desain Spanduk",
                 "poster": "Desain Poster",
                 "brand": "Paket Merek"

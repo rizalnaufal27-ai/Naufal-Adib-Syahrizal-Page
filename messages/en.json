@@ -103,6 +103,7 @@
             "select": "Select Design Options",
             "items": {
                 "logo": "Logo Design",
+                "bookCover": "Book Cover",
                 "banner": "Banner Design",
                 "poster": "Poster Design",
                 "brand": "Brand Package"
