@@ -16,8 +16,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import Script from 'next/script';
 
-import SpaceAmbience from "@/components/SpaceAmbience";
-import { AudioProvider } from "@/components/AudioContext";
+
 
 export default async function RootLayout({
   children,
@@ -31,11 +30,8 @@ export default async function RootLayout({
     <html lang={locale} className="dark">
       <body className="antialiased">
         <NextIntlClientProvider messages={messages}>
-          <AudioProvider>
-            <div className="noise-overlay" />
-            {children}
-            <SpaceAmbience />
-          </AudioProvider>
+          <div className="noise-overlay" />
+          {children}
         </NextIntlClientProvider>
         {/* Midtrans Snap.js — loaded before interactive for payment pages */}
         <Script

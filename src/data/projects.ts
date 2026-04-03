@@ -1,4 +1,4 @@
-export type ProjectCategory = "Graphic Design" | "Illustration" | "Photography" | "Video Editing" | "Animation";
+export type ProjectCategory = "Graphic Design" | "Illustration" | "Photography" | "Video Editing" | "Animation" | "App Development";
 
 export interface Project {
     id: number;
@@ -13,6 +13,17 @@ export interface Project {
 }
 
 export const projects: Project[] = [
+    {
+        id: 15,
+        title: "Vizento 2.0 — Gamified Learning App",
+        category: "App Development",
+        image: "/images/portfolio/vizento/cover.png",
+        gradient: "linear-gradient(135deg, #1E293B, #6366F1)",
+        tools: ["Flutter", "Riverpod", "Supabase", "Machine Learning"],
+        story: "A comprehensive gamified creative learning platform focused on Visual Communication Design (DKV). Vizento 2.0 features offline AI voice recognition, a collaborative Gameboard era progression, and realtime multiplayer rooms, redefining how creatives learn and collaborate together.",
+        media: ["/images/portfolio/vizento/cover.png"],
+        date: "2026",
+    },
     {
         id: 1,
         title: "Happy Biscuit — Packaging Design",

@@ -1,53 +1,30 @@
 import { create } from "zustand";
 
-export type ServiceType = "design" | "illustration" | "photo" | "video" | "web" | "app";
+export type ServiceType = "brand_identity" | "digital_presence" | "startup_mvp";
 
 interface PricingState {
     service: ServiceType | null;
     setService: (s: ServiceType | null) => void;
 
-    // Graphic Design
-    designItems: string[];
-    toggleDesignItem: (item: string) => void;
+    // Base Modifiers
+    expressDelivery: boolean;
+    setExpressDelivery: (b: boolean) => void;
 
-    // Illustration
-    illusType: "half" | "full" | "render";
-    setIllusType: (t: "half" | "full" | "render") => void;
-    charCount: number;
-    setCharCount: (n: number) => void;
+    // Brand Identity
+    brandAddons: string[];
+    toggleBrandAddon: (item: string) => void;
 
-    // Photography
-    photoMode: "package" | "edit";
-    setPhotoMode: (m: "package" | "edit") => void;
-    location: string;
-    setLocation: (l: string) => void;
-    isJabodetabek: boolean | null;
-    editComplexity: number;
-    setEditComplexity: (n: number) => void;
-    addRaw: boolean;
-    setAddRaw: (b: boolean) => void;
-
-    // Video
-    videoDuration: number;
-    setVideoDuration: (n: number) => void;
-    videoComplexity: "low" | "med" | "high";
-    setVideoComplexity: (c: "low" | "med" | "high") => void;
-
-    // Web Design
+    // Digital Presence
     webPages: number;
     setWebPages: (n: number) => void;
-    webResponsive: "basic" | "full";
-    setWebResponsive: (r: "basic" | "full") => void;
-    webInteractivity: "static" | "dynamic" | "cms";
-    setWebInteractivity: (i: "static" | "dynamic" | "cms") => void;
+    webCMS: boolean;
+    setWebCMS: (b: boolean) => void;
 
-    // App Design
+    // Startup MVP
     appFlows: number;
     setAppFlows: (n: number) => void;
-    appPrototype: "lofi" | "hifi";
-    setAppPrototype: (p: "lofi" | "hifi") => void;
-    appLogic: "simple" | "moderate" | "complex";
-    setAppLogic: (l: "simple" | "moderate" | "complex") => void;
+    appAI: boolean;
+    setAppAI: (b: boolean) => void;
 
     // Currency
     currency: "USD" | "IDR";
@@ -56,61 +33,33 @@ interface PricingState {
 
     // Computed
     getTotalUSD: () => number;
+    getEstimatedDays: () => number;
     formatPrice: (usd: number) => string;
     getServiceLabel: () => string;
     reset: () => void;
 }
 
-const JABODETABEK = ["jakarta", "bogor", "depok", "tangerang", "bekasi", "jabodetabek"];
-
 export const usePricingStore = create<PricingState>((set, get) => ({
     service: null,
     setService: (s) => set({ service: s }),
 
-    designItems: [],
-    toggleDesignItem: (item) =>
-        set((state) => ({
-            designItems: state.designItems.includes(item)
-                ? state.designItems.filter((i) => i !== item)
-                : [...state.designItems, item],
-        })),
+    expressDelivery: false,
+    setExpressDelivery: (b) => set({ expressDelivery: b }),
 
-    illusType: "half",
-    setIllusType: (t) => set({ illusType: t }),
-    charCount: 1,
-    setCharCount: (n) => set({ charCount: n }),
-
-    photoMode: "package",
-    setPhotoMode: (m) => set({ photoMode: m }),
-    location: "",
-    setLocation: (l) => {
-        const lower = l.toLowerCase();
-        set({ location: l, isJabodetabek: l.length > 2 ? JABODETABEK.some((a) => lower.includes(a)) : null });
-    },
-    isJabodetabek: null,
-    editComplexity: 3,
-    setEditComplexity: (n) => set({ editComplexity: n }),
-    addRaw: false,
-    setAddRaw: (b) => set({ addRaw: b }),
-
-    videoDuration: 5,
-    setVideoDuration: (n) => set({ videoDuration: n }),
-    videoComplexity: "low",
-    setVideoComplexity: (c) => set({ videoComplexity: c }),
+    brandAddons: [],
+    toggleBrandAddon: (item) => set((s) => ({
+        brandAddons: s.brandAddons.includes(item) ? s.brandAddons.filter((i) => i !== item) : [...s.brandAddons, item]
+    })),
 
     webPages: 3,
     setWebPages: (n) => set({ webPages: n }),
-    webResponsive: "basic",
-    setWebResponsive: (r) => set({ webResponsive: r }),
-    webInteractivity: "static",
-    setWebInteractivity: (i) => set({ webInteractivity: i }),
+    webCMS: false,
+    setWebCMS: (b) => set({ webCMS: b }),
 
-    appFlows: 3,
+    appFlows: 5,
     setAppFlows: (n) => set({ appFlows: n }),
-    appPrototype: "lofi",
-    setAppPrototype: (p) => set({ appPrototype: p }),
-    appLogic: "simple",
-    setAppLogic: (l) => set({ appLogic: l }),
+    appAI: false,
+    setAppAI: (b) => set({ appAI: b }),
 
     currency: "USD",
     rate: 1,
@@ -118,44 +67,63 @@ export const usePricingStore = create<PricingState>((set, get) => ({
 
     getTotalUSD: () => {
         const s = get();
+        let total = 0;
         switch (s.service) {
-            case "design": {
-                let total = 0;
-                if (s.designItems.includes("logo")) total += 5;
-                if (s.designItems.includes("bookCover")) total += 5;
-                if (s.designItems.includes("banner")) total += 5;
-                if (s.designItems.includes("poster")) total += 5;
-                if (s.designItems.includes("brand")) total += 20;
-                return total;
-            }
-            case "illustration": {
-                const prices = { half: 5, full: 8, render: 12 };
-                return prices[s.illusType] * s.charCount;
-            }
-            case "photo": {
-                if (s.photoMode === "package") {
-                    return s.isJabodetabek ? 20 + (s.addRaw ? 5 : 0) : 0;
-                }
-                return s.editComplexity;
-            }
-            case "video": {
-                const base = { low: 10, med: 30, high: 50 };
-                const overtime = Math.max(0, s.videoDuration - 10) * 2;
-                return base[s.videoComplexity] + overtime;
-            }
-            case "web": {
-                const responsiveM = s.webResponsive === "full" ? 1.5 : 1;
-                const interactM = { static: 1, dynamic: 1.8, cms: 2.5 };
-                return Math.round(s.webPages * 25 * responsiveM * interactM[s.webInteractivity]);
-            }
-            case "app": {
-                const protoM = s.appPrototype === "hifi" ? 2 : 1;
-                const logicM = { simple: 1, moderate: 1.5, complex: 2.5 };
-                return Math.round(s.appFlows * 30 * protoM * logicM[s.appLogic]);
-            }
+            case "brand_identity":
+                total = 200; // Base: Logo + Guidelines
+                if (s.brandAddons.includes("social")) total += 50;
+                if (s.brandAddons.includes("stationery")) total += 30;
+                if (s.brandAddons.includes("3d")) total += 100;
+                break;
+            case "digital_presence":
+                total = 400; // Base Web
+                total += Math.max(0, s.webPages - 3) * 50;
+                if (s.webCMS) total += 200;
+                break;
+            case "startup_mvp":
+                total = 800; // Base App
+                total += Math.max(0, s.appFlows - 5) * 80;
+                if (s.appAI) total += 500;
+                break;
             default:
                 return 0;
         }
+        
+        // Rush Fee (50% Markup)
+        if (s.expressDelivery) {
+            total = Math.round(total * 1.5);
+        }
+        return total;
+    },
+
+    getEstimatedDays: () => {
+        const s = get();
+        let days = 0;
+        switch (s.service) {
+            case "brand_identity":
+                days = 7;
+                if (s.brandAddons.includes("3d")) days += 4;
+                break;
+            case "digital_presence":
+                days = 14;
+                days += Math.max(0, s.webPages - 3) * 1;
+                if (s.webCMS) days += 5;
+                break;
+            case "startup_mvp":
+                days = 30;
+                days += Math.max(0, s.appFlows - 5) * 2;
+                if (s.appAI) days += 10;
+                break;
+            default:
+                return 0;
+        }
+
+        // Express halves the days
+        if (s.expressDelivery) {
+            days = Math.max(3, Math.ceil(days / 2));
+        }
+
+        return days;
     },
 
     formatPrice: (usd: number) => {
@@ -166,34 +134,20 @@ export const usePricingStore = create<PricingState>((set, get) => ({
 
     getServiceLabel: () => {
         const labels: Record<ServiceType, string> = {
-            design: "Graphic Design",
-            illustration: "Illustration",
-            photo: "Photography",
-            video: "Video Production",
-            web: "Web Design",
-            app: "App Design",
+            brand_identity: "Brand Identity",
+            digital_presence: "Digital Web Presence",
+            startup_mvp: "Startup MVP Builder",
         };
-        return labels[get().service || "design"];
+        return labels[get().service || "brand_identity"];
     },
 
-    reset: () =>
-        set({
-            service: null,
-            designItems: [],
-            illusType: "half",
-            charCount: 1,
-            photoMode: "package",
-            location: "",
-            isJabodetabek: null,
-            editComplexity: 3,
-            addRaw: false,
-            videoDuration: 5,
-            videoComplexity: "low",
-            webPages: 3,
-            webResponsive: "basic",
-            webInteractivity: "static",
-            appFlows: 3,
-            appPrototype: "lofi",
-            appLogic: "simple",
-        }),
+    reset: () => set({
+        service: null,
+        expressDelivery: false,
+        brandAddons: [],
+        webPages: 3,
+        webCMS: false,
+        appFlows: 5,
+        appAI: false,
+    })
 }));

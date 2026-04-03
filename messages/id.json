@@ -201,5 +201,59 @@
             "subtitle": "Pesanan Anda telah dicatat. Kami akan segera menghubungi Anda.",
             "privateLink": "Simpan tautan pribadi ini untuk melacak proyek Anda:"
         }
+    },
+    "PortfolioGrid": {
+        "selectedWorks": "Karya Pilihan",
+        "portfolio": "Portofolio",
+        "browse": "Jelajahi proyek dan studi kasus terbaru saya.",
+        "clickToView": "Klik untuk melihat detail",
+        "noProjects": "Tidak ada proyek ditemukan di kategori ini."
+    },
+    "Chatbot": {
+        "title": "Concierge Studio",
+        "subtitle": "Naufal Adib • Studio Kreatif",
+        "pillLabel": "Tanya apa saja",
+        "greeting": "Selamat datang di studio Naufal. Saya siap membantu Anda.",
+        "helpText": "Tanyakan tentang layanan, harga, atau mulai proyek.",
+        "placeholder": "Ada yang bisa dibantu?",
+        "send": "Kirim",
+        "quickActions": {
+            "pricing": "Lihat harga",
+            "portfolio": "Lihat portofolio",
+            "track": "Lacak pesanan",
+            "order": "Mulai proyek"
+        },
+        "error": {
+            "processing": "Tidak bisa memproses. Coba lagi ya.",
+            "connection": "Koneksi bermasalah. Periksa internet Anda."
+        }
+    },
+    "IntroSequence": {
+        "initializing": "Studio Kreatif",
+        "ready": "Siap."
+    },
+    "ResumePage": {
+        "title": "Resume",
+        "download": "Unduh PDF"
+    },
+    "TrackPage": {
+        "title": "Lacak Pesanan",
+        "placeholder": "Masukkan ID Pesanan",
+        "submit": "Lacak"
+    },
+    "OrderPage": {
+        "title": "Detail Pesanan",
+        "status": "Status Pesanan"
+    },
+    "PublicDashboard": {
+        "title": "Dasbor",
+        "welcome": "Selamat datang kembali"
+    },
+    "ConsultationPage": {
+        "title": "Konsultasi",
+        "book": "Pesan jadwal"
+    },
+    "FloatingOrderFab": {
+        "order": "Pesan Sekarang"
     }
 }

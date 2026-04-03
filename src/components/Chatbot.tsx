@@ -1,6 +1,7 @@
 "use client";
-import { useState, useRef, useEffect, type ReactNode } from "react";
+import { useState, useRef, useEffect, useCallback, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface ChatbotProps {
     onOpenPricing: () => void;
@@ -11,9 +12,9 @@ interface Message {
     content: string;
 }
 
-const TRIGGER_WORDS = ["order", "price", "hire", "cost", "quote", "pricing", "harga", "pesan"];
+const TRIGGER_WORDS = ["order", "price", "hire", "cost", "quote", "pricing", "harga", "pesan", "book", "start"];
 
-// Simple markdown renderer for tables and bold text
+// ── Markdown Renderer ──────────────────────────────────────────
 function renderMd(text: string): ReactNode {
     const lines = text.split("\n");
     const elements: ReactNode[] = [];
@@ -21,13 +22,12 @@ function renderMd(text: string): ReactNode {
     let inTable = false;
 
     const processText = (t: string, key: string) => {
-        // Bold
         const parts = t.split(/(\*\*[^*]+\*\*)/g);
         return (
             <span key={key}>
                 {parts.map((p, i) =>
                     p.startsWith("**") && p.endsWith("**")
-                        ? <strong key={i} className="font-bold">{p.slice(2, -2)}</strong>
+                        ? <strong key={i} className="font-bold text-white">{p.slice(2, -2)}</strong>
                         : p
                 )}
             </span>
@@ -39,10 +39,10 @@ function renderMd(text: string): ReactNode {
         const header = tableRows[0];
         const body = tableRows.slice(1).filter(r => !r.every(c => /^[-:]+$/.test(c.trim())));
         elements.push(
-            <div key={`tbl-${elements.length}`} className="my-2 overflow-x-auto rounded-lg" style={{ border: "1px solid rgba(255,255,255,0.1)" }}>
+            <div key={`tbl-${elements.length}`} className="my-2 overflow-x-auto rounded-lg" style={{ border: "1px solid rgba(255,255,255,0.08)" }}>
                 <table className="w-full text-[11px]">
-                    <thead><tr style={{ background: "rgba(99,102,241,0.15)" }}>{header.map((h, i) => <th key={i} className="px-2 py-1.5 text-left font-bold text-indigo-300">{h.trim()}</th>)}</tr></thead>
-                    <tbody>{body.map((row, ri) => <tr key={ri} style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>{row.map((c, ci) => <td key={ci} className="px-2 py-1 text-white/70">{c.trim()}</td>)}</tr>)}</tbody>
+                    <thead><tr style={{ background: "rgba(255,255,255,0.04)" }}>{header.map((h, i) => <th key={i} className="px-2 py-1.5 text-left font-bold text-white/70">{h.trim()}</th>)}</tr></thead>
+                    <tbody>{body.map((row, ri) => <tr key={ri} style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>{row.map((c, ci) => <td key={ci} className="px-2 py-1 text-white/50">{c.trim()}</td>)}</tr>)}</tbody>
                 </table>
             </div>
         );
@@ -53,43 +53,60 @@ function renderMd(text: string): ReactNode {
         const trimmed = line.trim();
         if (trimmed.startsWith("|") && trimmed.endsWith("|")) {
             inTable = true;
-            const cells = trimmed.split("|").filter(Boolean);
-            tableRows.push(cells);
+            tableRows.push(trimmed.split("|").filter(Boolean));
         } else {
             if (inTable) { flushTable(); inTable = false; }
-            if (trimmed === "") {
-                elements.push(<br key={`br-${li}`} />);
-            } else if (trimmed.startsWith("## ")) {
-                elements.push(<p key={li} className="font-bold text-xs text-indigo-300 mt-2 mb-1">{trimmed.slice(3)}</p>);
-            } else if (/^\d+\.\s/.test(trimmed)) {
-                elements.push(<p key={li} className="ml-2">{processText(trimmed, `li-${li}`)}</p>);
-            } else if (trimmed.startsWith("- ")) {
-                elements.push(<p key={li} className="ml-2">• {processText(trimmed.slice(2), `bl-${li}`)}</p>);
-            } else {
-                elements.push(<p key={li}>{processText(trimmed, `p-${li}`)}</p>);
-            }
+            if (trimmed === "") elements.push(<br key={`br-${li}`} />);
+            else if (trimmed.startsWith("## ")) elements.push(<p key={li} className="font-bold text-xs text-white/60 mt-2 mb-1 uppercase tracking-wider">{trimmed.slice(3)}</p>);
+            else if (/^\d+\.\s/.test(trimmed)) elements.push(<p key={li} className="ml-2">{processText(trimmed, `li-${li}`)}</p>);
+            else if (trimmed.startsWith("- ")) elements.push(<p key={li} className="ml-2">• {processText(trimmed.slice(2), `bl-${li}`)}</p>);
+            else elements.push(<p key={li}>{processText(trimmed, `p-${li}`)}</p>);
         }
     });
     if (inTable) flushTable();
     return <>{elements}</>;
 }
 
+// ── Quick Action Suggestions ───────────────────────────────────
+const SUGGESTIONS = [
+    { emoji: "💰", key: "pricing" },
+    { emoji: "📁", key: "portfolio" },
+    { emoji: "📦", key: "track" },
+    { emoji: "🚀", key: "order" },
+];
+
+// ── AI Concierge Pill ──────────────────────────────────────────
 export default function Chatbot({ onOpenPricing }: ChatbotProps) {
     const t = useTranslations("Chatbot");
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
+    const [hasNewMessage, setHasNewMessage] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
 
-    const sendMessage = async () => {
-        if (!input.trim() || loading) return;
+    useEffect(() => {
+        if (isOpen) { inputRef.current?.focus(); setHasNewMessage(false); }
+    }, [isOpen]);
 
-        const userMsg: Message = { role: "user", content: input.trim() };
+    // Auto-greet after 8 seconds of inactivity
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (!isOpen && messages.length === 0) setHasNewMessage(true);
+        }, 8000);
+        return () => clearTimeout(timer);
+    }, [isOpen, messages.length]);
+
+    const sendMessage = useCallback(async (overrideInput?: string) => {
+        const text = (overrideInput || input).trim();
+        if (!text || loading) return;
+
+        const userMsg: Message = { role: "user", content: text };
         const newMessages = [...messages, userMsg];
         setMessages(newMessages);
         setInput("");
@@ -118,6 +135,7 @@ export default function Chatbot({ onOpenPricing }: ChatbotProps) {
             }
 
             setMessages([...newMessages, { role: "assistant", content: assistantContent }]);
+            if (!isOpen) setHasNewMessage(true);
         } catch {
             setMessages([
                 ...newMessages,
@@ -126,103 +144,176 @@ export default function Chatbot({ onOpenPricing }: ChatbotProps) {
         }
 
         setLoading(false);
-    };
+    }, [input, loading, messages, t, onOpenPricing, isOpen]);
 
     return (
         <>
-            {/* Floating Button */}
-            <button
+            {/* ═══ Floating Pill Trigger ═══ */}
+            <motion.button
                 onClick={() => setIsOpen(!isOpen)}
-                className="fixed bottom-6 right-6 z-[150] w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 group"
+                className="fixed z-[150] flex items-center gap-2.5 transition-all duration-300 group cursor-pointer"
                 style={{
-                    background: "linear-gradient(135deg, var(--color-primary), var(--color-secondary))",
-                    boxShadow: "0 4px 30px rgba(59,130,246,0.4)",
+                    bottom: "24px",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    background: "rgba(20,20,20,0.9)",
+                    backdropFilter: "blur(20px)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    borderRadius: "9999px",
+                    padding: isOpen ? "10px 16px" : "10px 20px",
+                    boxShadow: "0 8px 32px rgba(0,0,0,0.6)",
                 }}
-                aria-label="Open chat"
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                aria-label="Toggle concierge"
             >
-                {isOpen ? (
-                    <svg width="22" height="22" fill="none" stroke="#fff" strokeWidth="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" /></svg>
-                ) : (
-                    <svg width="22" height="22" fill="none" stroke="#fff" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
+                {/* Status Dot */}
+                <span className="relative flex h-2.5 w-2.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-40" />
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400" />
+                </span>
+
+                {!isOpen && (
+                    <span className="text-xs font-medium text-white/70 tracking-wide">
+                        {t("pillLabel")}
+                    </span>
                 )}
-                <div className="absolute inset-0 rounded-full" style={{ background: "linear-gradient(135deg, var(--color-primary), var(--color-secondary))", animation: "glowPulse 3s ease-in-out infinite", opacity: 0.5, zIndex: -1 }} />
-            </button>
 
-            {/* Chat Window */}
-            {isOpen && (
-                <div
-                    className="fixed bottom-24 right-6 z-[150] w-[380px] max-w-[calc(100vw-32px)] rounded-2xl overflow-hidden flex flex-col"
-                    style={{ height: "520px", background: "rgba(10,10,10,0.95)", backdropFilter: "blur(20px)", border: "1px solid var(--color-border)", boxShadow: "0 20px 60px rgba(0,0,0,0.5)" }}
-                >
-                    {/* Header */}
-                    <div className="px-5 py-4 flex items-center gap-3" style={{ background: "linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.1))", borderBottom: "1px solid var(--color-border)" }}>
-                        <div className="w-9 h-9 rounded-full flex-shrink-0" style={{ background: "linear-gradient(135deg, var(--color-primary), var(--color-secondary), var(--color-highlight))", animation: "glowPulse 3s ease-in-out infinite" }} />
-                        <div>
-                            <p className="text-sm font-semibold" style={{ color: "var(--color-text)" }}>{t("title")}</p>
-                            <p className="text-xs" style={{ color: "var(--color-text-muted)" }}>{t("subtitle")}</p>
+                {isOpen ? (
+                    <svg width="14" height="14" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" /></svg>
+                ) : (
+                    <svg width="14" height="14" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
+                )}
+
+                {/* New Message Indicator */}
+                {hasNewMessage && !isOpen && (
+                    <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-red-500 border-2 border-[#141414]" />
+                )}
+            </motion.button>
+
+            {/* ═══ Chat Panel ═══ */}
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 40, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 40, scale: 0.95 }}
+                        transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
+                        className="fixed z-[149] flex flex-col overflow-hidden"
+                        style={{
+                            bottom: "72px",
+                            left: "50%",
+                            transform: "translateX(-50%)",
+                            width: "min(420px, calc(100vw - 32px))",
+                            height: "520px",
+                            background: "rgba(10,10,10,0.97)",
+                            backdropFilter: "blur(24px)",
+                            border: "1px solid rgba(255,255,255,0.06)",
+                            borderRadius: "20px",
+                            boxShadow: "0 24px 80px rgba(0,0,0,0.7)",
+                        }}
+                    >
+                        {/* ── Header ── */}
+                        <div className="px-5 py-4 flex items-center gap-3" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+                            <div className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-sm" style={{ background: "rgba(255,255,255,0.06)" }}>
+                                ✦
+                            </div>
+                            <div>
+                                <p className="text-sm font-semibold text-white">{t("title")}</p>
+                                <p className="text-[11px] text-white/30">{t("subtitle")}</p>
+                            </div>
                         </div>
-                    </div>
 
-                    {/* Messages */}
-                    <div className="flex-1 overflow-y-auto p-4 space-y-3">
-                        {messages.length === 0 && (
-                            <div className="text-center py-6">
-                                <div className="w-14 h-14 rounded-full mx-auto mb-3" style={{ background: "linear-gradient(135deg, var(--color-primary), var(--color-secondary), var(--color-highlight))", animation: "float 6s ease-in-out infinite" }} />
-                                <p className="text-sm font-medium" style={{ color: "var(--color-text)" }}>{t("greeting")} 👋</p>
-                                <p className="text-xs mt-1 mb-3" style={{ color: "var(--color-text-muted)" }}>{t("helpText")}</p>
-                                {/* Quick action buttons */}
-                                <div className="flex flex-wrap gap-1.5 justify-center">
-                                    {[t("quickActions.pricing"), t("quickActions.portfolio"), t("quickActions.track"), t("quickActions.order")].map(q => (
-                                        <button key={q} onClick={() => { setInput(q.replace(/^[\u2700-\u27bf\ud800-\udbff\udc00-\udfff\u2000-\u3300\ufe0e\ufe0f\u00a9\u00ae]+\s*/, "").trim()); }} className="px-3 py-1.5 rounded-full text-[11px] font-medium transition-all hover:scale-105" style={{ background: "rgba(99,102,241,0.12)", color: "#818cf8", border: "1px solid rgba(99,102,241,0.2)" }}>{q}</button>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
-                        {messages.map((msg, i) => (
-                            <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                                <div
-                                    className="max-w-[85%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed"
-                                    style={{
-                                        background: msg.role === "user" ? "linear-gradient(135deg, var(--color-primary), var(--color-secondary))" : "rgba(255,255,255,0.05)",
-                                        color: msg.role === "user" ? "#fff" : "var(--color-text)",
-                                        borderBottomRightRadius: msg.role === "user" ? "4px" : "16px",
-                                        borderBottomLeftRadius: msg.role === "assistant" ? "4px" : "16px",
-                                    }}
-                                >
-                                    {msg.role === "assistant" ? renderMd(msg.content) : msg.content}
-                                </div>
-                            </div>
-                        ))}
-
-                        {loading && (
-                            <div className="flex justify-start">
-                                <div className="px-4 py-3 rounded-2xl" style={{ background: "rgba(255,255,255,0.05)" }}>
-                                    <div className="flex gap-1.5">
-                                        <span className="w-2 h-2 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: "0s" }} />
-                                        <span className="w-2 h-2 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: "0.15s" }} />
-                                        <span className="w-2 h-2 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: "0.3s" }} />
+                        {/* ── Messages ── */}
+                        <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
+                            {messages.length === 0 && (
+                                <div className="text-center py-8">
+                                    <p className="text-sm text-white/60 mb-1">{t("greeting")}</p>
+                                    <p className="text-[11px] text-white/30 mb-5">{t("helpText")}</p>
+                                    <div className="flex flex-wrap gap-1.5 justify-center">
+                                        {SUGGESTIONS.map((s) => (
+                                            <button
+                                                key={s.key}
+                                                onClick={() => sendMessage(t(`quickActions.${s.key}`))}
+                                                className="px-3 py-1.5 rounded-full text-[11px] font-medium transition-all hover:bg-white/10"
+                                                style={{
+                                                    background: "rgba(255,255,255,0.04)",
+                                                    color: "rgba(255,255,255,0.5)",
+                                                    border: "1px solid rgba(255,255,255,0.06)",
+                                                }}
+                                            >
+                                                {s.emoji} {t(`quickActions.${s.key}`)}
+                                            </button>
+                                        ))}
                                     </div>
                                 </div>
-                            </div>
-                        )}
-                        <div ref={messagesEndRef} />
-                    </div>
+                            )}
 
-                    {/* Input */}
-                    <div className="p-3" style={{ borderTop: "1px solid var(--color-border)" }}>
-                        <div className="flex gap-2">
-                            <input
-                                type="text" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && sendMessage()} placeholder={t("placeholder")}
-                                className="flex-1 px-4 py-3 rounded-xl text-sm" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid var(--color-border)", color: "var(--color-text)", outline: "none" }}
-                            />
-                            <button onClick={sendMessage} disabled={loading || !input.trim()} className="px-4 rounded-xl transition-all duration-300" style={{ background: input.trim() ? "linear-gradient(135deg, var(--color-primary), var(--color-secondary))" : "rgba(255,255,255,0.05)", color: input.trim() ? "#fff" : "var(--color-text-muted)" }}>
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" /></svg>
-                            </button>
+                            {messages.map((msg, i) => (
+                                <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                                    <div
+                                        className="max-w-[85%] px-4 py-2.5 rounded-2xl text-[13px] leading-relaxed"
+                                        style={{
+                                            background: msg.role === "user"
+                                                ? "rgba(255,255,255,0.08)"
+                                                : "rgba(255,255,255,0.03)",
+                                            color: "rgba(255,255,255,0.75)",
+                                            borderBottomRightRadius: msg.role === "user" ? "4px" : "16px",
+                                            borderBottomLeftRadius: msg.role === "assistant" ? "4px" : "16px",
+                                        }}
+                                    >
+                                        {msg.role === "assistant" ? renderMd(msg.content) : msg.content}
+                                    </div>
+                                </div>
+                            ))}
+
+                            {loading && (
+                                <div className="flex justify-start">
+                                    <div className="px-4 py-3 rounded-2xl" style={{ background: "rgba(255,255,255,0.03)" }}>
+                                        <div className="flex gap-1.5">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-white/30 animate-bounce" style={{ animationDelay: "0s" }} />
+                                            <span className="w-1.5 h-1.5 rounded-full bg-white/30 animate-bounce" style={{ animationDelay: "0.15s" }} />
+                                            <span className="w-1.5 h-1.5 rounded-full bg-white/30 animate-bounce" style={{ animationDelay: "0.3s" }} />
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                            <div ref={messagesEndRef} />
                         </div>
-                    </div>
-                </div>
-            )}
+
+                        {/* ── Input ── */}
+                        <div className="p-3" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                            <div className="flex gap-2">
+                                <input
+                                    ref={inputRef}
+                                    type="text"
+                                    value={input}
+                                    onChange={(e) => setInput(e.target.value)}
+                                    onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+                                    placeholder={t("placeholder")}
+                                    className="flex-1 px-4 py-3 rounded-xl text-sm outline-none"
+                                    style={{
+                                        background: "rgba(255,255,255,0.03)",
+                                        border: "1px solid rgba(255,255,255,0.06)",
+                                        color: "rgba(255,255,255,0.8)",
+                                    }}
+                                />
+                                <button
+                                    onClick={() => sendMessage()}
+                                    disabled={loading || !input.trim()}
+                                    className="px-4 rounded-xl transition-all duration-200"
+                                    style={{
+                                        background: input.trim() ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.03)",
+                                        color: input.trim() ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.2)",
+                                    }}
+                                >
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" /></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </>
     );
 }

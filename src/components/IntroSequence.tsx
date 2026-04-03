@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 
@@ -9,76 +9,91 @@ interface IntroSequenceProps {
 
 export default function IntroSequence({ onComplete }: IntroSequenceProps) {
     const t = useTranslations("IntroSequence");
-    const [isExiting, setIsExiting] = useState(false);
+    const [phase, setPhase] = useState<"curtain" | "reveal" | "done">("curtain");
+
+    const startReveal = useCallback(() => {
+        setPhase("reveal");
+        setTimeout(onComplete, 900);
+    }, [onComplete]);
 
     useEffect(() => {
-        // Start exit sequence after 4.5 seconds
-        const timer = setTimeout(() => {
-            setIsExiting(true);
-            // Trigger completion after exit animation
-            setTimeout(onComplete, 800);
-        }, 4500);
-
+        const timer = setTimeout(startReveal, 2400);
         return () => clearTimeout(timer);
-    }, [onComplete]);
+    }, [startReveal]);
 
     return (
         <AnimatePresence>
-            {!isExiting && (
+            {phase !== "done" && (
                 <motion.div
-                    className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#050505]"
-                    exit={{ opacity: 0, transition: { duration: 0.8, ease: "easeInOut" } }}
+                    className="fixed inset-0 z-[9999] flex items-center justify-center"
+                    style={{ background: "#0A0A0A" }}
+                    exit={{ opacity: 0, transition: { duration: 0.6, ease: "easeInOut" } }}
                 >
-                    <div className="relative flex items-center justify-center">
-                        {/* Core */}
+                    {/* Curtain Top */}
+                    <motion.div
+                        className="absolute top-0 left-0 right-0 h-1/2"
+                        style={{ background: "#0A0A0A", zIndex: 2 }}
+                        animate={phase === "reveal" ? { y: "-100%" } : { y: "0%" }}
+                        transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+                    />
+
+                    {/* Curtain Bottom */}
+                    <motion.div
+                        className="absolute bottom-0 left-0 right-0 h-1/2"
+                        style={{ background: "#0A0A0A", zIndex: 2 }}
+                        animate={phase === "reveal" ? { y: "100%" } : { y: "0%" }}
+                        transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+                    />
+
+                    {/* Center Content */}
+                    <div className="relative z-10 text-center">
+                        {/* Monogram */}
                         <motion.div
-                            className="w-4 h-4 rounded-full bg-blue-500 blur-[2px]"
-                            animate={{
-                                scale: [1, 1.5, 1],
-                                opacity: [0.5, 1, 0.5],
-                                boxShadow: [
-                                    "0 0 10px rgba(59,130,246,0.5)",
-                                    "0 0 20px rgba(59,130,246,1)",
-                                    "0 0 10px rgba(59,130,246,0.5)"
-                                ]
-                            }}
-                            transition={{
-                                duration: 2,
-                                repeat: Infinity,
-                                ease: "easeInOut"
-                            }}
+                            className="text-4xl md:text-5xl font-bold tracking-tighter mb-3"
+                            style={{ fontFamily: "var(--font-heading)", color: "#fff" }}
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+                        >
+                            NA
+                        </motion.div>
+
+                        {/* Thin divider line */}
+                        <motion.div
+                            className="w-8 h-px mx-auto mb-3"
+                            style={{ background: "rgba(255,255,255,0.2)" }}
+                            initial={{ scaleX: 0 }}
+                            animate={{ scaleX: 1 }}
+                            transition={{ duration: 0.5, delay: 0.6 }}
                         />
 
-                        {/* Inner Ring */}
-                        <motion.div
-                            className="absolute border border-blue-500/30 rounded-full w-16 h-16 border-t-blue-400 border-r-transparent"
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-                        />
-
-                        {/* Middle Ring */}
-                        <motion.div
-                            className="absolute border border-purple-500/20 rounded-full w-24 h-24 border-b-purple-400 border-l-transparent"
-                            animate={{ rotate: -360 }}
-                            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                        />
-
-                        {/* Outer Ring */}
-                        <motion.div
-                            className="absolute border border-cyan-500/10 rounded-full w-32 h-32 border-l-cyan-400 border-r-transparent"
-                            animate={{ rotate: 180 }}
-                            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                        />
-
-                        {/* Loading Text */}
+                        {/* Subtitle */}
                         <motion.p
-                            className="absolute mt-48 text-[10px] uppercase tracking-[0.3em] text-white/40 font-mono"
+                            className="text-[10px] uppercase tracking-[0.4em] font-medium"
+                            style={{ color: "rgba(255,255,255,0.3)" }}
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
-                            transition={{ delay: 0.5 }}
+                            transition={{ delay: 0.8, duration: 0.5 }}
                         >
                             {t("initializing")}
                         </motion.p>
+
+                        {/* Minimal progress bar */}
+                        <motion.div
+                            className="mt-4 mx-auto h-px overflow-hidden"
+                            style={{ width: "48px", background: "rgba(255,255,255,0.06)" }}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 1 }}
+                        >
+                            <motion.div
+                                className="h-full"
+                                style={{ background: "rgba(255,255,255,0.3)" }}
+                                initial={{ width: "0%" }}
+                                animate={{ width: "100%" }}
+                                transition={{ duration: 1.4, delay: 1, ease: "easeInOut" }}
+                            />
+                        </motion.div>
                     </div>
                 </motion.div>
             )}

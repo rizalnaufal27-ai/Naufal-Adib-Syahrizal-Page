@@ -68,13 +68,13 @@ export default function DashboardPage() {
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center pt-20" style={{ background: "#050505" }}>
-                <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+                <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin" />
             </div>
         );
     }
 
     return (
-        <main className="min-h-screen pt-24 pb-12 px-4 relative z-10" style={{ background: "#050505" }}>
+        <main className="min-h-screen pt-24 pb-12 px-4 relative z-10" style={{ background: "#0A0A0A" }}>
             <div className="section-container max-w-4xl mx-auto">
                 <div className="flex items-center justify-between mb-8">
                     <div>
@@ -92,8 +92,8 @@ export default function DashboardPage() {
 
                 {orders.length === 0 ? (
                     <div className="text-center py-20 rounded-2xl border border-dashed" style={{ borderColor: "var(--color-border)", background: "rgba(255,255,255,0.02)" }}>
-                        <div className="w-16 h-16 rounded-full bg-indigo-500/10 flex items-center justify-center mx-auto mb-4">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6366F1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: "rgba(255,255,255,0.04)" }}>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                 <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
                                 <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
                             </svg>
@@ -109,7 +109,7 @@ export default function DashboardPage() {
                             <div
                                 key={order.id}
                                 onClick={() => window.open(`/order/${order.uuid_token}`, "_blank")}
-                                className="group cursor-pointer relative p-5 rounded-2xl transition-all duration-300 hover:scale-[1.01] hover:shadow-xl hover:shadow-indigo-500/10"
+                                className="group cursor-pointer relative p-5 rounded-2xl transition-all duration-300 hover:scale-[1.01]"
                                 style={{
                                     background: "rgba(255,255,255,0.03)",
                                     border: "1px solid rgba(255,255,255,0.08)",
@@ -128,7 +128,7 @@ export default function DashboardPage() {
                                     <span className="text-xs font-mono text-gray-500">#{order.order_number}</span>
                                 </div>
 
-                                <h3 className="text-lg font-bold text-white mb-1 group-hover:text-indigo-400 transition-colors">
+                                <h3 className="text-lg font-bold text-white mb-1 group-hover:text-white/80 transition-colors">
                                     {order.service_type}
                                 </h3>
                                 <p className="text-sm text-gray-400 line-clamp-2 mb-4">
@@ -139,16 +139,16 @@ export default function DashboardPage() {
                                     <div className="text-xs text-gray-500">
                                         {new Date(order.created_at).toLocaleDateString()}
                                     </div>
-                                    <div className="text-xs font-medium text-indigo-400 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-2 group-hover:translate-x-0">
+                                    <div className="text-xs font-medium text-white/40 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-2 group-hover:translate-x-0">
                                         Open Project →
                                     </div>
                                 </div>
 
                                 {/* Progress Bar Background */}
-                                <div className="absolute bottom-0 left-0 h-1 bg-indigo-500/20 w-full rounded-b-2xl overflow-hidden">
+                                <div className="absolute bottom-0 left-0 h-1 bg-white/5 w-full rounded-b-2xl overflow-hidden">
                                     <div
-                                        className="h-full bg-gradient-to-r from-indigo-500 to-purple-500"
-                                        style={{ width: `${order.progress}%` }}
+                                        className="h-full"
+                                        style={{ width: `${order.progress}%`, background: order.progress === 100 ? "#22C55E" : "rgba(255,255,255,0.2)" }}
                                     />
                                 </div>
                             </div>

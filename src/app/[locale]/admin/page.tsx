@@ -47,11 +47,11 @@ const fmt = (n: number) => `Rp ${(n || 0).toLocaleString("id-ID")}`;
 const ChatBubble = ({ m, name }: { m: ChatMsg; name: string }) => (
     <div className={`flex ${m.sender === "admin" ? "justify-end" : "justify-start"}`}>
         <div className="max-w-[75%] rounded-2xl px-4 py-2.5" style={{
-            background: m.sender === "admin" ? "linear-gradient(135deg, #3B82F6, #2563EB)" : "rgba(255,255,255,0.06)",
+            background: m.sender === "admin" ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.03)",
             borderBottomRightRadius: m.sender === "admin" ? "6px" : "16px",
             borderBottomLeftRadius: m.sender === "customer" ? "6px" : "16px",
         }}>
-            <p className="text-[10px] font-semibold mb-0.5" style={{ color: m.sender === "admin" ? "rgba(255,255,255,0.7)" : "#6366F1" }}>
+            <p className="text-[10px] font-semibold mb-0.5" style={{ color: m.sender === "admin" ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.4)" }}>
                 {m.sender === "admin" ? "You" : name}
             </p>
             {m.message.startsWith("[FILE]") ? (
@@ -212,10 +212,10 @@ export default function AdminPage() {
     //  LOGIN SCREEN
     // ═══════════════════════════════════════════
     if (!auth) return (
-        <div className="flex items-center justify-center min-h-screen relative z-[100] overflow-hidden" style={{ background: "radial-gradient(circle at top right, rgba(99,102,241,0.15), transparent 40%), radial-gradient(circle at bottom left, rgba(236,72,153,0.1), transparent 40%), #050505" }}>
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
+        <div className="flex items-center justify-center min-h-screen relative z-[100] overflow-hidden" style={{ background: "#0A0A0A" }}>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-white/[0.02] rounded-full blur-[100px] pointer-events-none" />
             <div className="p-10 w-full max-w-sm relative z-20 rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 backdrop-blur-xl" style={{ background: "rgba(10,10,10,0.8)" }}>
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center mx-auto mb-6 shadow-lg shadow-blue-500/20">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-6" style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
                 </div>
                 <h1 className="text-2xl font-bold mb-2 text-center text-white">Admin Access</h1>
@@ -223,7 +223,7 @@ export default function AdminPage() {
                 <form onSubmit={(e) => { e.preventDefault(); login(); }} className="space-y-5">
                     <input type="password" autoComplete="current-password" value={pw} onChange={(e) => setPw(e.target.value)} placeholder="Enter admin password" className="w-full px-4 py-3.5 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500/50 transition-all placeholder:text-white/20 bg-white/[0.03] border border-white/10 text-white" />
                     {authErr && <p className="text-xs text-center font-medium text-red-400 animate-pulse">{authErr}</p>}
-                    <button type="submit" className="w-full py-3.5 rounded-xl text-sm font-semibold text-white transition-transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-blue-500/25" style={{ background: "linear-gradient(135deg, #3B82F6, #2563EB)" }}>Authenticate →</button>
+                    <button type="submit" className="w-full py-3.5 rounded-xl text-sm font-semibold text-white transition-transform hover:scale-[1.02] active:scale-[0.98]" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.1)" }}>Authenticate →</button>
                 </form>
             </div>
         </div>
@@ -256,12 +256,12 @@ export default function AdminPage() {
     //  MAIN LAYOUT
     // ═══════════════════════════════════════════
     return (
-        <div className="flex h-screen overflow-hidden" style={{ background: "#050505" }}>
+        <div className="flex h-screen overflow-hidden" style={{ background: "#0A0A0A" }}>
             {/* ═══ SIDEBAR ═══ */}
             <aside className={`${sidebarCollapsed ? "w-16" : "w-60"} shrink-0 h-screen flex flex-col border-r border-white/[0.06] transition-all duration-300`} style={{ background: "#0A0A0A" }}>
                 {/* Logo */}
                 <div className="px-4 py-5 flex items-center gap-3 border-b border-white/[0.06]">
-                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center shrink-0">
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(255,255,255,0.08)" }}>
                         <span className="text-white font-black text-sm">N</span>
                     </div>
                     {!sidebarCollapsed && <span className="text-sm font-bold text-white truncate">Dashboard</span>}
@@ -293,7 +293,7 @@ export default function AdminPage() {
                             <button key={item.key} onClick={() => switchView(item.key)}
                                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${view === item.key ? "bg-white/[0.08] text-white font-medium" : "text-white/50 hover:text-white/80 hover:bg-white/[0.04]"}`}
                                 title={sidebarCollapsed ? item.label : undefined}>
-                                <span className={view === item.key ? "text-blue-400" : "text-white/40"}>{item.icon}</span>
+                                <span className={view === item.key ? "text-white" : "text-white/40"}>{item.icon}</span>
                                 {!sidebarCollapsed && <span className="flex-1 text-left">{item.label}</span>}
                                 {!sidebarCollapsed && item.count !== undefined && item.count > 0 && (
                                     <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-white/[0.06] text-white/40 font-mono">{item.count}</span>
@@ -382,7 +382,12 @@ export default function AdminPage() {
                                                 </div>
                                                 <p className="text-xs text-white/30 mt-1">{selected.customer_name} • {selected.customer_email || "No email"} • {new Date(selected.created_at).toLocaleDateString("id-ID")}</p>
                                             </div>
-                                            <button onClick={() => deleteOrder(selected.id)} className="p-2 rounded-lg text-red-400/50 hover:text-red-400 hover:bg-red-500/10 transition-all">{Icons.trash}</button>
+                                            <div className="flex gap-2">
+                                                <button onClick={() => deleteOrder(selected.id)} className="p-2 rounded-lg text-red-400/50 hover:text-red-400 hover:bg-red-500/10 transition-all">{Icons.trash}</button>
+                                                {selected.status !== "cancelled" && (
+                                                    <button onClick={() => updateOrder("status", "cancelled")} className="px-3 py-2 rounded-lg text-xs font-semibold text-red-400/70 hover:text-red-400 border border-red-500/15 hover:bg-red-500/10 transition-all">Cancel Order</button>
+                                                )}
+                                            </div>
                                         </div>
 
                                         {selected.description && (
@@ -410,14 +415,14 @@ export default function AdminPage() {
                                                             <select value={editStat} onChange={(e) => setEditStat(e.target.value)} className="flex-1 px-3 py-2 rounded-lg text-sm bg-white/[0.04] border border-white/[0.06] text-white outline-none">
                                                                 {["pending", "processing", "done", "cancelled"].map(s => <option key={s} value={s} style={{ background: "#111" }}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
                                                             </select>
-                                                            <button onClick={() => updateOrder("status", editStat)} disabled={editStat === selected.status} className="px-4 py-2 rounded-lg text-xs font-semibold text-white disabled:opacity-20" style={{ background: "linear-gradient(135deg, #3B82F6, #2563EB)" }}>Save</button>
+                                                            <button onClick={() => updateOrder("status", editStat)} disabled={editStat === selected.status} className="px-4 py-2 rounded-lg text-xs font-semibold text-white disabled:opacity-20" style={{ background: "rgba(255,255,255,0.08)" }}>Save</button>
                                                         </div>
                                                     </div>
                                                     {/* Progress */}
                                                     <div>
-                                                        <label className="text-[10px] font-bold uppercase tracking-widest text-white/30 flex justify-between mb-2"><span>Progress</span><span className="text-blue-400 font-mono">{editProg}%</span></label>
-                                                        <input type="range" min="0" max="100" step="5" value={editProg} onChange={(e) => setEditProg(parseInt(e.target.value))} className="w-full accent-blue-500 mb-2" />
-                                                        <button onClick={() => updateOrder("progress", editProg)} disabled={editProg === selected.progress} className="w-full py-2 rounded-lg text-xs font-semibold text-white disabled:opacity-20" style={{ background: "linear-gradient(135deg, #3B82F6, #2563EB)" }}>Update Progress</button>
+                                                        <label className="text-[10px] font-bold uppercase tracking-widest text-white/30 flex justify-between mb-2"><span>Progress</span><span className="text-white/60 font-mono">{editProg}%</span></label>
+                                                        <input type="range" min="0" max="100" step="5" value={editProg} onChange={(e) => setEditProg(parseInt(e.target.value))} className="w-full accent-white mb-2" />
+                                                        <button onClick={() => updateOrder("progress", editProg)} disabled={editProg === selected.progress} className="w-full py-2 rounded-lg text-xs font-semibold text-white disabled:opacity-20" style={{ background: "rgba(255,255,255,0.08)" }}>Update Progress</button>
                                                     </div>
                                                 </div>
 

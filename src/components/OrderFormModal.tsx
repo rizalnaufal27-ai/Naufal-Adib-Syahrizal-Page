@@ -46,7 +46,7 @@ export default function OrderFormModal({ isOpen, onClose }: OrderFormModalProps)
                     service_type: serviceLabel,
                     description: form.description,
                     gross_amount: totalIDR,
-                    estimated_days: 7, // Default estimation
+                    estimated_days: pricing.getEstimatedDays(),
                     pricing_details: usePricingStore.getState(),
                 }),
             });
