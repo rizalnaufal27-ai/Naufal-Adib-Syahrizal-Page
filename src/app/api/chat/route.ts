@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { streamText } from "ai";
-import { createOpenRouter } from "@openrouter/ai-sdk-provider";
+import { createOpenAI } from "@ai-sdk/openai";
 import { supabase } from "@/lib/supabase";
 import { PORTFOLIO_RAG } from "@/lib/portfolio-data";
 
@@ -87,7 +87,14 @@ When user asks about pricing, respond with a clear summary and mention the prici
 When user mentions ordering, include [OPEN_PRICING] at the end of your response.
 `;
 
-        const openrouter = createOpenRouter({ apiKey });
+        const openrouter = createOpenAI({ 
+            baseURL: "https://openrouter.ai/api/v1",
+            apiKey,
+            headers: {
+                "HTTP-Referer": "https://naufal-adib-syahrizal-page.vercel.app",
+                "X-Title": "Naufal Studio NASAI"
+            }
+        });
 
         const result = streamText({
             model: openrouter("google/gemini-2.0-flash-001"),
