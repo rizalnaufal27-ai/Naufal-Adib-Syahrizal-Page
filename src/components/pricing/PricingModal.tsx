@@ -26,7 +26,7 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
     const toggleDesign = (item: string) => setSelectedDesign((prev) => prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]);
     const getDesignTotal = () => {
         let total = 0;
-        if (selectedDesign.includes("logo")) total += 150000;
+        if (selectedDesign.includes("logo")) total += 75000;
         if (selectedDesign.includes("banner")) total += 75000;
         if (selectedDesign.includes("poster")) total += 75000;
         if (selectedDesign.includes("brand")) total += 775000;
@@ -42,9 +42,9 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
     // Web UI/UX state - PROFESSIONAL TIERS
     const [webScale, setWebScale] = useState<"small" | "medium" | "large">("small");
     const webPrices = { 
-        small: 1500000,   // Landing Page
-        medium: 3500000,  // SaaS / Dashboard
-        large: 6500000    // Corporate / Complex System
+        small: 500000,    // Landing Page
+        medium: 2500000,  // SaaS / Dashboard
+        large: 5000000    // Corporate / Complex System
     };
     const [webWireframeOnly, setWebWireframeOnly] = useState(false);
     const getWebTotal = () => {
@@ -129,7 +129,7 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
                             <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                     {[
-                                        { id: "logo", label: "Logo Design", price: 150000 },
+                                        { id: "logo", label: "Logo Design", price: 75000 },
                                         { id: "banner", label: "Banner / Social Media", price: 75000 },
                                         { id: "poster", label: "Poster / Print", price: 75000 },
                                         { id: "brand", label: "Full Brand Identity", price: 775000 },
