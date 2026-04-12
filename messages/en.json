@@ -247,6 +247,10 @@
     },
     "PublicDashboard": {
         "title": "Dashboard",
+        "transparency": "PUBLIC DASHBOARD · TRANSPARENCY",
+        "subtitle": "All active projects — publicly visible for full transparency.",
+        "noProjects": "No active projects at the moment.",
+        "view": "View →",
         "welcome": "Welcome back"
     },
     "ConsultationPage": {

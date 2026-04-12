@@ -13,22 +13,25 @@ export default function HeroSection({ onOrderClick }: HeroSectionProps) {
       {/* Navbar spacer */}
       <div className="h-[72px] flex-shrink-0" />
 
-      {/* Main grid layout — reference style */}
+      {/* Main grid layout */}
       <div className="flex-1 max-w-[1400px] mx-auto w-full px-6 md:px-12 grid grid-cols-1 md:grid-cols-12 gap-0 relative">
 
-        {/* BIG TITLE — left column, vertically centered */}
-        <div className="md:col-span-5 flex flex-col justify-center py-12 md:py-0 relative z-10">
+        {/* LEFT COLUMN — title stays strictly within col-span-5, no overflow */}
+        <div className="md:col-span-5 flex flex-col justify-center py-12 md:py-0 relative z-10 overflow-hidden">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
           >
             <h1
-              className="text-[13vw] md:text-[7vw] lg:text-[6.5vw] font-black leading-[0.85] tracking-tighter text-white uppercase select-none"
-              style={{ fontFamily: "var(--font-heading)" }}
+              className="font-black leading-[0.88] tracking-tighter text-white uppercase select-none"
+              style={{
+                fontFamily: "var(--font-heading)",
+                fontSize: "clamp(3rem, 6vw, 6rem)",
+              }}
             >
               VISUAL
-              <span className="block text-neutral-600 leading-[0.9]">/</span>
+              <br />
               DESIGNER
             </h1>
           </motion.div>
@@ -78,7 +81,7 @@ export default function HeroSection({ onOrderClick }: HeroSectionProps) {
           </div>
         </motion.div>
 
-        {/* RIGHT COLUMN — bio + social + selected works label */}
+        {/* RIGHT COLUMN */}
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -104,7 +107,7 @@ export default function HeroSection({ onOrderClick }: HeroSectionProps) {
             Start a Project
           </button>
 
-          {/* Social icons — monochrome */}
+          {/* Social icons */}
           <div className="flex gap-4 mb-12">
             <a href="https://www.instagram.com/ncs_rizal" target="_blank" rel="noopener noreferrer" className="text-neutral-600 hover:text-white transition-colors text-xs uppercase tracking-widest font-medium">IG</a>
             <a href="https://www.behance.net/naufaladibs" target="_blank" rel="noopener noreferrer" className="text-neutral-600 hover:text-white transition-colors text-xs uppercase tracking-widest font-medium">Be</a>
@@ -117,7 +120,7 @@ export default function HeroSection({ onOrderClick }: HeroSectionProps) {
         </motion.div>
       </div>
 
-      {/* Availability badge — bottom left */}
+      {/* Availability badge */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

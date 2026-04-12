@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { useTranslations } from "next-intl";
 
 interface Order {
     id: string;
@@ -16,149 +15,107 @@ interface Order {
     uuid_token: string;
 }
 
+const statusColor = (s: string) => ({
+    done: { bg: "rgba(34,197,94,0.1)", color: "#22C55E" },
+    processing: { bg: "rgba(59,130,246,0.1)", color: "#3B82F6" },
+    pending: { bg: "rgba(234,179,8,0.1)", color: "#EAB308" },
+    cancelled: { bg: "rgba(239,68,68,0.1)", color: "#EF4444" },
+}[s] || { bg: "rgba(255,255,255,0.05)", color: "#6B7280" });
+
 export default function FullPublicDashboard() {
     const router = useRouter();
-    const t = useTranslations("PublicDashboard");
-    const tDash = useTranslations("Dashboard.columns");
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchOrders = async () => {
-            const { data } = await supabase
-                .from("orders")
-                .select("id, order_number, service_type, status, progress, created_at, uuid_token")
-                .order("created_at", { ascending: false });
-
-            if (data) {
-                setOrders(data);
-            }
-            setLoading(false);
-        };
-        fetchOrders();
+        supabase
+            .from("orders")
+            .select("id, order_number, service_type, status, progress, created_at, uuid_token")
+            .order("created_at", { ascending: false })
+            .then(({ data }) => {
+                setOrders(data || []);
+                setLoading(false);
+            });
     }, []);
 
-    const getStatusStyle = (status: string) => {
-        const styles: Record<string, { bg: string; color: string; dot: string }> = {
-            done: { bg: "rgba(34,197,94,0.1)", color: "#22C55E", dot: "#22C55E" },
-            processing: { bg: "rgba(59,130,246,0.1)", color: "#3B82F6", dot: "#3B82F6" },
-            pending: { bg: "rgba(234,179,8,0.1)", color: "#EAB308", dot: "#EAB308" },
-        };
-        return styles[status] || styles.pending;
-    };
-
     return (
-        <main className="min-h-screen pt-24 pb-12 px-4 relative z-10" style={{ background: "#050505" }}>
+        <div className="min-h-screen bg-[#0A0A0A]">
             <Navbar />
-            <div className="section-container max-w-5xl mx-auto mt-10">
-                <div className="text-center mb-12">
-                    <p className="section-label">{t("transparency")}</p>
-                    <h1 className="text-3xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-white/80 to-white/60 mb-4">
-                        {t("title")}
+            <main className="max-w-5xl mx-auto px-6 md:px-12 pt-32 pb-24">
+
+                {/* Header */}
+                <div className="mb-16 border-b border-white/[0.06] pb-8">
+                    <p className="text-[10px] uppercase tracking-[0.25em] text-neutral-600 font-medium mb-4">PUBLIC DASHBOARD · TRANSPARENCY</p>
+                    <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tight text-white" style={{ fontFamily: "var(--font-heading)" }}>
+                        Dashboard
                     </h1>
-                    <p className="text-sm" style={{ color: "var(--color-text-muted)" }}>
-                        {t("subtitle")}
-                    </p>
+                    <p className="text-sm text-neutral-500 mt-4">All active projects — publicly visible for full transparency.</p>
                 </div>
 
-                <div className="agency-card overflow-hidden">
+                {/* Table */}
+                <div className="border border-white/[0.06]">
+                    {/* Table Header */}
+                    <div className="grid grid-cols-12 gap-4 px-6 py-3 border-b border-white/[0.06] bg-white/[0.02]">
+                        <p className="col-span-2 text-[10px] font-bold uppercase tracking-widest text-neutral-600">Order ID</p>
+                        <p className="col-span-4 text-[10px] font-bold uppercase tracking-widest text-neutral-600">Service</p>
+                        <p className="col-span-2 text-[10px] font-bold uppercase tracking-widest text-neutral-600">Date</p>
+                        <p className="col-span-2 text-[10px] font-bold uppercase tracking-widest text-neutral-600">Status</p>
+                        <p className="col-span-2 text-[10px] font-bold uppercase tracking-widest text-neutral-600">Progress</p>
+                    </div>
+
                     {loading ? (
                         <div className="py-20 flex justify-center">
-                            <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+                            <div className="w-6 h-6 border border-neutral-600 border-t-white rounded-full animate-spin" />
                         </div>
-                    ) : (
-                        <div className="overflow-x-auto">
-                            <table className="w-full">
-                                <thead>
-                                    <tr style={{ borderBottom: "1px solid var(--color-border)" }}>
-                                        <th className="text-left px-6 py-4 text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--color-text-muted)" }}>
-                                            {tDash("order")}
-                                        </th>
-                                        <th className="text-left px-6 py-4 text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--color-text-muted)" }}>
-                                            {tDash("service")}
-                                        </th>
-                                        <th className="text-left px-6 py-4 text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--color-text-muted)" }}>
-                                            Date
-                                        </th>
-                                        <th className="text-left px-6 py-4 text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--color-text-muted)" }}>
-                                            {tDash("status")}
-                                        </th>
-                                        <th className="text-left px-6 py-4 text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--color-text-muted)" }}>
-                                            {tDash("progress")}
-                                        </th>
-                                        <th className="px-4 py-4"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {orders.length === 0 ? (
-                                        <tr>
-                                            <td colSpan={6} className="px-6 py-12 text-center text-sm" style={{ color: "var(--color-text-muted)" }}>
-                                                {t("noProjects")}
-                                            </td>
-                                        </tr>
-                                    ) : orders.map((order) => {
-                                        const statusStyle = getStatusStyle(order.status);
-                                        return (
-                                            <tr
-                                                key={order.id}
-                                                className="transition-colors hover:bg-white/[0.04] cursor-pointer group"
-                                                style={{ borderBottom: "1px solid var(--color-border)" }}
-                                                onClick={() => router.push(`/public/dashboard/${order.uuid_token}`)}
-                                            >
-                                                <td className="px-6 py-5 text-sm font-mono font-semibold" style={{ color: "var(--color-text)" }}>
-                                                    #{order.order_number}
-                                                </td>
-                                                <td className="px-6 py-5 text-sm" style={{ color: "var(--color-text-muted)" }}>
-                                                    {order.service_type}
-                                                </td>
-                                                <td className="px-6 py-5 text-xs" style={{ color: "var(--color-text-muted)" }}>
-                                                    {new Date(order.created_at).toLocaleDateString()}
-                                                </td>
-                                                <td className="px-6 py-5">
-                                                    <span
-                                                        className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full uppercase"
-                                                        style={{
-                                                            background: statusStyle.bg,
-                                                            color: statusStyle.color,
-                                                        }}
-                                                    >
-                                                        <span className="w-1.5 h-1.5 rounded-full" style={{ background: statusStyle.dot }} />
-                                                        {order.status}
-                                                    </span>
-                                                </td>
-                                                <td className="px-6 py-5">
-                                                    <div className="flex items-center gap-3">
-                                                        <div className="flex-1 h-1.5 rounded-full min-w-[100px]" style={{ background: "rgba(255,255,255,0.05)" }}>
-                                                            <div
-                                                                className="h-full rounded-full transition-all duration-700"
-                                                                style={{
-                                                                    width: `${order.progress}%`,
-                                                                    background: order.status === "done" || order.progress === 100
-                                                                        ? "#22C55E"
-                                                                        : "linear-gradient(90deg, var(--color-primary), var(--color-secondary))",
-                                                                }}
-                                                            />
-                                                        </div>
-                                                        <span className="text-xs font-mono font-semibold min-w-[32px] text-right" style={{ color: "var(--color-text-muted)" }}>
-                                                            {order.progress}%
-                                                        </span>
-                                                    </div>
-                                                </td>
-                                                <td className="px-4 py-5">
-                                                    <span className="text-xs text-indigo-400/60 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                                        {t("view")}
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            </table>
+                    ) : orders.length === 0 ? (
+                        <div className="py-20 text-center">
+                            <p className="text-neutral-600 text-sm uppercase tracking-widest">No active projects at the moment.</p>
                         </div>
-                    )}
+                    ) : orders.map((order) => {
+                        const sc = statusColor(order.status);
+                        return (
+                            <div
+                                key={order.id}
+                                onClick={() => router.push(`/public/dashboard/${order.uuid_token}`)}
+                                className="grid grid-cols-12 gap-4 px-6 py-5 border-b border-white/[0.04] hover:bg-white/[0.02] cursor-pointer group transition-colors"
+                            >
+                                <div className="col-span-2">
+                                    <span className="text-sm font-mono font-semibold text-white">#{order.order_number}</span>
+                                </div>
+                                <div className="col-span-4">
+                                    <span className="text-sm text-neutral-300">{order.service_type}</span>
+                                </div>
+                                <div className="col-span-2">
+                                    <span className="text-xs text-neutral-600">{new Date(order.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "2-digit" })}</span>
+                                </div>
+                                <div className="col-span-2">
+                                    <span
+                                        className="inline-flex items-center gap-1.5 text-[10px] font-bold px-2 py-1 uppercase tracking-wider"
+                                        style={{ background: sc.bg, color: sc.color }}
+                                    >
+                                        <span className="w-1 h-1 rounded-full block" style={{ background: sc.color }} />
+                                        {order.status}
+                                    </span>
+                                </div>
+                                <div className="col-span-2 flex items-center gap-2">
+                                    <div className="flex-1 h-px bg-white/[0.08]">
+                                        <div
+                                            className="h-full transition-all duration-700"
+                                            style={{
+                                                width: `${order.progress}%`,
+                                                background: order.progress >= 100 ? "#22C55E" : "rgba(255,255,255,0.3)"
+                                            }}
+                                        />
+                                    </div>
+                                    <span className="text-[10px] font-mono text-neutral-600 w-8 text-right">{order.progress}%</span>
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
-            </div>
+
+            </main>
             <Footer />
-        </main>
+        </div>
     );
 }
