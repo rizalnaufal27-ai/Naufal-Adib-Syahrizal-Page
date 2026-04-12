@@ -10,7 +10,7 @@ interface PricingModalProps {
 type Tab = "design" | "illustration" | "web" | "photo" | "video";
 
 function useCurrency() {
-    const [currency] = useState<"USD" | "IDR">("USD");
+    const [currency] = useState<"USD" | "IDR">("IDR");
     const [rate] = useState(15500);
 
     const format = (usd: number) => {

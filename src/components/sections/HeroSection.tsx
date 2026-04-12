@@ -24,11 +24,11 @@ export default function HeroSection({ onOrderClick }: HeroSectionProps) {
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
           >
             <h1
-              className="text-[18vw] md:text-[10vw] lg:text-[9vw] font-black leading-[0.82] tracking-tighter text-white uppercase select-none"
+              className="text-[13vw] md:text-[7vw] lg:text-[6.5vw] font-black leading-[0.85] tracking-tighter text-white uppercase select-none"
               style={{ fontFamily: "var(--font-heading)" }}
             >
               VISUAL
-              <span className="block text-neutral-600">/</span>
+              <span className="block text-neutral-600 leading-[0.9]">/</span>
               DESIGNER
             </h1>
           </motion.div>

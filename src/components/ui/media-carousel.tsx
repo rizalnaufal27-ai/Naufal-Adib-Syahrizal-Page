@@ -39,22 +39,22 @@ export default function MediaCarousel({ media, gradient }: { media: string[]; gr
     const src = media[current];
 
     return (
-        <div className="relative w-full min-h-[300px] lg:min-h-[500px] flex items-center justify-center" style={{ background: "#0a0a0a" }}>
+        <div className="relative w-full flex items-center justify-center bg-[#0a0a0a]" style={{ minHeight: "400px", height: "100%" }}>
             {isVideo(src) ? (
                 <video
                     src={src}
                     controls
-                    className="w-full h-full max-h-[500px] object-contain"
+                    className="w-full max-h-[500px] object-contain"
                     style={{ background: "#000" }}
                 />
             ) : (
-                <div className="relative w-full h-full max-h-[500px]">
+                <div className="relative w-full" style={{ minHeight: "400px", height: "100%" }}>
                     <Image
                         src={src}
                         alt={`Slide ${current + 1}`}
                         fill
                         className="object-contain"
-                        style={{ background: "#0a0a0a" }}
+                        unoptimized
                     />
                 </div>
             )}

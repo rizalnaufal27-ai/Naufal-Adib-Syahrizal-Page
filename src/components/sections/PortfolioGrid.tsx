@@ -88,16 +88,17 @@ export default function PortfolioGrid() {
                                                 loop
                                                 playsInline
                                                 preload="metadata"
-                                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                                onMouseEnter={(e) => e.currentTarget.play()}
-                                                onMouseLeave={(e) => { e.currentTarget.pause(); e.currentTarget.currentTime = 0; }}
+                                                className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
+                                                style={{ filter: "grayscale(80%)" }}
+                                                onMouseEnter={(e) => { e.currentTarget.play(); e.currentTarget.style.filter = "grayscale(0%)"; }}
+                                                onMouseLeave={(e) => { e.currentTarget.pause(); e.currentTarget.currentTime = 0; e.currentTarget.style.filter = "grayscale(80%)"; }}
                                             />
                                         ) : (
                                             <Image
                                                 src={project.image}
                                                 alt={project.title}
                                                 fill
-                                                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                                className="object-cover transition-all duration-700 group-hover:scale-105 group-hover:[filter:grayscale(0%)] [filter:grayscale(80%)]"
                                                 loading="lazy"
                                                 sizes="(max-width: 768px) 100vw, 33vw"
                                             />

@@ -12,7 +12,7 @@ import ServicesSection from "@/components/sections/ServicesSection";
 
 import Footer from "@/components/Footer";
 import Chatbot from "@/components/Chatbot";
-import OrderFormModal from "@/components/OrderFormModal";
+import PricingModal from "@/components/pricing/PricingModal";
 import FloatingOrderFab from "@/components/ui/floating-order-fab";
 
 
@@ -56,8 +56,6 @@ export default function Home() {
 
         {/* Dark Premium Sections */}
         <div className="relative z-10 pb-20 bg-[#0A0A0A] overflow-hidden">
-          {/* Subtle Grid Background Layer */}
-          <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: "linear-gradient(#ffffff 1px, transparent 1px), linear-gradient(90deg, #ffffff 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
 
           {/* ═══ Section Divider ═══ */}
           <div className="relative h-16" />
@@ -97,7 +95,7 @@ export default function Home() {
 
       <FloatingOrderFab onClick={handleOrderClick} />
       <Chatbot onOpenPricing={handleOrderClick} />
-      <OrderFormModal isOpen={orderFormOpen} onClose={() => setOrderFormOpen(false)} />
+      <PricingModal isOpen={orderFormOpen} onClose={() => setOrderFormOpen(false)} />
     </>
   );
 }
