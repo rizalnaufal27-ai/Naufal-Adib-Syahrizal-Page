@@ -98,7 +98,7 @@ ${portfolioList}
             temperature: 0.7,
         });
 
-        return result.toDataStreamResponse();
+        return result.toAIStreamResponse();
     } catch (error) {
         console.error("Chat API error:", error);
         return NextResponse.json(

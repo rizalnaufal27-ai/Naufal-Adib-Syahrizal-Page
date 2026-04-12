@@ -19,7 +19,7 @@ const services = [
     { 
         title: "UI/UX Web Design", 
         description: "User-centric wireframes, high-conversion landing pages, and complex dashboard prototypes.", 
-        price: "Project Based",
+        price: "Starting at Rp 1.500.000",
     },
     { 
         title: "Photography", 

@@ -10,57 +10,64 @@ interface PricingModalProps {
 type Tab = "design" | "illustration" | "web" | "photo" | "video";
 
 function useCurrency() {
-    const [currency] = useState<"USD" | "IDR">("IDR");
-    const [rate] = useState(15500);
-
-    const format = (usd: number) => {
-        if (currency === "IDR") return `Rp ${(usd * rate).toLocaleString("id-ID")}`;
-        return `$${usd}`;
+    const format = (idr: number) => {
+        return `Rp ${idr.toLocaleString("id-ID")}`;
     };
 
-    return { currency, format };
+    return { format };
 }
 
 export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
     const [tab, setTab] = useState<Tab>("design");
     const { format } = useCurrency();
 
-    // Graphic Design state
+    // Graphic Design state - Starting at 75k
     const [selectedDesign, setSelectedDesign] = useState<string[]>([]);
     const toggleDesign = (item: string) => setSelectedDesign((prev) => prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]);
     const getDesignTotal = () => {
         let total = 0;
-        if (selectedDesign.includes("logo")) total += 15;
-        if (selectedDesign.includes("banner")) total += 10;
-        if (selectedDesign.includes("poster")) total += 10;
-        if (selectedDesign.includes("brand")) total += 50;
+        if (selectedDesign.includes("logo")) total += 150000;
+        if (selectedDesign.includes("banner")) total += 75000;
+        if (selectedDesign.includes("poster")) total += 75000;
+        if (selectedDesign.includes("brand")) total += 775000;
         return total;
     };
 
-    // Illustration state
+    // Illustration state - Starting at 75k/char
     const [charCount, setCharCount] = useState(1);
     const [illusType, setIllusType] = useState<"half" | "full" | "render">("half");
-    const illusPrices = { half: 15, full: 25, render: 40 };
+    const illusPrices = { half: 75000, full: 150000, render: 300000 };
     const getIllusTotal = () => illusPrices[illusType] * charCount;
 
-    // Web UI/UX state
+    // Web UI/UX state - PROFESSIONAL TIERS
     const [webScale, setWebScale] = useState<"small" | "medium" | "large">("small");
-    const webPrices = { small: 50, medium: 150, large: 300 }; // small = LP, medium = Dashboard, large = Full profile/complex
+    const webPrices = { 
+        small: 1500000,   // Landing Page
+        medium: 3500000,  // SaaS / Dashboard
+        large: 6500000    // Corporate / Complex System
+    };
     const [webWireframeOnly, setWebWireframeOnly] = useState(false);
     const getWebTotal = () => {
         const base = webPrices[webScale];
         return webWireframeOnly ? Math.floor(base * 0.4) : base;
     };
 
-    // Photography state
+    // Photography state - Starting at 300k (2hrs)
     const [addRaw, setAddRaw] = useState(false);
     const [photoHours, setPhotoHours] = useState(2);
-    const getPhotoTotal = () => (photoHours * 15) + (addRaw ? 20 : 0);
+    const getPhotoTotal = () => (photoHours * 150000) + (addRaw ? 100000 : 0);
 
-    // Video state
+    // Video state - Starting at 150k
     const [vidDuration, setVidDuration] = useState(1);
     const [vidGrade, setVidGrade] = useState<"standard" | "color_graded">("standard");
-    const getVidTotal = () => (vidDuration * 20) + (vidGrade === "color_graded" ? 30 : 0);
+    const getVidTotal = () => (vidDuration * 150000) + (vidGrade === "color_graded" ? 150000 : 0);
+
+    // Global Complexity Multiplier
+    const [complexity, setComplexity] = useState(1); // 1 = Simple, 2 = Pro, 3 = Enterprise
+    const complexityLabels = ["Simple", "Standard / Professional", "High Complexity / Enterprise"];
+    const complexityMultipliers = [1, 1.8, 3.5];
+
+    const calculateFinal = (base: number) => Math.round(base * complexityMultipliers[complexity - 1]);
 
     if (!isOpen) return null;
 
@@ -119,10 +126,10 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
                             <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                     {[
-                                        { id: "logo", label: "Logo Design", price: 15 },
-                                        { id: "banner", label: "Banner / Social Media", price: 10 },
-                                        { id: "poster", label: "Poster / Print", price: 10 },
-                                        { id: "brand", label: "Full Brand Identity", price: 50 },
+                                        { id: "logo", label: "Logo Design", price: 150000 },
+                                        { id: "banner", label: "Banner / Social Media", price: 75000 },
+                                        { id: "poster", label: "Poster / Print", price: 75000 },
+                                        { id: "brand", label: "Full Brand Identity", price: 775000 },
                                     ].map((item) => (
                                         <button
                                             key={item.id}
@@ -136,7 +143,7 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
                                 </div>
                                 <div className="flex justify-between items-center py-4 border-t border-white/[0.05]">
                                     <span className="text-sm text-neutral-500 uppercase tracking-widest">Est. Total</span>
-                                    <span className="text-2xl font-bold text-white">{format(getDesignTotal())}</span>
+                                    <span className="text-2xl font-bold text-white">{format(calculateFinal(getDesignTotal()))}</span>
                                 </div>
                             </div>
                         )}
@@ -148,9 +155,9 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
                                     <label className="text-xs uppercase tracking-widest text-neutral-500 mb-4 block">Render Type</label>
                                     <div className="grid grid-cols-3 gap-2">
                                         {[
-                                            { key: "half" as const, label: "Half Body", price: 15 },
-                                            { key: "full" as const, label: "Full Body", price: 25 },
-                                            { key: "render" as const, label: "Full Render", price: 40 },
+                                            { key: "half" as const, label: "Half Body", price: 75000 },
+                                            { key: "full" as const, label: "Full Body", price: 150000 },
+                                            { key: "render" as const, label: "Full Render", price: 300000 },
                                         ].map((t) => (
                                             <button
                                                 key={t.key}
@@ -172,7 +179,7 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
                                 </div>
                                 <div className="flex justify-between items-center py-4 border-t border-white/[0.05]">
                                     <span className="text-sm text-neutral-500 uppercase tracking-widest">Est. Total</span>
-                                    <span className="text-2xl font-bold text-white">{format(getIllusTotal())}</span>
+                                    <span className="text-2xl font-bold text-white">{format(calculateFinal(getIllusTotal()))}</span>
                                 </div>
                             </div>
                         )}
@@ -208,7 +215,7 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
                                 </label>
                                 <div className="flex justify-between items-center py-4 border-t border-white/[0.05]">
                                     <span className="text-sm text-neutral-500 uppercase tracking-widest">Est. Total</span>
-                                    <span className="text-2xl font-bold text-white">{format(getWebTotal())}</span>
+                                    <span className="text-2xl font-bold text-white">{format(calculateFinal(getWebTotal()))}</span>
                                 </div>
                             </div>
                         )}
@@ -231,12 +238,12 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
                                     <input type="checkbox" checked={addRaw} onChange={(e) => setAddRaw(e.target.checked)} className="accent-white w-4 h-4" />
                                     <div>
                                         <p className="text-sm font-semibold text-white">Provide RAW Files</p>
-                                        <p className="text-xs text-neutral-500">Includes all unedited photos from the session (+{format(20)})</p>
+                                        <p className="text-xs text-neutral-500">Includes all unedited photos from the session (+{format(100000)})</p>
                                     </div>
                                 </label>
                                 <div className="flex justify-between items-center py-4 border-t border-white/[0.05]">
                                     <span className="text-sm text-neutral-500 uppercase tracking-widest">Est. Total</span>
-                                    <span className="text-2xl font-bold text-white">{format(getPhotoTotal())}</span>
+                                    <span className="text-2xl font-bold text-white">{format(calculateFinal(getPhotoTotal()))}</span>
                                 </div>
                             </div>
                         )}
@@ -271,10 +278,29 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
                                 </div>
                                 <div className="flex justify-between items-center py-4 border-t border-white/[0.05]">
                                     <span className="text-sm text-neutral-500 uppercase tracking-widest">Est. Total</span>
-                                    <span className="text-2xl font-bold text-white">{format(getVidTotal())}</span>
+                                    <span className="text-2xl font-bold text-white">{format(calculateFinal(getVidTotal()))}</span>
                                 </div>
                             </div>
                         )}
+
+                        {/* GLOBAL COMPLEXITY SLIDER */}
+                        <div className="mt-8 p-6 bg-white/[0.03] border border-white/5 space-y-4">
+                            <label className="text-xs uppercase tracking-widest text-neutral-500 flex justify-between items-center">
+                                <span>Project Difficulty / Scale</span>
+                                <span className="text-white font-bold px-2 py-0.5 border border-white/10 rounded-sm">{complexityLabels[complexity - 1]}</span>
+                            </label>
+                            <input 
+                                type="range" 
+                                min="1" 
+                                max="3" 
+                                value={complexity} 
+                                onChange={(e) => setComplexity(Number(e.target.value))} 
+                                className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-white" 
+                            />
+                            <p className="text-[10px] text-neutral-500 leading-tight">
+                                *Adjust based on asset quantity, revisions, or technical complexity. Standard is recommended for most projects.
+                            </p>
+                        </div>
 
                         {/* CTA */}
                         <div className="pt-6 mt-6 border-t border-white/[0.05]">
