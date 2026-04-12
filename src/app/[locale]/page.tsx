@@ -93,7 +93,6 @@ export default function Home() {
         <Footer />
       </footer>
 
-      <FloatingOrderFab onClick={handleOrderClick} />
       <Chatbot onOpenPricing={handleOrderClick} />
       <PricingModal isOpen={orderFormOpen} onClose={() => setOrderFormOpen(false)} />
     </>

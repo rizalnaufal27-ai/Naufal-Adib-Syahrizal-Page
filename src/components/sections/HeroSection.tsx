@@ -77,13 +77,20 @@ export default function HeroSection({ onOrderClick }: HeroSectionProps) {
           Based in Jakarta. Specializing in minimal aesthetics, brand identity, and creative visual design for modern digital platforms.
         </p>
         
-        {/* CHANGED: This now accurately links to #work */}
-        <button 
-          onClick={() => document.getElementById("work")?.scrollIntoView({ behavior: "smooth" })}
-          className="px-6 py-2.5 rounded-full border border-neutral-600 text-[11px] font-medium text-neutral-300 uppercase tracking-[0.15em] hover:border-white hover:text-white transition-colors backdrop-blur-[2px] pointer-events-auto"
-        >
-          View Portfolio
-        </button>
+        <div className="flex flex-col gap-3">
+          <button 
+            onClick={() => document.getElementById("work")?.scrollIntoView({ behavior: "smooth" })}
+            className="px-6 py-2.5 rounded-full border border-neutral-600 text-[11px] font-medium text-neutral-300 uppercase tracking-[0.15em] hover:border-white hover:text-white transition-colors backdrop-blur-[2px] pointer-events-auto w-fit text-left"
+          >
+            View Portfolio
+          </button>
+          <button 
+            onClick={onOrderClick}
+            className="px-6 py-2.5 rounded-full bg-white text-black border border-white text-[11px] font-bold uppercase tracking-[0.15em] hover:bg-neutral-200 transition-colors pointer-events-auto w-fit text-left"
+          >
+            Start a Project
+          </button>
+        </div>
         
         <div className="hidden md:flex items-center gap-5 mt-2">
           <a href="https://www.instagram.com/ncs_rizal" target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-white transition-colors pointer-events-auto">
