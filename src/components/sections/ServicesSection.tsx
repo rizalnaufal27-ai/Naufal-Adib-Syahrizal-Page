@@ -22,9 +22,9 @@ const services = [
         price: "Starting at Rp 1.500.000",
     },
     { 
-        title: "Photography", 
-        description: "Product photography, graduation events, conceptual portraits, and professional RAW editing.", 
-        price: "Starting at Rp 300.000",
+        title: "Studio & Photography", 
+        description: "Cinematic portrait sessions, professional studio rental, graduation events, and high-end conceptual photography with pro editing.", 
+        price: "Starting at Rp 150.000",
     },
     { 
         title: "Videography", 

@@ -27,7 +27,13 @@ const PenguinIcon = ({ className }: { className?: string }) => (
 
 export function NasaiChatbot() {
     const [isOpen, setIsOpen] = useState(false);
-    const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat();
+    const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
+        onError: (error) => {
+            console.error("NASAI Chat Error:", error);
+            // We can add a custom error message to the chat if needed
+        },
+        initialMessages: [],
+    });
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     // Auto-scroll to bottom of messages

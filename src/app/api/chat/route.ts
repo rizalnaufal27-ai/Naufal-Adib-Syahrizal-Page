@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { convertToCoreMessages, streamText } from "ai";
+import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { supabase } from "@/lib/supabase";
 import { PORTFOLIO_RAG } from "@/lib/portfolio-data";
 
@@ -39,8 +41,7 @@ async function buildDynamicContext() {
     return { pricingTable, portfolioList };
 }
 
-import { createOpenRouter } from "@openrouter/ai-sdk-provider";
-import { streamText } from "ai";
+
 
 export async function POST(req: NextRequest) {
     try {
@@ -91,14 +92,14 @@ ${portfolioList}
 
         const openrouter = createOpenRouter({ apiKey });
 
-        const result = streamText({
+        const result = await streamText({
             model: openrouter("google/gemini-2.0-flash-001"),
             system: SYSTEM_PROMPT,
-            messages,
+            messages: convertToCoreMessages(messages),
             temperature: 0.7,
         });
 
-        return result.toAIStreamResponse();
+        return result.toDataStreamResponse();
     } catch (error) {
         console.error("Chat API error:", error);
         return NextResponse.json(

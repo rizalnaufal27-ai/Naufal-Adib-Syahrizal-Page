@@ -52,10 +52,13 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
         return webWireframeOnly ? Math.floor(base * 0.4) : base;
     };
 
-    // Photography state - Starting at 300k (2hrs)
-    const [addRaw, setAddRaw] = useState(false);
-    const [photoHours, setPhotoHours] = useState(2);
-    const getPhotoTotal = () => (photoHours * 150000) + (addRaw ? 100000 : 0);
+    // Studio & Photography state - Starting at 300k
+    const [studioType, setStudioType] = useState<"portrait" | "rental">("portrait");
+    const [studioHours, setStudioHours] = useState(2);
+    const getStudioTotal = () => {
+        const rate = studioType === "portrait" ? 150000 : 75000;
+        return studioHours * rate;
+    };
 
     // Video state - Starting at 150k
     const [vidDuration, setVidDuration] = useState(1);
@@ -75,7 +78,7 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
         { key: "design", label: "Graphic" },
         { key: "illustration", label: "Illustration" },
         { key: "web", label: "UI/UX" },
-        { key: "photo", label: "Photo" },
+        { key: "photo", label: "Studio" },
         { key: "video", label: "Video" },
     ];
 
@@ -99,7 +102,7 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
                     {/* Header */}
                     <div className="sticky top-0 bg-[#0a0a0a]/90 backdrop-blur border-b border-white/[0.05] px-8 py-5 flex items-center justify-between z-10">
                         <h2 className="text-xl font-semibold text-white tracking-tight" style={{ fontFamily: "var(--font-heading)" }}>
-                            A-La-Carte Pricing
+                            Studio Pricing
                         </h2>
                         <button onClick={onClose} className="text-neutral-500 hover:text-white transition-colors">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M18 6L6 18M6 6l12 12" /></svg>
@@ -220,30 +223,38 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
                             </div>
                         )}
 
-                        {/* PHOTOGRAPHY */}
+                        {/* STUDIO & PHOTOGRAPHY */}
                         {tab === "photo" && (
                             <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
-                                <div className="p-4 border border-white/[0.05] bg-white/[0.02] text-sm text-neutral-400">
-                                    <span className="text-white font-medium block mb-1">Location Notice:</span>
-                                    Photography sessions are currently limited to the Jabodetabek (Jakarta) region.
+                                <div className="grid grid-cols-2 gap-2">
+                                    {[
+                                        { key: "portrait" as const, label: "Cinematic Portrait", desc: "Professional studio session" },
+                                        { key: "rental" as const, label: "Studio Rental", desc: "Rent space only" },
+                                    ].map((s) => (
+                                        <button
+                                            key={s.key}
+                                            onClick={() => setStudioType(s.key)}
+                                            className={`p-4 text-center border transition-all ${studioType === s.key ? "border-white bg-white/5" : "border-white/[0.05] bg-transparent hover:border-white/20"}`}
+                                        >
+                                            <span className="block text-sm font-semibold text-white mb-1">{s.label}</span>
+                                            <span className="text-xs text-neutral-500">{s.desc}</span>
+                                        </button>
+                                    ))}
+                                </div>
+                                <div className="p-4 border border-white/[0.05] bg-white/[0.02] text-xs text-neutral-400">
+                                    <span className="text-white font-medium block mb-1">Notice:</span>
+                                    {studioType === "portrait" ? "Limited to Jabodetabek (Jakarta) region." : "Studio located in Jakarta Selatan."}
                                 </div>
                                 <div>
                                     <label className="text-xs uppercase tracking-widest text-neutral-500 mb-4 flex justify-between">
                                         <span>Duration (Hours)</span>
-                                        <span className="text-white font-bold">{photoHours}h</span>
+                                        <span className="text-white font-bold">{studioHours}h</span>
                                     </label>
-                                    <input type="range" min="1" max="8" value={photoHours} onChange={(e) => setPhotoHours(Number(e.target.value))} className="w-full accent-white" />
+                                    <input type="range" min="1" max="8" value={studioHours} onChange={(e) => setStudioHours(Number(e.target.value))} className="w-full accent-white" />
                                 </div>
-                                <label className="flex items-center gap-4 p-4 border border-white/[0.05] cursor-pointer hover:bg-white/[0.02]">
-                                    <input type="checkbox" checked={addRaw} onChange={(e) => setAddRaw(e.target.checked)} className="accent-white w-4 h-4" />
-                                    <div>
-                                        <p className="text-sm font-semibold text-white">Provide RAW Files</p>
-                                        <p className="text-xs text-neutral-500">Includes all unedited photos from the session (+{format(100000)})</p>
-                                    </div>
-                                </label>
                                 <div className="flex justify-between items-center py-4 border-t border-white/[0.05]">
                                     <span className="text-sm text-neutral-500 uppercase tracking-widest">Est. Total</span>
-                                    <span className="text-2xl font-bold text-white">{format(calculateFinal(getPhotoTotal()))}</span>
+                                    <span className="text-2xl font-bold text-white">{format(calculateFinal(getStudioTotal()))}</span>
                                 </div>
                             </div>
                         )}
