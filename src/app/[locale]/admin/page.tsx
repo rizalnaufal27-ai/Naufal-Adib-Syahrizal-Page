@@ -277,47 +277,74 @@ export default function AdminPage() {
     };
 
     return (
-        <div className="flex h-screen overflow-hidden" style={{ background: "#0A0A0A" }}>
-            {/* ═══ SIDEBAR ═══ */}
-            <aside className={`${sidebarCollapsed ? "w-16" : "w-60"} shrink-0 h-screen flex flex-col border-r border-white/[0.06] transition-all duration-300`} style={{ background: "#0A0A0A" }}>
-                {/* Logo */}
-                <div className="px-4 py-5 flex items-center gap-3 border-b border-white/[0.06]">
-                    <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(255,255,255,0.08)" }}>
-                        <span className="text-white font-black text-sm">N</span>
+        <div className="flex h-screen overflow-hidden" style={{ background: "#080808" }}>
+            {/* ═══ SIDEBAR — Command Center ═══ */}
+            <aside
+                className={`${sidebarCollapsed ? "w-[60px]" : "w-[220px]"} shrink-0 h-screen flex flex-col transition-all duration-300`}
+                style={{ background: "#0A0A0A", borderRight: "1px solid rgba(255,255,255,0.05)" }}
+            >
+                {/* Logo / Brand */}
+                <div
+                    className="flex items-center gap-3 px-4 shrink-0"
+                    style={{ height: "56px", borderBottom: "1px solid rgba(255,255,255,0.05)" }}
+                >
+                    <div
+                        className="w-7 h-7 flex items-center justify-center shrink-0 font-black text-xs text-white"
+                        style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}
+                    >
+                        N
                     </div>
-                    {!sidebarCollapsed && <span className="text-sm font-bold text-white truncate">Dashboard</span>}
-                    <button onClick={() => setSidebarCollapsed(!sidebarCollapsed)} className="ml-auto text-white/30 hover:text-white/60 transition-colors">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d={sidebarCollapsed ? "M9 18l6-6-6-6" : "M15 18l-6-6 6-6"} /></svg>
+                    {!sidebarCollapsed && (
+                        <div className="flex-1 min-w-0">
+                            <p className="text-[11px] font-bold text-white tracking-wide uppercase">Command</p>
+                            <p className="text-[9px] text-white/25 uppercase tracking-widest">Center</p>
+                        </div>
+                    )}
+                    <button
+                        onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                        className="ml-auto text-white/20 hover:text-white/50 transition-colors shrink-0"
+                    >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d={sidebarCollapsed ? "M9 18l6-6-6-6" : "M15 18l-6-6 6-6"} />
+                        </svg>
                     </button>
                 </div>
 
-                {/* Search */}
-                {!sidebarCollapsed && (
-                    <div className="px-3 py-3">
-                        <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/[0.04] border border-white/[0.06] text-white/30 text-xs">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
-                            <span>Search...</span>
-                            <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded bg-white/[0.06]">⌘K</span>
-                        </div>
-                    </div>
-                )}
-
-                {/* Nav Items */}
-                <nav className="flex-1 overflow-y-auto px-2 py-2 space-y-1">
+                {/* Nav */}
+                <nav className="flex-1 overflow-y-auto py-4 space-y-0.5 px-2">
                     {navItems.reduce((acc, item, i) => {
                         if (i === 0 || item.section !== navItems[i - 1].section) {
                             if (!sidebarCollapsed) acc.push(
-                                <p key={`sec-${item.section}`} className="text-[10px] font-bold uppercase tracking-widest text-white/20 px-3 pt-4 pb-1">{item.section}</p>
+                                <div key={`sec-${item.section}`} className="px-3 pt-4 pb-1.5">
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/20">{item.section}</span>
+                                        <div className="flex-1 h-px bg-white/[0.05]" />
+                                    </div>
+                                </div>
                             );
                         }
+                        const isActive = view === item.key;
                         acc.push(
-                            <button key={item.key} onClick={() => switchView(item.key)}
-                                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${view === item.key ? "bg-white/[0.08] text-white font-medium" : "text-white/50 hover:text-white/80 hover:bg-white/[0.04]"}`}
-                                title={sidebarCollapsed ? item.label : undefined}>
-                                <span className={view === item.key ? "text-white" : "text-white/40"}>{item.icon}</span>
-                                {!sidebarCollapsed && <span className="flex-1 text-left">{item.label}</span>}
+                            <button
+                                key={item.key}
+                                onClick={() => switchView(item.key)}
+                                title={sidebarCollapsed ? item.label : undefined}
+                                className="w-full flex items-center gap-3 px-3 py-2.5 text-xs transition-all relative"
+                                style={{
+                                    background: isActive ? "rgba(255,255,255,0.06)" : "transparent",
+                                    color: isActive ? "#fff" : "rgba(255,255,255,0.35)",
+                                    borderLeft: isActive ? "2px solid rgba(255,255,255,0.6)" : "2px solid transparent",
+                                }}
+                            >
+                                <span style={{ opacity: isActive ? 1 : 0.4 }}>{item.icon}</span>
+                                {!sidebarCollapsed && <span className="flex-1 text-left font-medium tracking-wide">{item.label}</span>}
                                 {!sidebarCollapsed && item.count !== undefined && item.count > 0 && (
-                                    <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-white/[0.06] text-white/40 font-mono">{item.count}</span>
+                                    <span
+                                        className="text-[9px] px-1.5 py-0.5 font-mono"
+                                        style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.3)" }}
+                                    >
+                                        {item.count}
+                                    </span>
                                 )}
                             </button>
                         );
@@ -325,27 +352,72 @@ export default function AdminPage() {
                     }, [] as React.ReactNode[])}
                 </nav>
 
-                {/* Bottom Actions */}
-                <div className="border-t border-white/[0.06] p-2 space-y-1">
-                    <Link href="/" className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-white/40 hover:text-white/70 hover:bg-white/[0.04] transition-all`}>
-                        {Icons.home}<span>Back to Site</span>
+                {/* Bottom */}
+                <div className="p-2 space-y-0.5" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                    <Link
+                        href="/"
+                        className="w-full flex items-center gap-3 px-3 py-2.5 text-xs transition-all"
+                        style={{ color: "rgba(255,255,255,0.3)" }}
+                    >
+                        {Icons.home}
+                        {!sidebarCollapsed && <span>Back to Site</span>}
                     </Link>
-                    <button onClick={logout} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-red-400/60 hover:text-red-400 hover:bg-red-500/[0.06] transition-all">
-                        {Icons.logout}{!sidebarCollapsed && <span>Logout</span>}
+                    <button
+                        onClick={logout}
+                        className="w-full flex items-center gap-3 px-3 py-2.5 text-xs transition-all"
+                        style={{ color: "rgba(239,68,68,0.5)" }}
+                    >
+                        {Icons.logout}
+                        {!sidebarCollapsed && <span>Logout</span>}
                     </button>
                 </div>
             </aside>
 
             {/* ═══ MAIN CONTENT ═══ */}
-            <main className="flex-1 flex flex-col h-screen overflow-hidden">
-                {/* Header */}
-                <header className="shrink-0 px-6 py-4 flex items-center justify-between border-b border-white/[0.06]" style={{ background: "#0A0A0A" }}>
-                    <div>
-                        <h1 className="text-lg font-bold text-white capitalize">{view === "messages" ? "Chat Log History" : view}</h1>
-                        <p className="text-[11px] text-white/30 mt-0.5">{orders.length} orders • {new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}</p>
+            <main className="flex-1 flex flex-col h-screen overflow-hidden" style={{ background: "#080808" }}>
+                {/* ── TOP COMMAND BAR ── */}
+                <header
+                    className="shrink-0 px-6 flex items-center gap-6"
+                    style={{ height: "56px", borderBottom: "1px solid rgba(255,255,255,0.05)", background: "#0A0A0A" }}
+                >
+                    {/* Page title */}
+                    <div className="flex items-center gap-3 flex-1">
+                        <div className="w-1 h-5 bg-white/60" />
+                        <h1 className="text-sm font-bold text-white uppercase tracking-widest">
+                            {view === "messages" ? "Chat Log" : view}
+                        </h1>
+                        <span className="text-[9px] text-white/20 uppercase tracking-[0.2em] font-mono">
+                            {orders.length} entries
+                        </span>
                     </div>
-                    <button onClick={fetchOrders} className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs text-white/40 hover:text-white hover:bg-white/[0.04] border border-white/[0.06] transition-all">
-                        {Icons.refresh} Refresh
+
+                    {/* Stat pills */}
+                    <div className="hidden md:flex items-center gap-3">
+                        {[
+                            { label: "Pending", value: orders.filter(o => o.status === "pending").length, color: "#EAB308" },
+                            { label: "Active", value: orders.filter(o => o.status === "processing").length, color: "#3B82F6" },
+                            { label: "Done", value: orders.filter(o => o.status === "done").length, color: "#22C55E" },
+                        ].map(stat => (
+                            <div
+                                key={stat.label}
+                                className="flex items-center gap-2 px-3 py-1.5 text-[10px]"
+                                style={{ background: `${stat.color}10`, border: `1px solid ${stat.color}20` }}
+                            >
+                                <span className="w-1.5 h-1.5 rounded-full" style={{ background: stat.color }} />
+                                <span className="font-mono font-bold" style={{ color: stat.color }}>{stat.value}</span>
+                                <span className="text-white/30 uppercase tracking-wide">{stat.label}</span>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Refresh */}
+                    <button
+                        onClick={fetchOrders}
+                        className="flex items-center gap-1.5 px-3 py-1.5 text-[10px] uppercase tracking-widest text-white/30 hover:text-white transition-colors"
+                        style={{ border: "1px solid rgba(255,255,255,0.06)" }}
+                    >
+                        {Icons.refresh}
+                        <span>Sync</span>
                     </button>
                 </header>
 
