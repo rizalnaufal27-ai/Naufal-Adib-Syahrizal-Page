@@ -1,46 +1,36 @@
 "use client";
 import { motion } from "framer-motion";
-import { Palette, Film, Globe } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 interface ServicesSectionProps {
     onOpenPricing: () => void;
 }
 
-const fadeUp = {
-    hidden: { opacity: 0, y: 40, filter: "blur(6px)" },
-    visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] as const } },
-};
-
-const cardPop = {
-    hidden: { opacity: 0, y: 50, scale: 0.92 },
-    visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] as const } },
-};
-
 const services = [
     { 
-        title: "Essential Studio", 
-        description: "Perfect for personal projects and small startups. Includes basic graphic design, simple illustration, and photo editing.", 
-        icon: Palette, 
-        color: "#9CA3AF", // Silver / Gray-400
-        price: "Rp 150.000",
-        tier: "Silver"
+        title: "Graphic Design", 
+        description: "Logo, Brand Identity, Stationery, Posters, & Banners. A-la-carte visual assets built to scale your business identity.", 
+        price: "Starting at $5",
     },
     { 
-        title: "Professional Studio", 
-        description: "Comprehensive creative solutions for growing brands. Includes full brand identity, video production, and UI/UX.", 
-        icon: Film, 
-        color: "#FCD34D", // Pale Gold / Amber-300
-        price: "Rp 500.000",
-        tier: "Gold"
+        title: "Illustration", 
+        description: "Bespoke digital artwork. From half-body concepts to full character renders for your creative commercial needs.", 
+        price: "Starting at $5/char",
     },
     { 
-        title: "Enterprise Digital", 
-        description: "The ultimate digital transformation. Custom web applications, full-scale post-production, and premium agency retaining.", 
-        icon: Globe, 
-        color: "#E5E7EB", // Platinum / Gray-200
-        price: "Rp 1.500.000",
-        tier: "Platinum"
+        title: "UI/UX Web Design", 
+        description: "User-centric wireframes, high-conversion landing pages, and complex dashboard prototypes.", 
+        price: "Project Based",
+    },
+    { 
+        title: "Photography", 
+        description: "Product photography, graduation events, conceptual portraits, and professional RAW editing.", 
+        price: "Starting at $20",
+    },
+    { 
+        title: "Videography", 
+        description: "Short-form video editing, color grading, and commercial video post-production.", 
+        price: "Starting at $10",
     },
 ];
 
@@ -48,76 +38,63 @@ export default function ServicesSection({ onOpenPricing }: ServicesSectionProps)
     const t = useTranslations("Services");
 
     return (
-        <div className="section-container py-28 relative overflow-hidden bg-[#0A0A0A]">
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}>
-                <div className="text-center mb-16">
-                    <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-[0.3em] mb-3 text-neutral-500">
-                        ✦ {t("label")}
-                    </motion.p>
-                    <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-black tracking-tight text-white/90">
-                        {t("title")}
-                    </motion.h2>
-                    <motion.p variants={fadeUp} className="text-sm mt-4 max-w-lg mx-auto text-neutral-400">
-                        {t("desc")}
-                    </motion.p>
+        <section className="w-full py-32 bg-[#050505] text-white">
+            <div className="max-w-[1400px] mx-auto px-6 md:px-12">
+                
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 md:mb-24 gap-6">
+                    <div>
+                        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500 mb-6">
+                            ✦ {t("label")}
+                        </p>
+                        <h2 className="text-4xl md:text-6xl font-bold tracking-tight" style={{ fontFamily: "var(--font-heading)" }}>
+                            A-La-Carte <br/>
+                            <span className="text-neutral-600">Expertise.</span>
+                        </h2>
+                    </div>
+                    <p className="text-neutral-400 max-w-sm text-sm leading-relaxed font-medium">
+                        I don&apos;t believe in locking you into bloated agency retainers. Pick exactly the service you need, when you need it. High-end execution, modular pricing.
+                    </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                <div className="flex flex-col border-t border-white/[0.05]">
                     {services.map((service, index) => (
                         <motion.div
                             key={service.title}
-                            variants={cardPop}
-                            custom={index}
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: "-50px" }}
+                            transition={{ duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
                             onClick={onOpenPricing}
-                            className="group cursor-pointer rounded-2xl p-8 relative overflow-hidden transition-all duration-500 hover:-translate-y-2 bg-[#111111]"
-                            style={{ 
-                                border: `1px solid rgba(255,255,255,0.05)`, 
-                            }}
+                            className="group cursor-pointer grid grid-cols-1 md:grid-cols-12 gap-6 items-center py-10 md:py-12 border-b border-white/[0.05] hover:bg-white/[0.02] transition-colors duration-500 px-4 md:px-8 -mx-4 md:-mx-8"
                         >
-                            {/* Hover minimal glow */}
-                            <div 
-                                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" 
-                                style={{ background: `radial-gradient(circle at 50% 0%, ${service.color}08 0%, transparent 70%)` }} 
-                            />
-
-                            {/* Animated icon (Matte dark style) */}
-                            <motion.div
-                                className="mb-6 w-fit rounded-xl p-3 border border-white/[0.05] bg-[#1A1A1A]"
-                                animate={{ y: [0, -4, 0] }}
-                                transition={{ duration: 4 + index * 0.2, repeat: Infinity, ease: "easeInOut" }}
-                            >
-                                <service.icon
-                                    className="w-7 h-7 transition-all duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0"
-                                    style={{ color: service.color }}
-                                />
-                            </motion.div>
-
-                            <div className="mb-2 flex items-center gap-2">
-                                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-sm border" style={{ color: service.color, borderColor: `${service.color}30`, backgroundColor: `${service.color}10` }}>
-                                    {service.tier}
-                                </span>
+                            <div className="col-span-1 md:col-span-5">
+                                <h3 className="text-2xl md:text-4xl font-bold tracking-tight text-white/50 group-hover:text-white transition-colors duration-500" style={{ fontFamily: "var(--font-heading)" }}>
+                                    {service.title}
+                                </h3>
+                            </div>
+                            
+                            <div className="col-span-1 md:col-span-5">
+                                <p className="text-sm md:text-base text-neutral-500 group-hover:text-neutral-300 transition-colors duration-500 max-w-md">
+                                    {service.description}
+                                </p>
                             </div>
 
-                            <h3 className="text-xl font-bold mb-3 text-white/90 transition-colors duration-300">
-                                {service.title}
-                            </h3>
-                            <p className="text-sm leading-relaxed mb-8 text-neutral-400 transition-colors duration-300">
-                                {service.description}
-                            </p>
-
-                            <div className="flex items-center justify-between pt-5 border-t border-white/[0.05] relative z-10">
-                                <div className="flex flex-col">
-                                    <span className="text-[10px] text-neutral-500 uppercase tracking-widest">Starting at</span>
-                                    <span className="text-sm font-bold text-white/80">{service.price}</span>
+                            <div className="col-span-1 md:col-span-2 flex justify-start md:justify-end items-center gap-4">
+                                <div className="text-left md:text-right">
+                                    <p className="text-[10px] uppercase tracking-widest text-neutral-600 mb-1">Pricing</p>
+                                    <p className="text-sm font-semibold text-white">{service.price}</p>
                                 </div>
-                                <span className="text-xs font-semibold px-5 py-2 rounded-lg transition-all duration-500 bg-white/5 hover:bg-white/10 text-white/70 border border-white/10 group-hover:border-white/20 group-hover:text-white">
-                                    {t("get_quote")}
-                                </span>
+                                <div className="hidden md:flex w-12 h-12 rounded-full border border-white/10 items-center justify-center opacity-0 group-hover:opacity-100 group-hover:bg-white text-black transition-all duration-500 -rotate-45 group-hover:rotate-0">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                                    </svg>
+                                </div>
                             </div>
                         </motion.div>
                     ))}
                 </div>
-            </motion.div>
-        </div>
+
+            </div>
+        </section>
     );
 }

@@ -1,37 +1,20 @@
 "use client";
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface PricingModalProps {
     isOpen: boolean;
     onClose: () => void;
 }
 
-type Tab = "design" | "illustration" | "photo" | "video";
+type Tab = "design" | "illustration" | "web" | "photo" | "video";
 
 function useCurrency() {
-    const [currency] = useState<"USD" | "IDR">(() => {
-        if (typeof window !== "undefined") {
-            try {
-                const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                if (tz && tz.toLowerCase().includes("jakarta")) return "IDR";
-            } catch { /* fallback */ }
-        }
-        return "USD";
-    });
-    const [rate] = useState(() => {
-        if (typeof window !== "undefined") {
-            try {
-                const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                if (tz && tz.toLowerCase().includes("jakarta")) return 15500;
-            } catch { /* fallback */ }
-        }
-        return 1;
-    });
+    const [currency] = useState<"USD" | "IDR">("USD");
+    const [rate] = useState(15500);
 
     const format = (usd: number) => {
-        if (currency === "IDR") {
-            return `Rp ${(usd * rate).toLocaleString("id-ID")}`;
-        }
+        if (currency === "IDR") return `Rp ${(usd * rate).toLocaleString("id-ID")}`;
         return `$${usd}`;
     };
 
@@ -44,405 +27,269 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
 
     // Graphic Design state
     const [selectedDesign, setSelectedDesign] = useState<string[]>([]);
+    const toggleDesign = (item: string) => setSelectedDesign((prev) => prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]);
+    const getDesignTotal = () => {
+        let total = 0;
+        if (selectedDesign.includes("logo")) total += 15;
+        if (selectedDesign.includes("banner")) total += 10;
+        if (selectedDesign.includes("poster")) total += 10;
+        if (selectedDesign.includes("brand")) total += 50;
+        return total;
+    };
 
     // Illustration state
     const [charCount, setCharCount] = useState(1);
     const [illusType, setIllusType] = useState<"half" | "full" | "render">("half");
-
-    // Photography state
-    const [location, setLocation] = useState("");
-    const [isJabodetabek, setIsJabodetabek] = useState<boolean | null>(null);
-    const [addRaw, setAddRaw] = useState(false);
-    const [editComplexity, setEditComplexity] = useState(3);
-    const [photoMode, setPhotoMode] = useState<"package" | "edit">("package");
-
-    // Video state
-    const [videoDuration, setVideoDuration] = useState(5);
-    const [videoComplexity, setVideoComplexity] = useState<"low" | "med" | "high">("low");
-    const [gdriveLink, setGdriveLink] = useState("");
-    const [videoBrief, setVideoBrief] = useState("");
-
-    const jabodetabekAreas = ["jakarta", "bogor", "depok", "tangerang", "bekasi", "jabodetabek"];
-
-    const checkLocation = (loc: string) => {
-        setLocation(loc);
-        const lower = loc.toLowerCase();
-        setIsJabodetabek(jabodetabekAreas.some((a) => lower.includes(a)));
-    };
-
-    const toggleDesign = (item: string) => {
-        setSelectedDesign((prev) =>
-            prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]
-        );
-    };
-
-    const getDesignTotal = () => {
-        let total = 0;
-        if (selectedDesign.includes("logo")) total += 5;
-        if (selectedDesign.includes("banner")) total += 5;
-        if (selectedDesign.includes("poster")) total += 5;
-        if (selectedDesign.includes("brand")) total += 20;
-        return total;
-    };
-
-    const illusPrices = { half: 5, full: 8, render: 12 };
+    const illusPrices = { half: 15, full: 25, render: 40 };
     const getIllusTotal = () => illusPrices[illusType] * charCount;
 
-    const getVideoBase = () => {
-        const base = { low: 10, med: 30, high: 50 };
-        return base[videoComplexity];
+    // Web UI/UX state
+    const [webScale, setWebScale] = useState<"small" | "medium" | "large">("small");
+    const webPrices = { small: 50, medium: 150, large: 300 }; // small = LP, medium = Dashboard, large = Full profile/complex
+    const [webWireframeOnly, setWebWireframeOnly] = useState(false);
+    const getWebTotal = () => {
+        const base = webPrices[webScale];
+        return webWireframeOnly ? Math.floor(base * 0.4) : base;
     };
-    const getVideoTotal = () => {
-        const base = getVideoBase();
-        const overtime = Math.max(0, videoDuration - 10) * 2;
-        return base + overtime;
-    };
+
+    // Photography state
+    const [addRaw, setAddRaw] = useState(false);
+    const [photoHours, setPhotoHours] = useState(2);
+    const getPhotoTotal = () => (photoHours * 15) + (addRaw ? 20 : 0);
+
+    // Video state
+    const [vidDuration, setVidDuration] = useState(1);
+    const [vidGrade, setVidGrade] = useState<"standard" | "color_graded">("standard");
+    const getVidTotal = () => (vidDuration * 20) + (vidGrade === "color_graded" ? 30 : 0);
 
     if (!isOpen) return null;
 
     const tabs: { key: Tab; label: string }[] = [
-        { key: "design", label: "Graphic Design" },
+        { key: "design", label: "Graphic" },
         { key: "illustration", label: "Illustration" },
-        { key: "photo", label: "Photography" },
-        { key: "video", label: "Video Editing" },
+        { key: "web", label: "UI/UX" },
+        { key: "photo", label: "Photo" },
+        { key: "video", label: "Video" },
     ];
 
     return (
-        <div
-            className="fixed inset-0 z-[200] flex items-center justify-center p-4"
-            style={{ background: "rgba(0,0,0,0.85)", backdropFilter: "blur(12px)" }}
-            onClick={onClose}
-        >
-            <div
-                className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl"
-                style={{
-                    background: "rgba(10,10,10,0.98)",
-                    border: "1px solid var(--color-border)",
-                }}
-                onClick={(e) => e.stopPropagation()}
+        <AnimatePresence>
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
+                onClick={onClose}
             >
-                {/* Header */}
-                <div className="flex items-center justify-between p-6" style={{ borderBottom: "1px solid var(--color-border)" }}>
-                    <h2 className="text-xl font-bold" style={{ fontFamily: "var(--font-heading)" }}>
-                        <span className="gradient-text">Pricing Calculator</span>
-                    </h2>
-                    <button onClick={onClose} className="p-2 rounded-full" style={{ color: "var(--color-text-muted)" }}>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M18 6L6 18M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-
-                {/* Tabs */}
-                <div className="flex gap-1 p-2 mx-6 mt-4 rounded-xl" style={{ background: "rgba(255,255,255,0.03)" }}>
-                    {tabs.map((t) => (
-                        <button
-                            key={t.key}
-                            onClick={() => setTab(t.key)}
-                            className="flex-1 py-2.5 px-3 rounded-lg text-xs font-medium transition-all duration-300"
-                            style={{
-                                background: tab === t.key ? "linear-gradient(135deg, var(--color-primary), var(--color-secondary))" : "transparent",
-                                color: tab === t.key ? "#fff" : "var(--color-text-muted)",
-                            }}
-                        >
-                            {t.label}
+                <motion.div
+                    initial={{ y: 20, opacity: 0, scale: 0.95 }}
+                    animate={{ y: 0, opacity: 1, scale: 1 }}
+                    exit={{ y: 20, opacity: 0, scale: 0.95 }}
+                    transition={{ ease: [0.16, 1, 0.3, 1], duration: 0.5 }}
+                    className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-[#0a0a0a] border border-white/[0.05] shadow-2xl relative"
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    {/* Header */}
+                    <div className="sticky top-0 bg-[#0a0a0a]/90 backdrop-blur border-b border-white/[0.05] px-8 py-5 flex items-center justify-between z-10">
+                        <h2 className="text-xl font-semibold text-white tracking-tight" style={{ fontFamily: "var(--font-heading)" }}>
+                            A-La-Carte Pricing
+                        </h2>
+                        <button onClick={onClose} className="text-neutral-500 hover:text-white transition-colors">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M18 6L6 18M6 6l12 12" /></svg>
                         </button>
-                    ))}
-                </div>
-
-                {/* Content */}
-                <div className="p-6">
-                    {/* GRAPHIC DESIGN */}
-                    {tab === "design" && (
-                        <div className="space-y-4">
-                            <p className="text-sm" style={{ color: "var(--color-text-muted)" }}>Select services:</p>
-                            <div className="grid grid-cols-2 gap-3">
-                                {[
-                                    { id: "logo", label: "Logo Design", price: 5 },
-                                    { id: "bookCover", label: "Book Cover", price: 5 },
-                                    { id: "banner", label: "Banner Design", price: 5 },
-                                    { id: "poster", label: "Poster Design", price: 5 },
-                                    { id: "brand", label: "Brand Identity Package", price: 20 },
-                                ].map((item) => (
-                                    <button
-                                        key={item.id}
-                                        onClick={() => toggleDesign(item.id)}
-                                        className="glass-card p-4 text-left transition-all duration-300"
-                                        style={{
-                                            borderColor: selectedDesign.includes(item.id)
-                                                ? "var(--color-primary)"
-                                                : "var(--color-border)",
-                                            background: selectedDesign.includes(item.id)
-                                                ? "rgba(59,130,246,0.08)"
-                                                : "var(--color-bg-glass)",
-                                        }}
-                                    >
-                                        <p className="text-sm font-semibold" style={{ color: "var(--color-text)" }}>{item.label}</p>
-                                        <p className="text-xs mt-1" style={{ color: "var(--color-primary)" }}>{format(item.price)}</p>
-                                    </button>
-                                ))}
-                            </div>
-                            {selectedDesign.length > 0 && (
-                                <div className="glass-card p-4 flex justify-between items-center">
-                                    <span className="text-sm" style={{ color: "var(--color-text-muted)" }}>Total</span>
-                                    <span className="text-lg font-bold gradient-text">{format(getDesignTotal())}</span>
-                                </div>
-                            )}
-                        </div>
-                    )}
-
-                    {/* ILLUSTRATION */}
-                    {tab === "illustration" && (
-                        <div className="space-y-5">
-                            <div>
-                                <label className="text-sm mb-2 block" style={{ color: "var(--color-text-muted)" }}>Type</label>
-                                <div className="flex gap-2">
-                                    {([
-                                        { key: "half" as const, label: "Half Body", price: 5 },
-                                        { key: "full" as const, label: "Full Body", price: 8 },
-                                        { key: "render" as const, label: "Full Render", price: 12 },
-                                    ]).map((t) => (
-                                        <button
-                                            key={t.key}
-                                            onClick={() => setIllusType(t.key)}
-                                            className="flex-1 py-3 rounded-xl text-xs font-medium transition-all duration-300"
-                                            style={{
-                                                background: illusType === t.key ? "linear-gradient(135deg, var(--color-primary), var(--color-secondary))" : "var(--color-bg-glass)",
-                                                color: illusType === t.key ? "#fff" : "var(--color-text-muted)",
-                                                border: `1px solid ${illusType === t.key ? "var(--color-primary)" : "var(--color-border)"}`,
-                                            }}
-                                        >
-                                            {t.label}<br />{format(t.price)}/char
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                            <div>
-                                <label className="text-sm mb-2 block" style={{ color: "var(--color-text-muted)" }}>
-                                    Number of Characters: <strong style={{ color: "var(--color-text)" }}>{charCount}</strong>
-                                </label>
-                                <input
-                                    type="range"
-                                    min="1"
-                                    max="10"
-                                    value={charCount}
-                                    onChange={(e) => setCharCount(Number(e.target.value))}
-                                    className="w-full accent-blue-500"
-                                />
-                            </div>
-                            <div className="glass-card p-4 flex justify-between items-center">
-                                <span className="text-sm" style={{ color: "var(--color-text-muted)" }}>Total ({charCount} characters)</span>
-                                <span className="text-lg font-bold gradient-text">{format(getIllusTotal())}</span>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* PHOTOGRAPHY */}
-                    {tab === "photo" && (
-                        <div className="space-y-5">
-                            <div className="flex gap-2">
-                                <button
-                                    onClick={() => setPhotoMode("package")}
-                                    className="flex-1 py-3 rounded-xl text-xs font-medium transition-all"
-                                    style={{
-                                        background: photoMode === "package" ? "linear-gradient(135deg, var(--color-primary), var(--color-secondary))" : "var(--color-bg-glass)",
-                                        color: photoMode === "package" ? "#fff" : "var(--color-text-muted)",
-                                        border: `1px solid ${photoMode === "package" ? "var(--color-primary)" : "var(--color-border)"}`,
-                                    }}
-                                >
-                                    📸 Photography Package
-                                </button>
-                                <button
-                                    onClick={() => setPhotoMode("edit")}
-                                    className="flex-1 py-3 rounded-xl text-xs font-medium transition-all"
-                                    style={{
-                                        background: photoMode === "edit" ? "linear-gradient(135deg, var(--color-primary), var(--color-secondary))" : "var(--color-bg-glass)",
-                                        color: photoMode === "edit" ? "#fff" : "var(--color-text-muted)",
-                                        border: `1px solid ${photoMode === "edit" ? "var(--color-primary)" : "var(--color-border)"}`,
-                                    }}
-                                >
-                                    🖌️ Edit Photo Only
-                                </button>
-                            </div>
-
-                            {photoMode === "package" && (
-                                <div className="space-y-4">
-                                    <div>
-                                        <label className="text-sm mb-2 block" style={{ color: "var(--color-text-muted)" }}>Your Location</label>
-                                        <input
-                                            type="text"
-                                            value={location}
-                                            onChange={(e) => checkLocation(e.target.value)}
-                                            placeholder="e.g. Jakarta, Depok, Tangerang..."
-                                            className="w-full px-4 py-3 rounded-xl text-sm"
-                                            style={{
-                                                background: "var(--color-bg-glass)",
-                                                border: "1px solid var(--color-border)",
-                                                color: "var(--color-text)",
-                                                outline: "none",
-                                            }}
-                                        />
-                                    </div>
-                                    {isJabodetabek === true && (
-                                        <div className="space-y-3">
-                                            <div className="glass-card p-4" style={{ borderColor: "rgba(34,197,94,0.3)" }}>
-                                                <p className="text-sm font-semibold" style={{ color: "#22C55E" }}>✓ Service available in your area!</p>
-                                                <p className="text-xs mt-1" style={{ color: "var(--color-text-muted)" }}>Free consultation included.</p>
-                                            </div>
-                                            <div className="glass-card p-4">
-                                                <p className="text-sm font-semibold" style={{ color: "var(--color-text)" }}>Graduation / Product Package</p>
-                                                <p className="text-xs" style={{ color: "var(--color-text-muted)" }}>2 Hours Session</p>
-                                                <p className="text-lg font-bold gradient-text mt-2">{format(20)}</p>
-                                            </div>
-                                            <label className="flex items-center gap-3 glass-card p-4 cursor-pointer">
-                                                <input type="checkbox" checked={addRaw} onChange={(e) => setAddRaw(e.target.checked)} className="accent-blue-500" />
-                                                <div>
-                                                    <p className="text-sm font-medium" style={{ color: "var(--color-text)" }}>Add RAW Files</p>
-                                                    <p className="text-xs" style={{ color: "var(--color-text-muted)" }}>+{format(5)} extra</p>
-                                                </div>
-                                            </label>
-                                            <div className="glass-card p-4 flex justify-between items-center">
-                                                <span className="text-sm" style={{ color: "var(--color-text-muted)" }}>Total</span>
-                                                <span className="text-lg font-bold gradient-text">{format(20 + (addRaw ? 5 : 0))}</span>
-                                            </div>
-                                        </div>
-                                    )}
-                                    {isJabodetabek === false && (
-                                        <div className="glass-card p-6 text-center" style={{ borderColor: "rgba(239,68,68,0.3)" }}>
-                                            <p className="text-3xl mb-3">🚫</p>
-                                            <p className="text-sm font-semibold" style={{ color: "#EF4444" }}>Service Unavailable in Your Area</p>
-                                            <p className="text-xs mt-2" style={{ color: "var(--color-text-muted)" }}>
-                                                Photography packages are only available in the Jabodetabek region.
-                                                Try our &quot;Edit Photo Only&quot; service instead!
-                                            </p>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-
-                            {photoMode === "edit" && (
-                                <div className="space-y-4">
-                                    <div className="glass-card p-4" style={{ borderColor: "rgba(34,197,94,0.3)" }}>
-                                        <p className="text-sm font-semibold" style={{ color: "#22C55E" }}>🌍 Available Globally</p>
-                                    </div>
-                                    <div>
-                                        <label className="text-sm mb-2 block" style={{ color: "var(--color-text-muted)" }}>
-                                            Edit Complexity: <strong style={{ color: "var(--color-text)" }}>{format(editComplexity)}</strong>
-                                        </label>
-                                        <input
-                                            type="range"
-                                            min="1"
-                                            max="5"
-                                            value={editComplexity}
-                                            onChange={(e) => setEditComplexity(Number(e.target.value))}
-                                            className="w-full accent-blue-500"
-                                        />
-                                        <div className="flex justify-between text-xs mt-1" style={{ color: "var(--color-text-muted)" }}>
-                                            <span>Simple</span><span>Complex</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    )}
-
-                    {/* VIDEO EDITING */}
-                    {tab === "video" && (
-                        <div className="space-y-5">
-                            <div>
-                                <label className="text-sm mb-2 block" style={{ color: "var(--color-text-muted)" }}>
-                                    Final Duration: <strong style={{ color: "var(--color-text)" }}>{videoDuration} min</strong>
-                                </label>
-                                <input
-                                    type="range"
-                                    min="1"
-                                    max="60"
-                                    value={videoDuration}
-                                    onChange={(e) => setVideoDuration(Number(e.target.value))}
-                                    className="w-full accent-blue-500"
-                                />
-                            </div>
-                            <div>
-                                <label className="text-sm mb-2 block" style={{ color: "var(--color-text-muted)" }}>Complexity</label>
-                                <div className="flex gap-2">
-                                    {([
-                                        { key: "low" as const, label: "Low", price: "$10" },
-                                        { key: "med" as const, label: "Medium", price: "$30" },
-                                        { key: "high" as const, label: "High", price: "$50" },
-                                    ]).map((c) => (
-                                        <button
-                                            key={c.key}
-                                            onClick={() => setVideoComplexity(c.key)}
-                                            className="flex-1 py-3 rounded-xl text-xs font-medium transition-all"
-                                            style={{
-                                                background: videoComplexity === c.key ? "linear-gradient(135deg, var(--color-primary), var(--color-secondary))" : "var(--color-bg-glass)",
-                                                color: videoComplexity === c.key ? "#fff" : "var(--color-text-muted)",
-                                                border: `1px solid ${videoComplexity === c.key ? "var(--color-primary)" : "var(--color-border)"}`,
-                                            }}
-                                        >
-                                            {c.label}<br /><span className="opacity-70">{c.price} base</span>
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                            <div>
-                                <label className="text-sm mb-2 block" style={{ color: "var(--color-text-muted)" }}>Google Drive Link (Source Material)</label>
-                                <input
-                                    type="url"
-                                    value={gdriveLink}
-                                    onChange={(e) => setGdriveLink(e.target.value)}
-                                    placeholder="https://drive.google.com/..."
-                                    className="w-full px-4 py-3 rounded-xl text-sm"
-                                    style={{ background: "var(--color-bg-glass)", border: "1px solid var(--color-border)", color: "var(--color-text)", outline: "none" }}
-                                />
-                            </div>
-                            <div>
-                                <label className="text-sm mb-2 block" style={{ color: "var(--color-text-muted)" }}>Brief / Description</label>
-                                <textarea
-                                    value={videoBrief}
-                                    onChange={(e) => setVideoBrief(e.target.value)}
-                                    placeholder="Describe your video project..."
-                                    rows={3}
-                                    className="w-full px-4 py-3 rounded-xl text-sm resize-none"
-                                    style={{ background: "var(--color-bg-glass)", border: "1px solid var(--color-border)", color: "var(--color-text)", outline: "none" }}
-                                />
-                            </div>
-                            <div className="glass-card p-4 space-y-2">
-                                <div className="flex justify-between text-xs" style={{ color: "var(--color-text-muted)" }}>
-                                    <span>Base ({videoComplexity})</span><span>{format(getVideoBase())}</span>
-                                </div>
-                                {videoDuration > 10 && (
-                                    <div className="flex justify-between text-xs" style={{ color: "var(--color-text-muted)" }}>
-                                        <span>Overtime ({videoDuration - 10} min × $2)</span><span>{format((videoDuration - 10) * 2)}</span>
-                                    </div>
-                                )}
-                                <div className="flex justify-between items-center pt-2" style={{ borderTop: "1px solid var(--color-border)" }}>
-                                    <span className="text-sm font-medium" style={{ color: "var(--color-text-muted)" }}>Total</span>
-                                    <span className="text-lg font-bold gradient-text">{format(getVideoTotal())}</span>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Contact CTA */}
-                    <div className="mt-6 flex gap-3">
-                        <a
-                            href="https://wa.me/6281234567890"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="btn-primary flex-1 text-center"
-                        >
-                            Order via WhatsApp
-                        </a>
-                        <a
-                            href="mailto:naufaladib@gmail.com"
-                            className="btn-outline flex-1 text-center"
-                        >
-                            Email Quote
-                        </a>
                     </div>
-                </div>
-            </div>
-        </div>
+
+                    {/* Tabs */}
+                    <div className="flex border-b border-white/[0.05] overflow-x-auto hide-scrollbar">
+                        {tabs.map((t) => (
+                            <button
+                                key={t.key}
+                                onClick={() => setTab(t.key)}
+                                className={`px-6 py-4 text-sm font-medium tracking-wide transition-colors whitespace-nowrap border-b-2 ${tab === t.key ? "text-white border-white" : "text-neutral-500 border-transparent hover:text-neutral-300"}`}
+                            >
+                                {t.label}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Content Body */}
+                    <div className="p-8">
+                        {/* GRAPHIC DESIGN */}
+                        {tab === "design" && (
+                            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    {[
+                                        { id: "logo", label: "Logo Design", price: 15 },
+                                        { id: "banner", label: "Banner / Social Media", price: 10 },
+                                        { id: "poster", label: "Poster / Print", price: 10 },
+                                        { id: "brand", label: "Full Brand Identity", price: 50 },
+                                    ].map((item) => (
+                                        <button
+                                            key={item.id}
+                                            onClick={() => toggleDesign(item.id)}
+                                            className={`p-5 text-left border transition-all ${selectedDesign.includes(item.id) ? "border-white bg-white/5" : "border-white/[0.05] bg-transparent hover:border-white/20"}`}
+                                        >
+                                            <p className="text-sm font-semibold text-white mb-1">{item.label}</p>
+                                            <p className="text-xs text-neutral-400">{format(item.price)}</p>
+                                        </button>
+                                    ))}
+                                </div>
+                                <div className="flex justify-between items-center py-4 border-t border-white/[0.05]">
+                                    <span className="text-sm text-neutral-500 uppercase tracking-widest">Est. Total</span>
+                                    <span className="text-2xl font-bold text-white">{format(getDesignTotal())}</span>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* ILLUSTRATION */}
+                        {tab === "illustration" && (
+                            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                                <div>
+                                    <label className="text-xs uppercase tracking-widest text-neutral-500 mb-4 block">Render Type</label>
+                                    <div className="grid grid-cols-3 gap-2">
+                                        {[
+                                            { key: "half" as const, label: "Half Body", price: 15 },
+                                            { key: "full" as const, label: "Full Body", price: 25 },
+                                            { key: "render" as const, label: "Full Render", price: 40 },
+                                        ].map((t) => (
+                                            <button
+                                                key={t.key}
+                                                onClick={() => setIllusType(t.key)}
+                                                className={`p-4 text-center border transition-all ${illusType === t.key ? "border-white bg-white/5" : "border-white/[0.05] bg-transparent hover:border-white/20"}`}
+                                            >
+                                                <span className="block text-sm font-semibold text-white mb-1">{t.label}</span>
+                                                <span className="text-xs text-neutral-500">{format(t.price)}/char</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="text-xs uppercase tracking-widest text-neutral-500 mb-4 flex justify-between">
+                                        <span>Characters / Figures</span>
+                                        <span className="text-white font-bold">{charCount}</span>
+                                    </label>
+                                    <input type="range" min="1" max="10" value={charCount} onChange={(e) => setCharCount(Number(e.target.value))} className="w-full accent-white" />
+                                </div>
+                                <div className="flex justify-between items-center py-4 border-t border-white/[0.05]">
+                                    <span className="text-sm text-neutral-500 uppercase tracking-widest">Est. Total</span>
+                                    <span className="text-2xl font-bold text-white">{format(getIllusTotal())}</span>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* UI/UX WEB DESIGN */}
+                        {tab === "web" && (
+                            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                                <div>
+                                    <label className="text-xs uppercase tracking-widest text-neutral-500 mb-4 block">Project Scale</label>
+                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                        {[
+                                            { key: "small" as const, label: "Small / Landing", desc: "Single page focused on conversion." },
+                                            { key: "medium" as const, label: "Medium / SaaS", desc: "Multi-page or Dashboard interfaces." },
+                                            { key: "large" as const, label: "Large / Corporate", desc: "Extensive design systems & portals." },
+                                        ].map((s) => (
+                                            <button
+                                                key={s.key}
+                                                onClick={() => setWebScale(s.key)}
+                                                className={`p-4 text-left border transition-all ${webScale === s.key ? "border-white bg-white/5" : "border-white/[0.05] bg-transparent hover:border-white/20"}`}
+                                            >
+                                                <span className="block text-sm font-semibold text-white mb-2">{s.label}</span>
+                                                <span className="text-xs text-neutral-500 leading-relaxed">{s.desc}</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                                <label className="flex items-center gap-4 p-4 border border-white/[0.05] cursor-pointer hover:bg-white/[0.02]">
+                                    <input type="checkbox" checked={webWireframeOnly} onChange={(e) => setWebWireframeOnly(e.target.checked)} className="accent-white w-4 h-4" />
+                                    <div>
+                                        <p className="text-sm font-semibold text-white">Wireframe / Lo-Fi Only</p>
+                                        <p className="text-xs text-neutral-500">I just need the structure, no hi-fi visuals. (-60% cost)</p>
+                                    </div>
+                                </label>
+                                <div className="flex justify-between items-center py-4 border-t border-white/[0.05]">
+                                    <span className="text-sm text-neutral-500 uppercase tracking-widest">Est. Total</span>
+                                    <span className="text-2xl font-bold text-white">{format(getWebTotal())}</span>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* PHOTOGRAPHY */}
+                        {tab === "photo" && (
+                            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                                <div className="p-4 border border-white/[0.05] bg-white/[0.02] text-sm text-neutral-400">
+                                    <span className="text-white font-medium block mb-1">Location Notice:</span>
+                                    Photography sessions are currently limited to the Jabodetabek (Jakarta) region.
+                                </div>
+                                <div>
+                                    <label className="text-xs uppercase tracking-widest text-neutral-500 mb-4 flex justify-between">
+                                        <span>Duration (Hours)</span>
+                                        <span className="text-white font-bold">{photoHours}h</span>
+                                    </label>
+                                    <input type="range" min="1" max="8" value={photoHours} onChange={(e) => setPhotoHours(Number(e.target.value))} className="w-full accent-white" />
+                                </div>
+                                <label className="flex items-center gap-4 p-4 border border-white/[0.05] cursor-pointer hover:bg-white/[0.02]">
+                                    <input type="checkbox" checked={addRaw} onChange={(e) => setAddRaw(e.target.checked)} className="accent-white w-4 h-4" />
+                                    <div>
+                                        <p className="text-sm font-semibold text-white">Provide RAW Files</p>
+                                        <p className="text-xs text-neutral-500">Includes all unedited photos from the session (+{format(20)})</p>
+                                    </div>
+                                </label>
+                                <div className="flex justify-between items-center py-4 border-t border-white/[0.05]">
+                                    <span className="text-sm text-neutral-500 uppercase tracking-widest">Est. Total</span>
+                                    <span className="text-2xl font-bold text-white">{format(getPhotoTotal())}</span>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* VIDEO EDITING */}
+                        {tab === "video" && (
+                            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                                <div>
+                                    <label className="text-xs uppercase tracking-widest text-neutral-500 mb-4 block">Finishing Quality</label>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        {[
+                                            { key: "standard" as const, label: "Standard Cut", desc: "Basic cuts & transitions" },
+                                            { key: "color_graded" as const, label: "Color Graded Pro", desc: "Cinematic grading & FX" },
+                                        ].map((v) => (
+                                            <button
+                                                key={v.key}
+                                                onClick={() => setVidGrade(v.key)}
+                                                className={`p-4 text-center border transition-all ${vidGrade === v.key ? "border-white bg-white/5" : "border-white/[0.05] bg-transparent hover:border-white/20"}`}
+                                            >
+                                                <span className="block text-sm font-semibold text-white mb-1">{v.label}</span>
+                                                <span className="text-xs text-neutral-500">{v.desc}</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="text-xs uppercase tracking-widest text-neutral-500 mb-4 flex justify-between">
+                                        <span>Final Output Duration (Minutes)</span>
+                                        <span className="text-white font-bold">{vidDuration}m</span>
+                                    </label>
+                                    <input type="range" min="1" max="15" value={vidDuration} onChange={(e) => setVidDuration(Number(e.target.value))} className="w-full accent-white" />
+                                </div>
+                                <div className="flex justify-between items-center py-4 border-t border-white/[0.05]">
+                                    <span className="text-sm text-neutral-500 uppercase tracking-widest">Est. Total</span>
+                                    <span className="text-2xl font-bold text-white">{format(getVidTotal())}</span>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* CTA */}
+                        <div className="pt-6 mt-6 border-t border-white/[0.05]">
+                            <a
+                                href="https://wa.me/6285782074034"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="block w-full py-4 text-center text-sm font-bold uppercase tracking-widest bg-white text-black hover:bg-neutral-200 transition-colors"
+                            >
+                                Contact / Order Now
+                            </a>
+                        </div>
+                    </div>
+                </motion.div>
+            </motion.div>
+        </AnimatePresence>
     );
 }

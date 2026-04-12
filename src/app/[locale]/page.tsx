@@ -9,7 +9,7 @@ import SkillsMarquee from "@/components/sections/SkillsMarquee";
 import PortfolioGrid from "@/components/sections/PortfolioGrid";
 import ProfileSection from "@/components/sections/ProfileSection";
 import ServicesSection from "@/components/sections/ServicesSection";
-import DashboardPreview from "@/components/sections/DashboardPreview";
+
 import Footer from "@/components/Footer";
 import Chatbot from "@/components/Chatbot";
 import OrderFormModal from "@/components/OrderFormModal";
@@ -87,12 +87,7 @@ export default function Home() {
 
           <section id="skills"><SkillsMarquee /></section>
 
-          {/* ═══ Subtle Divider ═══ */}
-          <div className="relative h-16 w-full flex justify-center items-center">
-            <div className="w-24 h-px bg-white/10" />
-          </div>
 
-          <section id="dashboard"><DashboardPreview /></section>
         </div>
       </main>
 
