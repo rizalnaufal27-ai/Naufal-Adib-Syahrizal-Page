@@ -43,8 +43,8 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
     const [webScale, setWebScale] = useState<"small" | "medium" | "large">("small");
     const webPrices = { 
         small: 500000,    // Landing Page
-        medium: 2500000,  // SaaS / Dashboard
-        large: 5000000    // Corporate / Complex System
+        medium: 1500000,  // SaaS / Dashboard
+        large: 3000000    // Corporate / Complex System
     };
     const [webWireframeOnly, setWebWireframeOnly] = useState(false);
     const getWebTotal = () => {

@@ -35,7 +35,7 @@ Naufal's studio uses a "Matte Pricing" scale for high-end creative services:
 5. **UI/UX & Web (Professional Tiers)**:
    - These are professional-grade services and follow industry standards.
    - Landing Page: Starts at **Rp 500,000**.
-   - SaaS / Dashboard: **Rp 2.500.000 - Rp 5.000.000+**.
+   - SaaS / Dashboard: **Rp 1,500,000 - Rp 3,000,000+**.
    - *Note to AI*: Explain that UI/UX is an investment in business logic and high-end aesthetics.
 
 ### HOW CALCULATOR DETECTS PROJECT SCALE:
