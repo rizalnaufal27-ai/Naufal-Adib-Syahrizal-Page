@@ -39,6 +39,9 @@ async function buildDynamicContext() {
     return { pricingTable, portfolioList };
 }
 
+import { createOpenRouter } from "@openrouter/ai-sdk-provider";
+import { streamText } from "ai";
+
 export async function POST(req: NextRequest) {
     try {
         const { messages } = await req.json();
@@ -54,7 +57,7 @@ export async function POST(req: NextRequest) {
         // Fetch live data from DB
         const { pricingTable, portfolioList } = await buildDynamicContext();
 
-        const SYSTEM_PROMPT = `You are Naufal Adib's professional AI assistant on his portfolio website.
+        const SYSTEM_PROMPT = `You are NASAI (Naufal Adib Syahrizal Artificial Intelligence), the exclusive AI concierge and web instructor for Naufal's creative studio website.
 You have deep knowledge of his portfolio, services, and pricing from the following data:
 
 ${PORTFOLIO_RAG}
@@ -83,48 +86,24 @@ ${portfolioList}
 - For tracking questions, always mention /track page
 - When recommending portfolio works, be specific about which pieces match the client's needs
 - You represent Naufal professionally — never make things up about his work
+- Keep instructions compact, step-by-step, and simple.
 - Use emoji sparingly but effectively to make responses engaging 🎨`;
 
-        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${apiKey}`,
-                "Content-Type": "application/json",
-                "HTTP-Referer": "https://naufaladib.com",
-                "X-Title": "Naufal Adib Portfolio",
-            },
-            body: JSON.stringify({
-                model: "google/gemini-2.0-flash-001",
-                messages: [
-                    { role: "system", content: SYSTEM_PROMPT },
-                    ...messages.map((m: { role: string; content: string }) => ({
-                        role: m.role,
-                        content: m.content,
-                    })),
-                ],
-                max_tokens: 1200,
-                temperature: 0.7,
-            }),
+        const openrouter = createOpenRouter({ apiKey });
+
+        const result = streamText({
+            model: openrouter("google/gemini-2.0-flash-001"),
+            system: SYSTEM_PROMPT,
+            messages,
+            temperature: 0.7,
         });
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error("OpenRouter error:", errorText);
-            return NextResponse.json(
-                { content: "I'm having trouble right now. Please try again in a moment!" },
-                { status: 200 }
-            );
-        }
-
-        const data = await response.json();
-        const content = data.choices?.[0]?.message?.content || "Sorry, I couldn't generate a response.";
-
-        return NextResponse.json({ content });
+        return result.toDataStreamResponse();
     } catch (error) {
         console.error("Chat API error:", error);
         return NextResponse.json(
-            { content: "Something went wrong. Please try again!" },
-            { status: 200 }
+            { error: "Something went wrong. Please try again!" },
+            { status: 500 }
         );
     }
 }

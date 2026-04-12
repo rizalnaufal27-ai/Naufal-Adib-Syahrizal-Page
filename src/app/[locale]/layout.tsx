@@ -15,8 +15,7 @@ export const metadata: Metadata = {
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import Script from 'next/script';
-
-
+import { NasaiChatbot } from '@/components/ui/nasai-chatbot';
 
 export default async function RootLayout({
   children,
@@ -32,6 +31,7 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           <div className="noise-overlay" />
           {children}
+          <NasaiChatbot />
         </NextIntlClientProvider>
         {/* Midtrans Snap.js — loaded before interactive for payment pages */}
         <Script
