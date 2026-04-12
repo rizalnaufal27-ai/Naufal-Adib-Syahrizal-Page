@@ -19,7 +19,13 @@ export default function HeroSection({ onOrderClick }: HeroSectionProps) {
         transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
         className="relative z-[2] flex flex-col items-center w-full max-w-[340px]"
       >
-        <div className="relative w-full aspect-[3/4] rounded-[24px] overflow-hidden shadow-2xl" style={{ border: "1px solid rgba(255,255,255,0.06)" }}>
+        <div 
+          className="relative w-full aspect-[3/4] rounded-[24px] overflow-hidden shadow-[0_30px_60px_-15px_rgba(0,0,0,0.8)]" 
+          style={{ 
+            border: "1px solid rgba(255,255,255,0.08)",
+            boxShadow: "0 40px 80px -20px rgba(0,0,0,0.9), inset 0 0 20px rgba(255,255,255,0.05)"
+          }}
+        >
           <Image
             src="/images/naufal-profile.jpg"
             alt="Naufal Adib Syahrizal"
@@ -52,7 +58,7 @@ export default function HeroSection({ onOrderClick }: HeroSectionProps) {
             fontSize: "clamp(4rem, 8vw, 9.5rem)",
             lineHeight: 0.88,
             letterSpacing: "-0.02em",
-            WebkitTextStroke: "1.5px rgba(255,255,255,0.8)"
+            WebkitTextStroke: "0.5px rgba(255,255,255,0.4)"
           }}
         >
           VISUAL<span className="font-light italic ml-2 md:ml-4 text-white/50">/</span><br />
