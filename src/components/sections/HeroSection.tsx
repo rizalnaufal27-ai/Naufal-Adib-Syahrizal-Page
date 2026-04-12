@@ -47,11 +47,12 @@ export default function HeroSection({ onOrderClick }: HeroSectionProps) {
         className="absolute left-6 md:left-[5vw] xl:left-[8vw] top-[30%] md:top-[45%] -translate-y-1/2 z-[3] pointer-events-none"
       >
         <h1 
-          className="text-white font-serif"
+          className="text-transparent font-serif"
           style={{ 
             fontSize: "clamp(4rem, 8vw, 9.5rem)",
             lineHeight: 0.88,
-            letterSpacing: "-0.02em"
+            letterSpacing: "-0.02em",
+            WebkitTextStroke: "1.5px rgba(255,255,255,0.8)"
           }}
         >
           VISUAL<span className="font-light italic ml-2 md:ml-4 text-white/50">/</span><br />
@@ -71,12 +72,12 @@ export default function HeroSection({ onOrderClick }: HeroSectionProps) {
         </p>
         
         {/* CHANGED: This now accurately links to #work */}
-        <Link 
-          href="#work"
+        <button 
+          onClick={() => document.getElementById("work")?.scrollIntoView({ behavior: "smooth" })}
           className="px-6 py-2.5 rounded-full border border-neutral-600 text-[11px] font-medium text-neutral-300 uppercase tracking-[0.15em] hover:border-white hover:text-white transition-colors backdrop-blur-[2px] pointer-events-auto"
         >
           View Portfolio
-        </Link>
+        </button>
         
         <div className="hidden md:flex items-center gap-5 mt-2">
           <a href="https://www.instagram.com/ncs_rizal" target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-white transition-colors pointer-events-auto">
