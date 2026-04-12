@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 
 interface HeroSectionProps {
   onViewResume?: () => void;
@@ -9,184 +10,87 @@ interface HeroSectionProps {
 
 export default function HeroSection({ onOrderClick }: HeroSectionProps) {
   return (
-    <section className="relative w-full min-h-screen bg-[#0A0A0A] overflow-hidden flex flex-col items-center justify-center">
+    <section className="relative w-full min-h-screen bg-[#0A0A0A] overflow-hidden flex flex-col items-center justify-center pt-[72px]">
       
-      {/* ── LAYER 1: BACK TEXT (SOLID/DIM) ── */}
+      {/* ── CENTRAL COLUMN (Photo) ── */}
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute z-[1] inset-0 flex flex-col items-center justify-center pointer-events-none select-none"
+        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+        className="relative z-[2] flex flex-col items-center w-full max-w-[340px]"
       >
-        <h1 
-          className="font-black uppercase text-center text-white/[0.08]"
-          style={{ 
-            fontFamily: "var(--font-heading)", 
-            fontSize: "clamp(3.5rem, 16vw, 15rem)", 
-            lineHeight: 0.85, 
-            letterSpacing: "-0.02em",
-          }}
-        >
-          VISUAL<br />DESIGNER
-        </h1>
-      </motion.div>
-
-      {/* ── LAYER 2: THE PHOTO ── */}
-      <motion.div 
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-        className="relative z-[2] w-[clamp(240px,28vw,420px)] aspect-[3/4] shadow-2xl mt-12 md:mt-0"
-      >
-        <div className="w-full h-full relative overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.08)" }}>
+        <div className="relative w-full aspect-[3/4] rounded-[24px] overflow-hidden shadow-2xl" style={{ border: "1px solid rgba(255,255,255,0.06)" }}>
           <Image
             src="/images/naufal-profile.jpg"
             alt="Naufal Adib Syahrizal"
             fill
-            className="object-cover object-center"
-            style={{ filter: "grayscale(20%) contrast(1.1)" }}
+            className="object-cover object-center grayscale-[20%]"
             priority
           />
-        </div>
-      </motion.div>
-
-      {/* ── LAYER 3: FRONT TEXT (STROKE/OUTLINE ONLY) ── */}
-      {/* This text is identically positioned as Layer 1, but transparent with a stroke.
-          It sits on top of the image (Layer 2), creating an editorial "cutout/sandwich" effect! */}
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute z-[3] inset-0 flex flex-col items-center justify-center pointer-events-none select-none"
-      >
-        <h1 
-          className="font-black uppercase text-center text-transparent"
-          style={{ 
-            fontFamily: "var(--font-heading)", 
-            fontSize: "clamp(3.5rem, 16vw, 15rem)", 
-            lineHeight: 0.85, 
-            letterSpacing: "-0.02em",
-            WebkitTextStroke: "1px rgba(255,255,255,0.7)"
-          }}
-        >
-          VISUAL<br />DESIGNER
-        </h1>
-      </motion.div>
-
-      {/* ── MOBILE CTA (Under photo) ── */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, delay: 0.6 }}
-        className="relative z-[4] mt-8 md:hidden"
-      >
-        <button
-          onClick={onOrderClick}
-          className="px-6 py-3 bg-white/5 border border-white/10 backdrop-blur-sm text-[10px] font-bold uppercase tracking-[0.2em] text-white active:bg-white active:text-black transition-all"
-        >
-          Start Project
-        </button>
-      </motion.div>
-
-      {/* ── DESKTOP LEFT COLUMN — Info & CTA ── */}
-      <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute z-[4] left-12 top-1/2 -translate-y-1/2 hidden md:flex flex-col gap-6"
-      >
-        <div>
-          <p className="text-[9px] uppercase tracking-[0.3em] text-neutral-600 font-medium mb-1">Based in</p>
-          <p className="text-sm font-semibold text-neutral-300">Jakarta, Indonesia.</p>
-          <p className="text-[10px] text-neutral-600 mt-0.5">GMT+7</p>
-        </div>
-
-        <button
-          onClick={onOrderClick}
-          className="w-fit px-6 py-3 bg-white/5 border border-white/10 backdrop-blur-sm text-xs font-bold uppercase tracking-[0.2em] text-white hover:bg-white hover:text-black transition-all duration-300"
-        >
-          Start Project
-        </button>
-      </motion.div>
-
-      {/* ── DESKTOP RIGHT COLUMN — Bio & Socials ── */}
-      <motion.div
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute z-[4] right-12 top-1/2 -translate-y-1/2 hidden md:flex flex-col items-end gap-6"
-      >
-        <div className="flex flex-col gap-2 items-end">
-          {[
-            { label: "IG", href: "https://www.instagram.com/ncs_rizal" },
-            { label: "Behance", href: "https://www.behance.net/naufaladibs" },
-            { label: "Email", href: "mailto:naufaladib@gmail.com" },
-          ].map((s) => (
-            <a
-              key={s.label}
-              href={s.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs uppercase tracking-[0.2em] text-neutral-400 hover:text-white transition-colors font-medium"
-            >
-              {s.label}
-            </a>
-          ))}
+          {/* Subtle bottom gradient to match mockup's mood */}
+          <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#0A0A0A]/50 to-transparent pointer-events-none" />
         </div>
         
-        <div className="text-right max-w-[200px] border-t border-white/[0.05] pt-4 mt-4">
-          <p className="text-xs text-neutral-400 leading-relaxed">
-            Specializing in minimal aesthetics & brand identity.
+        <div className="mt-8 flex flex-col items-center z-[4]">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white">Featured Projects</p>
+          <p className="text-[11px] text-neutral-400 text-center mt-2 w-[90%] leading-relaxed">
+            Crafting meaningful narratives through visual experiences and photographic storytelling.
           </p>
         </div>
       </motion.div>
 
-      {/* ── MOBILE SOCIALS (Bottom) ── */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1 }}
-        className="absolute z-[4] bottom-8 w-full flex justify-center gap-6 md:hidden"
+      {/* ── LEFT COLUMN (Text) ── */}
+      <motion.div 
+        initial={{ opacity: 0, x: -30 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 1.2, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+        className="absolute left-6 md:left-[5vw] xl:left-[8vw] top-[30%] md:top-[45%] -translate-y-1/2 z-[3] pointer-events-none"
       >
-        {[
-          { label: "IG", href: "https://www.instagram.com/ncs_rizal" },
-          { label: "BE", href: "https://www.behance.net/naufaladibs" },
-          { label: "MAIL", href: "mailto:naufaladib@gmail.com" },
-        ].map((s) => (
-          <a
-            key={s.label}
-            href={s.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[10px] uppercase tracking-[0.2em] text-neutral-500 font-medium"
-          >
-            {s.label}
+        <h1 
+          className="text-white font-serif"
+          style={{ 
+            fontSize: "clamp(4rem, 8vw, 9.5rem)",
+            lineHeight: 0.88,
+            letterSpacing: "-0.02em"
+          }}
+        >
+          VISUAL<span className="font-light italic ml-2 md:ml-4 text-white/50">/</span><br />
+          DESIGNER
+        </h1>
+      </motion.div>
+
+      {/* ── RIGHT COLUMN (Bio & Socials) ── */}
+      <motion.div 
+        initial={{ opacity: 0, x: 30 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        className="absolute right-6 md:right-[5vw] xl:right-[8vw] top-auto bottom-8 md:bottom-auto md:top-1/2 md:-translate-y-[40%] z-[3] flex flex-col items-start gap-6 w-[calc(100%-48px)] md:w-[clamp(240px,20vw,280px)]"
+      >
+        <p className="text-sm md:text-[15px] text-neutral-300 leading-relaxed font-light hidden md:block">
+          Based in Jakarta. Specializing in minimal aesthetics, brand identity, and creative visual design for modern digital platforms.
+        </p>
+        
+        {/* CHANGED: This now accurately links to #work */}
+        <Link 
+          href="#work"
+          className="px-6 py-2.5 rounded-full border border-neutral-600 text-[11px] font-medium text-neutral-300 uppercase tracking-[0.15em] hover:border-white hover:text-white transition-colors backdrop-blur-[2px] pointer-events-auto"
+        >
+          View Portfolio
+        </Link>
+        
+        <div className="hidden md:flex items-center gap-5 mt-2">
+          <a href="https://www.instagram.com/ncs_rizal" target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-white transition-colors pointer-events-auto">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
           </a>
-        ))}
-      </motion.div>
-
-      {/* ── AVAILABILITY BADGE ── */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.4 }}
-        className="absolute top-24 md:bottom-8 md:top-auto left-6 md:left-12 z-[5] flex items-center gap-2"
-      >
-        <span className="relative flex h-2 w-2">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-30" />
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-        </span>
-        <span className="text-[9px] uppercase tracking-[0.25em] text-neutral-500 font-medium">Available for work</span>
-      </motion.div>
-
-      {/* ── ISSUE NUMBER ── */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-        className="absolute bottom-8 right-12 z-[5] hidden md:block"
-      >
-        <p className="text-[9px] uppercase tracking-[0.3em] text-neutral-700 font-mono">NCS — 2026</p>
+          <a href="https://www.behance.net/naufaladibs" target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-white transition-colors pointer-events-auto">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M7 14H3v-4h4a2 2 0 1 1 0 4z M7 14a2 2 0 1 0 0 4H3v-4h4z M14 10h5M14 14h6M14 10v8M20 14v4M14 14c0-2-1-4-3-4M14 14c0 2-1 4-3 4"></path></svg>
+          </a>
+        </div>
+        
+        <div className="hidden md:flex items-center gap-4 w-full mt-2">
+          <span className="text-[9px] text-neutral-500 uppercase tracking-[0.2em] shrink-0 font-medium">Selected Works</span>
+          <div className="flex-1 h-px bg-neutral-800" />
+        </div>
       </motion.div>
 
     </section>
