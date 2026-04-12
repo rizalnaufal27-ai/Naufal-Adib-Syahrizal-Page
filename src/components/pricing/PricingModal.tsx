@@ -29,7 +29,7 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
         if (selectedDesign.includes("logo")) total += 75000;
         if (selectedDesign.includes("banner")) total += 75000;
         if (selectedDesign.includes("poster")) total += 75000;
-        if (selectedDesign.includes("brand")) total += 775000;
+        if (selectedDesign.includes("brand")) total += 300000;
         return total;
     };
 
@@ -132,7 +132,7 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
                                         { id: "logo", label: "Logo Design", price: 75000 },
                                         { id: "banner", label: "Banner / Social Media", price: 75000 },
                                         { id: "poster", label: "Poster / Print", price: 75000 },
-                                        { id: "brand", label: "Full Brand Identity", price: 775000 },
+                                        { id: "brand", label: "Full Brand Identity", price: 300000 },
                                     ].map((item) => (
                                         <button
                                             key={item.id}

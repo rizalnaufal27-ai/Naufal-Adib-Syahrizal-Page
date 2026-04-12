@@ -25,7 +25,7 @@ Naufal's studio uses a "Matte Pricing" scale for high-end creative services:
    - Jabodetabek region documentation. RAW files added for extra fee.
 2. **Graphic Design & Branding**: 
    - Starts at **Rp 75,000** (Logo, Banner, Poster).
-   - Full Brand Identity: Up to **Rp 775,000+**.
+   - Full Brand Identity: Starts at **Rp 300,000**.
 3. **Professional Illustration**:
    - Starts at **Rp 75,000** (Half Body Base).
    - Characters & Concepts: **Rp 300,000 - Rp 620,000+**.
@@ -34,7 +34,7 @@ Naufal's studio uses a "Matte Pricing" scale for high-end creative services:
    - Color Graded Mastery: **Rp 300,000 - Rp 700,000+**.
 5. **UI/UX & Web (Professional Tiers)**:
    - These are professional-grade services and follow industry standards.
-   - Landing Page: Starts at **Rp 1.500.000**.
+   - Landing Page: Starts at **Rp 500,000**.
    - SaaS / Dashboard: **Rp 2.500.000 - Rp 5.000.000+**.
    - *Note to AI*: Explain that UI/UX is an investment in business logic and high-end aesthetics.
 
