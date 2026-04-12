@@ -16,9 +16,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
         } else {
             document.body.style.overflow = "auto";
         }
-        return () => {
-            document.body.style.overflow = "auto";
-        };
+        return () => { document.body.style.overflow = "auto"; };
     }, [project]);
 
     return (
@@ -28,68 +26,72 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="fixed inset-0 z-[100] flex items-center justify-center p-4"
-                    style={{ background: "rgba(0,0,0,0.9)", backdropFilter: "blur(10px)" }}
+                    className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8"
+                    style={{ background: "rgba(0,0,0,0.92)", backdropFilter: "blur(16px)" }}
                     onClick={onClose}
                 >
                     <motion.div
-                        initial={{ scale: 0.9, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        exit={{ scale: 0.9, opacity: 0 }}
-                        className="w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-2xl relative"
-                        style={{
-                            background: "rgba(10,10,10,0.95)",
-                            border: "1px solid rgba(255,255,255,0.08)",
-                        }}
+                        initial={{ y: 20, opacity: 0, scale: 0.97 }}
+                        animate={{ y: 0, opacity: 1, scale: 1 }}
+                        exit={{ y: 20, opacity: 0, scale: 0.97 }}
+                        transition={{ ease: [0.16, 1, 0.3, 1], duration: 0.5 }}
+                        className="w-full max-w-5xl max-h-[90vh] overflow-hidden bg-[#0A0A0A] relative"
+                        style={{ border: "1px solid rgba(255,255,255,0.06)" }}
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <div className="grid grid-cols-1 lg:grid-cols-2">
-                            {/* Left: Media Carousel */}
-                            <MediaCarousel media={project.media} gradient={project.gradient} />
+                        {/* Close button */}
+                        <button
+                            onClick={onClose}
+                            className="absolute top-4 right-4 z-20 text-neutral-500 hover:text-white transition-colors"
+                        >
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                                <path d="M18 6L6 18M6 6l12 12" />
+                            </svg>
+                        </button>
 
-                            {/* Right: Context */}
-                            <div className="p-8 lg:p-10 space-y-6">
-                                <div>
-                                    <button
-                                        onClick={onClose}
-                                        className="float-right p-2 rounded-full transition-colors hover:bg-white/5"
-                                        style={{ color: "var(--color-text-muted)" }}
-                                    >
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                            <path d="M18 6L6 18M6 6l12 12" />
-                                        </svg>
-                                    </button>
-                                    <p className="text-[10px] uppercase tracking-widest mb-2 font-bold" style={{ color: "var(--color-text-muted)" }}>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 h-full max-h-[90vh]">
+                            {/* Left: Media */}
+                            <div className="overflow-hidden">
+                                <MediaCarousel media={project.media} gradient={project.gradient} />
+                            </div>
+
+                            {/* Right: The Explanation Room */}
+                            <div className="overflow-y-auto p-8 md:p-10 flex flex-col">
+                                <div className="mb-6">
+                                    <p className="text-[10px] uppercase tracking-[0.25em] text-neutral-500 font-semibold mb-1">
                                         {project.category}
                                     </p>
-                                    <h2 className="text-2xl md:text-3xl font-bold" style={{ fontFamily: "var(--font-heading)" }}>
+                                    <h2 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-white" style={{ fontFamily: "var(--font-heading)" }}>
                                         {project.title}
                                     </h2>
                                 </div>
 
-                                <div>
-                                    <h4 className="text-sm font-semibold mb-2 uppercase tracking-wider" style={{ color: "var(--color-text-muted)" }}>
-                                        Story & Philosophy
-                                    </h4>
-                                    <p className="leading-relaxed" style={{ color: "var(--color-text-muted)" }}>
+                                {/* The Explanation Room box — reference style */}
+                                <div
+                                    className="rounded-none p-6 mb-6 flex-1"
+                                    style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}
+                                >
+                                    <div className="flex items-center justify-between mb-4">
+                                        <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-white">THE EXPLANATION ROOM</h4>
+                                        <div className="flex gap-1">
+                                            {[0,1,2,3].map(i => (
+                                                <div key={i} className="w-2 h-2 rounded-full border border-neutral-600" />
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <p className="text-xs font-semibold text-neutral-300 uppercase tracking-widest mb-2">Story & Philosophy</p>
+                                    <p className="text-sm text-neutral-400 leading-relaxed">
                                         {project.story}
                                     </p>
                                 </div>
 
+                                {/* Tools — reference: outlined pills, monochrome, uppercase */}
                                 <div>
-                                    <h4 className="text-sm font-semibold mb-3 uppercase tracking-wider" style={{ color: "var(--color-text-muted)" }}>
-                                        Tools Used
-                                    </h4>
                                     <div className="flex flex-wrap gap-2">
                                         {project.tools.map((tool) => (
                                             <span
                                                 key={tool}
-                                                className="px-3 py-1.5 rounded-full text-xs font-medium"
-                                                style={{
-                                                    background: "rgba(255,255,255,0.03)",
-                                                    color: "#A3A3A3", // Silver/gray
-                                                    border: "1px solid rgba(255,255,255,0.1)",
-                                                }}
+                                                className="px-3 py-1.5 text-[10px] font-semibold uppercase tracking-widest text-neutral-400 border border-neutral-700 hover:border-white hover:text-white transition-colors"
                                             >
                                                 {tool}
                                             </span>
