@@ -11,7 +11,7 @@ import ProfileSection from "@/components/sections/ProfileSection";
 import ServicesSection from "@/components/sections/ServicesSection";
 
 import Footer from "@/components/Footer";
-import Chatbot from "@/components/Chatbot";
+
 import PricingModal from "@/components/pricing/PricingModal";
 import FloatingOrderFab from "@/components/ui/floating-order-fab";
 
@@ -93,7 +93,7 @@ export default function Home() {
         <Footer />
       </footer>
 
-      <Chatbot onOpenPricing={handleOrderClick} />
+
       <PricingModal isOpen={orderFormOpen} onClose={() => setOrderFormOpen(false)} />
     </>
   );

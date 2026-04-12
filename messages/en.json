@@ -209,25 +209,6 @@
         "clickToView": "Click to view details",
         "noProjects": "No projects found in this category."
     },
-    "Chatbot": {
-        "title": "Studio Concierge",
-        "subtitle": "Naufal Adib • Creative Studio",
-        "pillLabel": "Ask anything",
-        "greeting": "Welcome to Naufal's studio. I'm here to guide you.",
-        "helpText": "Ask about services, pricing, or start a project.",
-        "placeholder": "What can I help with?",
-        "send": "Send",
-        "quickActions": {
-            "pricing": "See pricing",
-            "portfolio": "View portfolio",
-            "track": "Track my order",
-            "order": "Start a project"
-        },
-        "error": {
-            "processing": "I couldn't process that. Please try again.",
-            "connection": "Connection issue. Please check your internet."
-        }
-    },
     "IntroSequence": {
         "initializing": "Creative Studio",
         "ready": "Ready."

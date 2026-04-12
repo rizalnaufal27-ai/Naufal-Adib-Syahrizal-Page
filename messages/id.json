@@ -209,25 +209,6 @@
         "clickToView": "Klik untuk melihat detail",
         "noProjects": "Tidak ada proyek ditemukan di kategori ini."
     },
-    "Chatbot": {
-        "title": "Concierge Studio",
-        "subtitle": "Naufal Adib • Studio Kreatif",
-        "pillLabel": "Ask anything",
-        "greeting": "Selamat datang di studio Naufal. Saya siap membantu Anda.",
-        "helpText": "Tanyakan tentang layanan, harga, atau mulai proyek.",
-        "placeholder": "Ada yang bisa dibantu?",
-        "send": "Kirim",
-        "quickActions": {
-            "pricing": "Lihat harga",
-            "portfolio": "Lihat portofolio",
-            "track": "Lacak pesanan",
-            "order": "Mulai proyek"
-        },
-        "error": {
-            "processing": "Tidak bisa memproses. Coba lagi ya.",
-            "connection": "Koneksi bermasalah. Periksa internet Anda."
-        }
-    },
     "IntroSequence": {
         "initializing": "Studio Kreatif",
         "ready": "Siap."
