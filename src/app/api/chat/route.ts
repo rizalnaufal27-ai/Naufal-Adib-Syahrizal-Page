@@ -97,7 +97,7 @@ When user mentions ordering, include [OPEN_PRICING] at the end of your response.
         });
 
         const result = streamText({
-            model: openrouter("google/gemini-2.0-flash-001"),
+            model: openrouter("google/gemma-3-27b-it:free"),
             system: SYSTEM_PROMPT,
             messages,
             temperature: 0.7,
@@ -106,7 +106,7 @@ When user mentions ordering, include [OPEN_PRICING] at the end of your response.
         return result.toDataStreamResponse();
     } catch (error: unknown) {
         const errMsg = error instanceof Error ? error.message : "Unknown error";
-        console.error("Chat API error:", errMsg);
+        console.error("FULL CHAT ERROR:", error);
         return new Response(
             JSON.stringify({ error: "Something went wrong. Please try again." }),
             { status: 500, headers: { "Content-Type": "application/json" } }
