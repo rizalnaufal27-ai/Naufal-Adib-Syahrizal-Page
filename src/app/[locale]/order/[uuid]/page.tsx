@@ -1,12 +1,13 @@
 "use client";
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback } from "react";
+import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import PaymentButton from "@/components/PaymentButton";
 import OrderChat from "@/components/OrderChat";
 import {
     CheckCircle2, CreditCard, MessageSquare, FileImage, RefreshCw, Lock,
-    Layout, ShieldCheck, Zap, ChevronDown, Clock, ArrowLeft
+    Layout, ShieldCheck, ChevronDown, Clock, ArrowLeft
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -153,7 +154,6 @@ export default function UnifiedOrderPage() {
         },
     ];
 
-    const activePhaseIndex = phases.findIndex(p => p.status === "active");
 
     return (
         <main className="min-h-screen bg-[#050505] text-white selection:bg-indigo-500/30">
@@ -401,7 +401,7 @@ export default function UnifiedOrderPage() {
                                                 <a key={i} href={ev.url} target="_blank" rel="noopener noreferrer"
                                                     className="block aspect-video rounded-lg overflow-hidden border border-white/10 hover:border-indigo-500/50 transition-colors relative group"
                                                 >
-                                                    <img src={ev.url} alt={`Evidence ${i + 1}`} className="w-full h-full object-cover" />
+                                                    <Image src={ev.url} alt={`Evidence ${i + 1}`} fill className="object-cover" unoptimized />
                                                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                                         <span className="text-[10px] font-bold text-white uppercase">{t("view")}</span>
                                                     </div>

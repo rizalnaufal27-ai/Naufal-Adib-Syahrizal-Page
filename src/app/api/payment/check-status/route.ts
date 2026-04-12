@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
-import { coreApi } from "@/lib/midtrans";
+import { coreApi, TransactionStatusResponse } from "@/lib/midtrans";
 
 export async function POST(request: NextRequest) {
     try {
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
         }
 
         if (transactionIdToCheck) {
-            const statusResponse = await (coreApi as any).transaction.status(transactionIdToCheck);
+            const statusResponse = await (coreApi as unknown as { transaction: { status: (id: string) => Promise<TransactionStatusResponse> } }).transaction.status(transactionIdToCheck);
             const { transaction_status, fraud_status, transaction_id } = statusResponse;
 
             let newStatus = "pending";
@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
             }
 
             // Update DB
-            const update: any = {
+            const update: Record<string, unknown> = {
                 transaction_id: transaction_id || transactionIdToCheck // Save the real transaction_id if we have it
             };
 

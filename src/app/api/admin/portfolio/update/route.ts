@@ -44,8 +44,9 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json({ error: "Invalid action" }, { status: 400 });
 
-    } catch (err: any) {
-        console.error("Admin portfolio error:", err);
-        return NextResponse.json({ error: err.message || "Internal server error" }, { status: 500 });
+    } catch (err) {
+        const error = err as Error;
+        console.error("Admin portfolio error:", error);
+        return NextResponse.json({ error: error.message || "Internal server error" }, { status: 500 });
     }
 }

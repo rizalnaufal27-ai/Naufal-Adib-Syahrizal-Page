@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
-import { coreApi } from "@/lib/midtrans";
+import { coreApi, TransactionStatusResponse } from "@/lib/midtrans";
 import { sendPaymentConfirmation } from "@/lib/email";
 
 export async function POST(request: NextRequest) {
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Verify status with Midtrans
-        const statusRes = await (coreApi as any).transaction.status(order_id);
+        const statusRes = await (coreApi as unknown as { transaction: { status: (id: string) => Promise<TransactionStatusResponse> } }).transaction.status(order_id);
 
         const transactionStatus = statusRes.transaction_status;
         const fraudStatus = statusRes.fraud_status;

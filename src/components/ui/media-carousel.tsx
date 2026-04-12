@@ -1,5 +1,5 @@
-"use client";
 import { useState, useCallback } from "react";
+import Image from "next/image";
 
 function isVideo(src: string) {
     return /\.(mp4|webm|mov|avi)$/i.test(src);
@@ -48,12 +48,15 @@ export default function MediaCarousel({ media, gradient }: { media: string[]; gr
                     style={{ background: "#000" }}
                 />
             ) : (
-                <img
-                    src={src}
-                    alt={`Slide ${current + 1}`}
-                    className="w-full h-full max-h-[500px] object-contain"
-                    style={{ background: "#0a0a0a" }}
-                />
+                <div className="relative w-full h-full max-h-[500px]">
+                    <Image
+                        src={src}
+                        alt={`Slide ${current + 1}`}
+                        fill
+                        className="object-contain"
+                        style={{ background: "#0a0a0a" }}
+                    />
+                </div>
             )}
 
             {/* Navigation arrows — only show when there are multiple items */}

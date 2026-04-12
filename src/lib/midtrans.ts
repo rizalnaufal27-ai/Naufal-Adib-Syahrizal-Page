@@ -1,5 +1,15 @@
 import midtransClient from "midtrans-client";
 
+export interface TransactionStatusResponse {
+    order_id: string;
+    transaction_status: string;
+    fraud_status?: string;
+    payment_type?: string;
+    transaction_id: string;
+    gross_amount: string;
+    [key: string]: unknown;
+}
+
 const isProduction = process.env.MIDTRANS_IS_PRODUCTION === "true";
 
 // Snap client for creating transactions
@@ -56,7 +66,7 @@ export async function createSnapTransaction(params: {
  * Verify notification signature from Midtrans webhook
  */
 export async function verifyNotification(notificationBody: Record<string, unknown>) {
-    const statusResponse = await (coreApi as any).transaction.notification(notificationBody);
+    const statusResponse = await (coreApi as unknown as { transaction: { notification: (body: Record<string, unknown>) => Promise<TransactionStatusResponse> } }).transaction.notification(notificationBody);
     return {
         orderId: statusResponse.order_id as string,
         transactionStatus: statusResponse.transaction_status as string,

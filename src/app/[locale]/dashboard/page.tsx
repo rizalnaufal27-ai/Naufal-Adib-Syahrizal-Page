@@ -38,7 +38,7 @@ export default function DashboardPage() {
 
     const fetchOrders = async (email: string) => {
         try {
-            const { data, error } = await supabase
+            const { data } = await supabase
                 .from("orders")
                 .select("*")
                 .eq("customer_email", email)
@@ -56,11 +56,11 @@ export default function DashboardPage() {
 
     const getStatusColor = (status: string) => {
         const map: Record<string, string> = {
-            pending: "#EAB308",
-            processing: "#3B82F6",
-            done: "#22C55E",
-            paid: "#22C55E",
-            unpaid: "#EF4444",
+            pending: "#A3A3A3",
+            processing: "#FFFFFF",
+            done: "#10B981",
+            paid: "#10B981",
+            unpaid: "#A3A3A3",
         };
         return map[status] || "#a3a3a3";
     };
@@ -148,7 +148,7 @@ export default function DashboardPage() {
                                 <div className="absolute bottom-0 left-0 h-1 bg-white/5 w-full rounded-b-2xl overflow-hidden">
                                     <div
                                         className="h-full"
-                                        style={{ width: `${order.progress}%`, background: order.progress === 100 ? "#22C55E" : "rgba(255,255,255,0.2)" }}
+                                        style={{ width: `${order.progress}%`, background: order.progress === 100 ? "#10B981" : "#E5E7EB" }}
                                     />
                                 </div>
                             </div>

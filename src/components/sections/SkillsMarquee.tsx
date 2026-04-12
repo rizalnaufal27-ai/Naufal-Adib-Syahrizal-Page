@@ -10,13 +10,13 @@ const skills = [
     { name: "Premiere Pro", color: "#9999FF", abbr: "Pr", bgColor: "#00005B" },
     { name: "InDesign", color: "#FF3366", abbr: "Id", bgColor: "#49021F" },
     { name: "Ibis Paint", color: "#FF6B9D", abbr: "iP", bgColor: "#2D0013" },
-    { name: "CapCut", color: "#FFFFFF", abbr: "Cc", bgColor: "#000000" },
-    { name: "Canva", color: "#FFFFFF", abbr: "C", bgColor: "#7D2AE8" },
-    { name: "DaVinci Resolve", color: "#FF6B35", abbr: "Dv", bgColor: "#1A1A2E" },
-    { name: "Camera", color: "#E5E5E5", abbr: "📷", bgColor: "#1A1A1A" },
+    { name: "CapCut", color: "#FFFFFF", abbr: "Cc", bgColor: "#111111" },
+    { name: "Canva", color: "#00C4CC", abbr: "C", bgColor: "#002F33" },
+    { name: "DaVinci Resolve", color: "#FF6B35", abbr: "Dv", bgColor: "#331100" },
+    { name: "Camera", color: "#E5E5E5", abbr: "📷", bgColor: "#222222" },
     { name: "Figma", color: "#A259FF", abbr: "Fi", bgColor: "#1E1E1E" },
     { name: "VS Code", color: "#007ACC", abbr: "VS", bgColor: "#1E1E1E" },
-    { name: "Antigravity", color: "#C084FC", abbr: "✦", bgColor: "#1A0B2E" },
+    { name: "Antigravity", color: "#FFFFFF", abbr: "✦", bgColor: "#1A1A1A" },
 ];
 
 const fadeUp = {
@@ -25,8 +25,8 @@ const fadeUp = {
 };
 
 const skillPop = {
-    hidden: { opacity: 0, scale: 0.7, rotate: -5 },
-    visible: { opacity: 1, scale: 1, rotate: 0, transition: { duration: 0.5, ease: "backOut" as const } },
+    hidden: { opacity: 0, scale: 0.9, rotate: 0 },
+    visible: { opacity: 1, scale: 1, rotate: 0, transition: { duration: 0.5, ease: "easeOut" as const } },
 };
 
 export default function SkillsMarquee() {
@@ -34,20 +34,17 @@ export default function SkillsMarquee() {
     const t = useTranslations("Skills");
 
     return (
-        <div className="py-28 overflow-hidden relative">
-            {/* Cosmic ambient */}
-            <div className="absolute top-[20%] right-[10%] w-[25%] h-[30%] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(192,132,252,0.06) 0%, transparent 70%)", filter: "blur(80px)", animation: "nebulaPulse 12s ease-in-out infinite" }} />
-
-            <div className="section-container mb-16">
+        <div className="py-28 overflow-hidden relative bg-[#0A0A0A]">
+            <div className="section-container mb-16 relative z-10">
                 <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }} className="text-center">
-                    <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-[0.3em] mb-3" style={{ background: "linear-gradient(90deg, #c084fc, #818cf8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>✦ {t("label")}</motion.p>
-                    <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-black tracking-tight" style={{ background: "linear-gradient(135deg, #fff 0%, #e0e7ff 40%, #c084fc 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{t("title")}</motion.h2>
-                    <motion.p variants={fadeUp} className="text-sm mt-4 max-w-md mx-auto" style={{ color: "#B8B0D0" }}>{t("desc")}</motion.p>
+                    <motion.p variants={fadeUp} className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500 mb-3">✦ {t("label")}</motion.p>
+                    <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-bold tracking-tight text-white">{t("title")}</motion.h2>
+                    <motion.p variants={fadeUp} className="text-sm mt-4 max-w-md mx-auto text-neutral-400">{t("desc")}</motion.p>
                 </motion.div>
             </div>
 
-            {/* Cosmic Grid */}
-            <div className="section-container">
+            {/* Grid */}
+            <div className="section-container relative z-10">
                 <motion.div
                     initial="hidden"
                     whileInView="visible"
@@ -59,39 +56,31 @@ export default function SkillsMarquee() {
                         <motion.div
                             key={skill.name}
                             variants={skillPop}
-                            className="flex flex-col items-center justify-center gap-3 p-5 md:p-6 cursor-default group rounded-2xl relative overflow-hidden transition-all duration-500 hover:-translate-y-2"
+                            className="flex flex-col items-center justify-center gap-3 p-5 md:p-6 cursor-default group rounded-2xl relative overflow-hidden transition-all duration-500 hover:-translate-y-1 bg-[#111111]"
                             onMouseEnter={() => setHoveredIndex(i)}
                             onMouseLeave={() => setHoveredIndex(null)}
                             style={{
-                                background: hoveredIndex === i ? `${skill.color}08` : "rgba(255,255,255,0.02)",
-                                border: `1px solid ${hoveredIndex === i ? `${skill.color}30` : "rgba(255,255,255,0.05)"}`,
-                                backdropFilter: "blur(10px)",
-                                boxShadow: hoveredIndex === i ? `0 0 30px ${skill.color}15` : "none",
+                                border: `1px solid ${hoveredIndex === i ? `${skill.color}50` : "rgba(255,255,255,0.05)"}`,
                             }}
                         >
-                            {/* Cosmic glow on hover */}
-                            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" style={{ background: `radial-gradient(circle at 50% 30%, ${skill.color}15 0%, transparent 60%)` }} />
-
-                            {/* Orbital ring on hover */}
-                            {hoveredIndex === i && (
-                                <div className="absolute inset-2 rounded-xl border border-dashed pointer-events-none" style={{ borderColor: `${skill.color}20`, animation: "orbitalSpin 6s linear infinite" }} />
-                            )}
+                            {/* Subtle dark gradient overlay based on skill color on hover without harsh brightness */}
+                            <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-700 pointer-events-none" style={{ background: skill.color }} />
 
                             {/* Icon badge */}
                             <div
-                                className="w-12 h-12 rounded-xl flex items-center justify-center text-sm font-bold transition-all duration-500 group-hover:scale-115 relative z-10"
+                                className="w-12 h-12 rounded-xl flex items-center justify-center text-sm font-bold transition-transform duration-500 group-hover:scale-105 relative z-10"
                                 style={{
-                                    background: skill.bgColor,
-                                    color: skill.color,
-                                    boxShadow: hoveredIndex === i ? `0 0 25px ${skill.color}40, 0 4px 15px rgba(0,0,0,0.3)` : "0 2px 8px rgba(0,0,0,0.2)",
+                                    background: "#1A1A1A",
+                                    color: hoveredIndex === i ? skill.color : "#737373", // neutral-500 until hovered
+                                    border: "1px solid rgba(255,255,255,0.05)",
                                 }}
                             >
                                 {skill.abbr}
                             </div>
 
                             {/* Name */}
-                            <span className="text-xs font-semibold text-center whitespace-nowrap transition-all duration-300 relative z-10"
-                                style={{ color: hoveredIndex === i ? skill.color : "#B8B0D0" }}>
+                            <span className="text-xs font-semibold text-center whitespace-nowrap transition-colors duration-300 relative z-10"
+                                style={{ color: hoveredIndex === i ? "#FFFFFF" : "#737373" }}>
                                 {skill.name}
                             </span>
                         </motion.div>
@@ -99,18 +88,18 @@ export default function SkillsMarquee() {
                 </motion.div>
             </div>
 
-            {/* Cosmic Marquee strip */}
-            <div className="relative mt-14 overflow-visible">
-                <div className="flex gap-12 py-6 overflow-visible" style={{ animation: "marquee 30s linear infinite", width: "max-content" }}>
+            {/* Marquee strip */}
+            <div className="relative mt-14 overflow-visible border-y border-white/[0.02] bg-[#0A0A0A]">
+                <div className="flex gap-12 py-4 overflow-visible" style={{ animation: "marquee 40s linear infinite", width: "max-content" }}>
                     {[...skills, ...skills, ...skills, ...skills].map((skill, i) => (
-                        <span key={`m-${i}`} className="text-sm font-bold uppercase tracking-[0.2em] whitespace-nowrap flex items-center gap-3" style={{ color: `${skill.color}80` }}>
-                            <span className="w-1 h-1 rounded-full" style={{ background: `${skill.color}40` }} />
+                        <span key={`m-${i}`} className="text-sm font-semibold uppercase tracking-widest whitespace-nowrap flex items-center gap-3 text-neutral-600 transition-colors hover:text-neutral-300">
+                            <span className="w-1.5 h-1.5 rounded-full bg-neutral-800" />
                             {skill.name}
                         </span>
                     ))}
                 </div>
-                <div className="absolute left-0 top-0 bottom-0 w-32 z-10 pointer-events-none" style={{ background: "linear-gradient(to right, var(--color-bg), transparent)" }} />
-                <div className="absolute right-0 top-0 bottom-0 w-32 z-10 pointer-events-none" style={{ background: "linear-gradient(to left, var(--color-bg), transparent)" }} />
+                <div className="absolute left-0 top-0 bottom-0 w-32 z-10 pointer-events-none bg-gradient-to-r from-[#0A0A0A] to-transparent" />
+                <div className="absolute right-0 top-0 bottom-0 w-32 z-10 pointer-events-none bg-gradient-to-l from-[#0A0A0A] to-transparent" />
             </div>
         </div >
     );

@@ -5,6 +5,7 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { SquareArrowOutUpRight } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 export type CardStackItem = {
     id: string | number;
@@ -250,7 +251,7 @@ export function CardStack<T extends CardStackItem>({
                                     dragConstraints: { left: 0, right: 0 },
                                     dragElastic: 0.18,
                                     onDragEnd: (
-                                        _e: any,
+                                        _e: unknown,
                                         info: { offset: { x: number }; velocity: { x: number } },
                                     ) => {
                                         if (reduceMotion) return;
@@ -389,10 +390,11 @@ function DefaultFanCard({ item }: { item: CardStackItem; active: boolean }) {
                             className="h-full w-full object-cover"
                         />
                     ) : (
-                        <img
+                        <Image
                             src={item.imageSrc}
                             alt={item.title}
-                            className="h-full w-full object-cover"
+                            fill
+                            className="object-cover"
                             draggable={false}
                             loading="eager"
                         />

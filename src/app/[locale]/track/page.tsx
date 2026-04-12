@@ -44,9 +44,9 @@ export default function TrackProjectPage() {
 
     const getStatusStyle = (status: string) => {
         const map: Record<string, { bg: string; color: string; dot: string }> = {
-            done: { bg: "rgba(34,197,94,0.1)", color: "#22C55E", dot: "#22C55E" },
-            processing: { bg: "rgba(59,130,246,0.1)", color: "#3B82F6", dot: "#3B82F6" },
-            pending: { bg: "rgba(234,179,8,0.1)", color: "#EAB308", dot: "#EAB308" },
+            done: { bg: "rgba(16, 185, 129, 0.1)", color: "#10B981", dot: "#10B981" },
+            processing: { bg: "rgba(255,255,255,0.08)", color: "#FFFFFF", dot: "#FFFFFF" },
+            pending: { bg: "rgba(255,255,255,0.03)", color: "#A3A3A3", dot: "#A3A3A3" },
         };
         return map[status] || map.pending;
     };
@@ -190,8 +190,8 @@ export default function TrackProjectPage() {
                                                             style={{
                                                                 width: `${order.progress}%`,
                                                                 background: order.progress === 100
-                                                                    ? "#22C55E"
-                                                                    : "rgba(255,255,255,0.3)",
+                                                                    ? "#10B981"
+                                                                    : "#E5E7EB",
                                                             }}
                                                         />
                                                     </div>

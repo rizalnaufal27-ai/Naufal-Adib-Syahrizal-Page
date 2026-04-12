@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
         );
 
         // Upload file to Supabase Storage
-        const ext = file.name.split(".").pop() || "bin";
+        // The extension is implicitly inferred or no longer used directly in the result URL.
         const storagePath = `results/${orderId}/${Date.now()}_${file.name}`;
         const arrayBuffer = await file.arrayBuffer();
         const buffer = new Uint8Array(arrayBuffer);

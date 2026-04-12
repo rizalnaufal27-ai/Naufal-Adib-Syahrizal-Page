@@ -45,37 +45,37 @@ export default function DashboardPreview() {
 
     const getStatusStyle = (status: string) => {
         const styles: Record<string, { bg: string; color: string; dot: string; glow: string }> = {
-            done: { bg: "rgba(34,197,94,0.1)", color: "#22C55E", dot: "#22C55E", glow: "0 0 12px rgba(34,197,94,0.4)" },
-            processing: { bg: "rgba(139,92,246,0.1)", color: "#8B5CF6", dot: "#8B5CF6", glow: "0 0 12px rgba(139,92,246,0.4)" },
-            pending: { bg: "rgba(234,179,8,0.1)", color: "#EAB308", dot: "#EAB308", glow: "0 0 12px rgba(234,179,8,0.4)" },
+            done: { bg: "rgba(16, 185, 129, 0.1)", color: "#10B981", dot: "#10B981", glow: "none" },
+            processing: { bg: "rgba(255,255,255,0.08)", color: "#FFFFFF", dot: "#FFFFFF", glow: "none" },
+            pending: { bg: "rgba(255,255,255,0.03)", color: "#A3A3A3", dot: "#A3A3A3", glow: "none" },
         };
         return styles[status] || styles.pending;
     };
 
     return (
-        <div className="section-container py-28 relative overflow-hidden">
-            {/* Cosmic ambient */}
-            <div className="absolute bottom-[10%] right-[-5%] w-[25%] h-[30%] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(139,92,246,0.05) 0%, transparent 70%)", filter: "blur(80px)", animation: "nebulaPulse 14s ease-in-out infinite" }} />
-
+        <div className="section-container py-28 relative overflow-hidden bg-[#0A0A0A]">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}>
                 <div className="text-center mb-16">
-                    <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-[0.3em] mb-3" style={{ background: "linear-gradient(90deg, #c084fc, #818cf8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>✦ {t("label")}</motion.p>
-                    <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-black tracking-tight" style={{ background: "linear-gradient(135deg, #fff 0%, #e0e7ff 40%, #c084fc 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{t("title")}</motion.h2>
-                    <motion.p variants={fadeUp} className="text-sm mt-4 max-w-md mx-auto" style={{ color: "#B8B0D0" }}>{t("desc")}</motion.p>
+                    <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-[0.3em] mb-3 text-neutral-500">
+                        ✦ {t("label")}
+                    </motion.p>
+                    <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-black tracking-tight text-white/90">
+                        {t("title")}
+                    </motion.h2>
+                    <motion.p variants={fadeUp} className="text-sm mt-4 max-w-md mx-auto text-neutral-400">
+                        {t("desc")}
+                    </motion.p>
                 </div>
 
                 <motion.div variants={fadeUp} className="max-w-3xl mx-auto">
-                    <div className="rounded-2xl overflow-hidden relative" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(139,92,246,0.12)", backdropFilter: "blur(10px)" }}>
-                        {/* Cosmic glow top */}
-                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[60%] h-[2px]" style={{ background: "linear-gradient(90deg, transparent, rgba(139,92,246,0.4), rgba(99,102,241,0.3), transparent)" }} />
-
+                    <div className="rounded-2xl overflow-hidden relative bg-[#111111]" style={{ border: "1px solid rgba(255,255,255,0.08)", backdropFilter: "blur(10px)" }}>
                         {/* Header */}
-                        <div className="px-6 py-5 flex items-center justify-between" style={{ borderBottom: "1px solid rgba(139,92,246,0.08)" }}>
-                            <h3 className="text-sm font-semibold flex items-center gap-2" style={{ color: "#E8E0FF" }}>
-                                <span className="w-2 h-2 rounded-full bg-purple-500 shadow-[0_0_8px_rgba(139,92,246,0.6)]" />
+                        <div className="px-6 py-5 flex items-center justify-between border-b border-white/[0.05]">
+                            <h3 className="text-sm font-semibold flex items-center gap-2 text-white/90">
+                                <span className="w-2 h-2 rounded-full bg-white/70" />
                                 {t("active_orders")}
                             </h3>
-                            <Link href="/public/dashboard" className="relative z-10 text-xs font-semibold px-4 py-2 rounded-lg transition-all duration-300 hover:-translate-y-[1px] hover:shadow-[0_0_25px_rgba(139,92,246,0.3)]" style={{ background: "linear-gradient(135deg, #7c3aed, #6366F1)", color: "#fff" }}>
+                            <Link href="/public/dashboard" className="relative z-10 text-xs font-semibold px-4 py-2 rounded-lg transition-all duration-300 bg-white/5 hover:bg-white/10 text-white border border-white/10">
                                 {t("view_full")}
                             </Link>
                         </div>
@@ -84,18 +84,18 @@ export default function DashboardPreview() {
                         <div className="overflow-x-auto">
                             <table className="w-full">
                                 <thead>
-                                    <tr style={{ borderBottom: "1px solid rgba(139,92,246,0.06)" }}>
+                                    <tr className="border-b border-white/[0.02]">
                                         {[t("columns.order"), t("columns.service"), t("columns.status"), t("columns.progress")].map(h => (
-                                            <th key={h} className="text-left px-6 py-3 text-[10px] font-bold uppercase tracking-widest" style={{ color: "#A8A0C8" }}>{h}</th>
+                                            <th key={h} className="text-left px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-neutral-500">{h}</th>
                                         ))}
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {orders.length === 0 ? (
                                         <tr>
-                                            <td colSpan={4} className="px-6 py-12 text-center text-sm" style={{ color: "#B8B0D0" }}>
+                                            <td colSpan={4} className="px-6 py-12 text-center text-sm text-neutral-500">
                                                 <div className="flex flex-col items-center gap-3">
-                                                    <span className="text-3xl opacity-30">🌌</span>
+                                                    <span className="text-3xl opacity-20 filter grayscale">🌌</span>
                                                     {t("no_active")}
                                                 </div>
                                             </td>
@@ -109,20 +109,19 @@ export default function DashboardPreview() {
                                                 whileInView={{ opacity: 1, x: 0 }}
                                                 viewport={{ once: true }}
                                                 transition={{ delay: i * 0.1, duration: 0.4 }}
-                                                className="transition-colors hover:bg-purple-500/[0.03] group"
-                                                style={{ borderBottom: "1px solid rgba(139,92,246,0.04)" }}
+                                                className="transition-colors hover:bg-white/[0.02] group border-b border-white/[0.02] last:border-b-0"
                                             >
-                                                <td className="px-6 py-4 text-sm font-mono font-bold" style={{ color: "#D4ADFC" }}>{order.id}</td>
-                                                <td className="px-6 py-4 text-sm" style={{ color: "#C8BFE8" }}>{order.service}</td>
+                                                <td className="px-6 py-4 text-sm font-mono font-bold text-white/80">{order.id}</td>
+                                                <td className="px-6 py-4 text-sm text-neutral-300">{order.service}</td>
                                                 <td className="px-6 py-4">
-                                                    <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full uppercase" style={{ background: statusStyle.bg, color: statusStyle.color }}>
-                                                        <span className="w-1.5 h-1.5 rounded-full" style={{ background: statusStyle.dot, boxShadow: statusStyle.glow }} />
+                                                    <span className="inline-flex items-center gap-1.5 text-[10px] font-bold tracking-widest px-2.5 py-1 rounded-full uppercase border border-white/[0.03]" style={{ background: statusStyle.bg, color: statusStyle.color }}>
+                                                        <span className="w-1.5 h-1.5 rounded-full" style={{ background: statusStyle.dot }} />
                                                         {order.status}
                                                     </span>
                                                 </td>
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center gap-3">
-                                                        <div className="flex-1 h-2 rounded-full" style={{ background: "rgba(139,92,246,0.06)" }}>
+                                                        <div className="flex-1 h-1.5 rounded-full bg-neutral-900 border border-white/[0.02]">
                                                             <motion.div
                                                                 initial={{ width: 0 }}
                                                                 whileInView={{ width: `${order.progress}%` }}
@@ -130,12 +129,11 @@ export default function DashboardPreview() {
                                                                 transition={{ duration: 1, delay: 0.3 + i * 0.1, ease: "easeOut" }}
                                                                 className="h-full rounded-full relative"
                                                                 style={{
-                                                                    background: order.status === "done" ? "linear-gradient(90deg, #22C55E, #16A34A)" : "linear-gradient(90deg, #8B5CF6, #6366F1)",
-                                                                    boxShadow: order.status === "done" ? "0 0 10px rgba(34,197,94,0.4)" : "0 0 10px rgba(139,92,246,0.4)",
+                                                                    background: order.status === "done" ? "#10B981" : "#E5E7EB",
                                                                 }}
                                                             />
                                                         </div>
-                                                        <span className="text-xs font-mono font-bold min-w-[32px] text-right" style={{ color: "#B8B0D0" }}>{order.progress}%</span>
+                                                        <span className="text-xs font-mono font-bold min-w-[32px] text-right text-neutral-400">{order.progress}%</span>
                                                     </div>
                                                 </td>
                                             </motion.tr>

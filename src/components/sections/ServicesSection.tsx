@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import { Palette, Sparkles, Camera, Film, Globe, Smartphone } from "lucide-react";
+import { Palette, Film, Globe } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 interface ServicesSectionProps {
@@ -18,72 +18,99 @@ const cardPop = {
 };
 
 const services = [
-    { title: "Graphic Design", description: "Logo, banner, poster, and complete brand identity packages. Clean, modern, impactful.", icon: Palette, color: "#8B5CF6", price: "Rp 75.000" },
-    { title: "Illustration", description: "Character illustration — half body, full body, and full render. Bring your characters to life.", icon: Sparkles, color: "#EC4899", price: "Rp 75.000" },
-    { title: "Photography", description: "Graduation, product, and event photography. Professional editing and retouching included.", icon: Camera, color: "#06B6D4", price: "Rp 150.000" },
-    { title: "Video Editing", description: "Professional post-production, color grading, motion graphics, transitions, and sound design.", icon: Film, color: "#F59E0B", price: "Rp 150.000" },
-    { title: "Web Design", description: "Modern, responsive website design with stunning UI/UX. Landing pages, portfolios, and business sites.", icon: Globe, color: "#22C55E", price: "Rp 350.000" },
-    { title: "App Development", description: "Custom mobile and web applications built with modern technologies. From concept to deployment.", icon: Smartphone, color: "#6366F1", price: "Rp 750.000" },
+    { 
+        title: "Essential Studio", 
+        description: "Perfect for personal projects and small startups. Includes basic graphic design, simple illustration, and photo editing.", 
+        icon: Palette, 
+        color: "#9CA3AF", // Silver / Gray-400
+        price: "Rp 150.000",
+        tier: "Silver"
+    },
+    { 
+        title: "Professional Studio", 
+        description: "Comprehensive creative solutions for growing brands. Includes full brand identity, video production, and UI/UX.", 
+        icon: Film, 
+        color: "#FCD34D", // Pale Gold / Amber-300
+        price: "Rp 500.000",
+        tier: "Gold"
+    },
+    { 
+        title: "Enterprise Digital", 
+        description: "The ultimate digital transformation. Custom web applications, full-scale post-production, and premium agency retaining.", 
+        icon: Globe, 
+        color: "#E5E7EB", // Platinum / Gray-200
+        price: "Rp 1.500.000",
+        tier: "Platinum"
+    },
 ];
 
 export default function ServicesSection({ onOpenPricing }: ServicesSectionProps) {
     const t = useTranslations("Services");
 
     return (
-        <div className="section-container py-28 relative overflow-hidden">
-            {/* Cosmic ambient */}
-            <div className="absolute top-[20%] right-[-5%] w-[30%] h-[30%] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 70%)", filter: "blur(60px)", animation: "nebulaPulse 12s ease-in-out infinite" }} />
-            <div className="absolute bottom-[10%] left-[-5%] w-[25%] h-[25%] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(236,72,153,0.05) 0%, transparent 70%)", filter: "blur(80px)", animation: "nebulaPulse 15s ease-in-out infinite reverse" }} />
-
+        <div className="section-container py-28 relative overflow-hidden bg-[#0A0A0A]">
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1 } } }}>
                 <div className="text-center mb-16">
-                    <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-[0.3em] mb-3" style={{ background: "linear-gradient(90deg, #c084fc, #818cf8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>✦ {t("label")}</motion.p>
-                    <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-black tracking-tight" style={{ background: "linear-gradient(135deg, #fff 0%, #e0e7ff 40%, #c084fc 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{t("title")}</motion.h2>
-                    <motion.p variants={fadeUp} className="text-sm mt-4 max-w-lg mx-auto" style={{ color: "#B8B0D0" }}>
+                    <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-[0.3em] mb-3 text-neutral-500">
+                        ✦ {t("label")}
+                    </motion.p>
+                    <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-black tracking-tight text-white/90">
+                        {t("title")}
+                    </motion.h2>
+                    <motion.p variants={fadeUp} className="text-sm mt-4 max-w-lg mx-auto text-neutral-400">
                         {t("desc")}
                     </motion.p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
                     {services.map((service, index) => (
                         <motion.div
                             key={service.title}
                             variants={cardPop}
                             custom={index}
                             onClick={onOpenPricing}
-                            className="group cursor-pointer rounded-2xl p-6 relative overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_0_50px_rgba(139,92,246,0.12)]"
-                            style={{ background: "rgba(255,255,255,0.02)", border: `1px solid ${service.color}15`, backdropFilter: "blur(10px)" }}
+                            className="group cursor-pointer rounded-2xl p-8 relative overflow-hidden transition-all duration-500 hover:-translate-y-2 bg-[#111111]"
+                            style={{ 
+                                border: `1px solid rgba(255,255,255,0.05)`, 
+                            }}
                         >
-                            {/* Hover glow */}
-                            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" style={{ background: `radial-gradient(circle at 50% 0%, ${service.color}12 0%, transparent 60%)` }} />
+                            {/* Hover minimal glow */}
+                            <div 
+                                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" 
+                                style={{ background: `radial-gradient(circle at 50% 0%, ${service.color}08 0%, transparent 70%)` }} 
+                            />
 
-                            {/* Cosmic particle on hover */}
-                            <div className="absolute top-4 right-4 w-2 h-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-700" style={{ background: service.color, boxShadow: `0 0 15px ${service.color}`, animation: "cosmicFloat 8s ease-in-out infinite" }} />
-
-                            {/* Animated icon */}
+                            {/* Animated icon (Matte dark style) */}
                             <motion.div
-                                className="mb-5 w-fit rounded-xl p-3"
-                                style={{ background: `${service.color}15` }}
-                                animate={{ y: [0, -6, 0] }}
-                                transition={{ duration: 3 + index * 0.2, repeat: Infinity, ease: "easeInOut" }}
+                                className="mb-6 w-fit rounded-xl p-3 border border-white/[0.05] bg-[#1A1A1A]"
+                                animate={{ y: [0, -4, 0] }}
+                                transition={{ duration: 4 + index * 0.2, repeat: Infinity, ease: "easeInOut" }}
                             >
                                 <service.icon
-                                    className="w-8 h-8 transition-transform duration-500 group-hover:scale-125 group-hover:rotate-12"
-                                    style={{ color: service.color, filter: `drop-shadow(0 0 10px ${service.color}60)` }}
+                                    className="w-7 h-7 transition-all duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0"
+                                    style={{ color: service.color }}
                                 />
                             </motion.div>
 
-                            <h3 className="text-lg font-bold mb-2 transition-colors duration-300" style={{ color: "#E8E0FF" }}>
+                            <div className="mb-2 flex items-center gap-2">
+                                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-sm border" style={{ color: service.color, borderColor: `${service.color}30`, backgroundColor: `${service.color}10` }}>
+                                    {service.tier}
+                                </span>
+                            </div>
+
+                            <h3 className="text-xl font-bold mb-3 text-white/90 transition-colors duration-300">
                                 {service.title}
                             </h3>
-                            <p className="text-sm leading-relaxed mb-6 transition-colors duration-300" style={{ color: "#B8B0D0" }}>
+                            <p className="text-sm leading-relaxed mb-8 text-neutral-400 transition-colors duration-300">
                                 {service.description}
                             </p>
 
-                            <div className="flex items-center justify-between pt-4 relative z-10" style={{ borderTop: `1px solid ${service.color}12` }}>
-                                <span className="text-sm font-bold" style={{ color: service.color }}>{t("startingFrom", { price: service.price })}</span>
-                                <span className="text-xs font-semibold px-4 py-1.5 rounded-full transition-all duration-500 group-hover:px-5 group-hover:shadow-[0_0_20px_rgba(0,0,0,0.5)]"
-                                    style={{ background: `${service.color}12`, color: service.color, border: `1px solid ${service.color}25` }}>
+                            <div className="flex items-center justify-between pt-5 border-t border-white/[0.05] relative z-10">
+                                <div className="flex flex-col">
+                                    <span className="text-[10px] text-neutral-500 uppercase tracking-widest">Starting at</span>
+                                    <span className="text-sm font-bold text-white/80">{service.price}</span>
+                                </div>
+                                <span className="text-xs font-semibold px-5 py-2 rounded-lg transition-all duration-500 bg-white/5 hover:bg-white/10 text-white/70 border border-white/10 group-hover:border-white/20 group-hover:text-white">
                                     {t("get_quote")}
                                 </span>
                             </div>

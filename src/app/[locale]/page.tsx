@@ -1,7 +1,6 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import IntroSequence from "@/components/IntroSequence";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/sections/HeroSection";
@@ -45,7 +44,7 @@ export default function Home() {
       {/* 1. Persistent Matte Dark Layer */}
       <div className="fixed inset-0 z-[-1] bg-[#0A0A0A]" />
 
-      <Navbar onOrderClick={handleOrderClick} />
+      <Navbar />
 
       {/* 2. Main Content */}
       <main className="relative z-10 transition-opacity duration-800 opacity-100 delay-300">

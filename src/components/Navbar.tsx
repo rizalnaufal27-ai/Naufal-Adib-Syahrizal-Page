@@ -3,13 +3,10 @@ import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { usePathname, useRouter } from "@/i18n/routing";
 import Link from "next/link";
+import Image from "next/image";
 import LanguageSwitcher from "./LanguageSwitcher";
 
-interface NavbarProps {
-    onOrderClick?: () => void;
-}
-
-export default function Navbar({ onOrderClick }: NavbarProps) {
+export default function Navbar() {
     const [active, setActive] = useState(0);
     const [scrolled, setScrolled] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
@@ -41,12 +38,12 @@ export default function Navbar({ onOrderClick }: NavbarProps) {
         setMobileOpen(false);
         if (isSubPage) {
             // On sub-pages, navigate to homepage with hash
-            router.push(`/${href}` as any);
+            router.push(`/${href}`);
         } else if (href.startsWith("#")) {
             const el = document.querySelector(href);
             if (el) el.scrollIntoView({ behavior: "smooth" });
         } else {
-            router.push(href as any);
+            router.push(href);
         }
     };
 
@@ -73,7 +70,9 @@ export default function Navbar({ onOrderClick }: NavbarProps) {
                 <div className="flex items-center justify-between h-16 md:h-[72px]">
                     {/* Logo — click to go home */}
                     <button onClick={handleLogoClick} className="flex items-center gap-2 group">
-                        <img src="/images/ncs-logo.png" alt="NCS Logo" className="h-8 md:h-10 w-auto group-hover:scale-105 transition-transform" />
+                        <div className="relative h-8 md:h-10 w-32 md:w-40 transition-transform group-hover:scale-105">
+                            <Image src="/images/ncs-logo.png" alt="NCS Logo" fill className="object-contain" priority />
+                        </div>
                     </button>
 
                     {/* Desktop Nav */}

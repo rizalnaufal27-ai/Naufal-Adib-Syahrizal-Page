@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import { CheckCircle2, Circle, Clock, Code2, Database, Layout, Palette, ShieldCheck, Zap } from "lucide-react";
+import { CheckCircle2, Layout, Palette, ShieldCheck, Zap } from "lucide-react";
 import Link from "next/link";
 
 interface Order {
@@ -25,7 +25,7 @@ export default function PublicDashboardPage() {
 
     useEffect(() => {
         const fetchOrder = async () => {
-            const { data, error } = await supabase
+            const { data } = await supabase
                 .from("orders")
                 .select("id, order_number, service_type, status, progress, description, created_at, updated_at, customer_name")
                 .eq("uuid_token", uuid)

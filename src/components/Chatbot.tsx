@@ -91,7 +91,7 @@ export default function Chatbot({ onOpenPricing }: ChatbotProps) {
     }, [messages]);
 
     useEffect(() => {
-        if (isOpen) { inputRef.current?.focus(); setHasNewMessage(false); }
+        if (isOpen) { inputRef.current?.focus(); }
     }, [isOpen]);
 
     // Auto-greet after 8 seconds of inactivity
@@ -150,7 +150,10 @@ export default function Chatbot({ onOpenPricing }: ChatbotProps) {
         <>
             {/* ═══ Floating Pill Trigger ═══ */}
             <motion.button
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={() => {
+                    setIsOpen(!isOpen);
+                    if (!isOpen) setHasNewMessage(false);
+                }}
                 className="fixed z-[150] flex items-center gap-2.5 transition-all duration-300 group cursor-pointer"
                 style={{
                     bottom: "24px",

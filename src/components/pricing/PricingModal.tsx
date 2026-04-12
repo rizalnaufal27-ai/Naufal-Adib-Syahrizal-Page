@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 interface PricingModalProps {
     isOpen: boolean;
@@ -9,18 +9,24 @@ interface PricingModalProps {
 type Tab = "design" | "illustration" | "photo" | "video";
 
 function useCurrency() {
-    const [currency, setCurrency] = useState<"USD" | "IDR">("USD");
-    const [rate, setRate] = useState(1);
-
-    useEffect(() => {
-        try {
-            const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            if (tz && tz.toLowerCase().includes("jakarta")) {
-                setCurrency("IDR");
-                setRate(15500);
-            }
-        } catch { /* fallback USD */ }
-    }, []);
+    const [currency] = useState<"USD" | "IDR">(() => {
+        if (typeof window !== "undefined") {
+            try {
+                const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                if (tz && tz.toLowerCase().includes("jakarta")) return "IDR";
+            } catch { /* fallback */ }
+        }
+        return "USD";
+    });
+    const [rate] = useState(() => {
+        if (typeof window !== "undefined") {
+            try {
+                const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                if (tz && tz.toLowerCase().includes("jakarta")) return 15500;
+            } catch { /* fallback */ }
+        }
+        return 1;
+    });
 
     const format = (usd: number) => {
         if (currency === "IDR") {

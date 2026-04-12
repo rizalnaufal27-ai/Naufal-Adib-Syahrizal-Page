@@ -4,6 +4,7 @@ import { Project, projects, ProjectCategory } from "@/data/projects";
 import ProjectModal from "@/components/ui/project-modal";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 
 function isVideo(src: string) {
     return /\.(mp4|webm|mov|avi)$/i.test(src);
@@ -64,12 +65,7 @@ export default function PortfolioGrid() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: 0.1 }}
-                    className="text-4xl md:text-6xl font-black tracking-tighter mb-4"
-                    style={{
-                        background: "linear-gradient(135deg, #fff 0%, #a5b4fc 50%, #06b6d4 100%)",
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
-                    }}
+                    className="text-4xl md:text-6xl font-black tracking-tighter mb-4 text-white/90"
                 >
                     {t("portfolio")}
                 </motion.h2>
@@ -94,23 +90,20 @@ export default function PortfolioGrid() {
                     {categories.map((category) => (
                         <button
                             key={category}
-                            onClick={() => setActiveCategory(category as any)}
+                            onClick={() => setActiveCategory(category as ProjectCategory | "All")}
                             className="relative px-5 py-2.5 rounded-full text-xs md:text-sm font-medium transition-all duration-300 z-20 overflow-hidden"
                             style={{
                                 background: activeCategory === category
-                                    ? "linear-gradient(135deg, rgba(99,102,241,0.25), rgba(6,182,212,0.15))"
-                                    : "rgba(255,255,255,0.03)",
+                                    ? "rgba(255,255,255,0.1)"
+                                    : "rgba(255,255,255,0.02)",
                                 border: activeCategory === category
-                                    ? "1px solid rgba(99,102,241,0.4)"
-                                    : "1px solid rgba(255,255,255,0.08)",
-                                color: activeCategory === category ? "#a5b4fc" : "rgba(255,255,255,0.5)",
-                                boxShadow: activeCategory === category
-                                    ? "0 0 20px rgba(99,102,241,0.15)"
-                                    : "none",
+                                    ? "1px solid rgba(255,255,255,0.2)"
+                                    : "1px solid rgba(255,255,255,0.05)",
+                                color: activeCategory === category ? "#ffffff" : "rgba(255,255,255,0.5)",
                             }}
                         >
                             {activeCategory === category && (
-                                <span className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-cyan-500/10 animate-pulse" />
+                                <span className="absolute inset-0 bg-white/5 animate-pulse" />
                             )}
                             <span className="relative z-10">{category}</span>
                         </button>
@@ -158,18 +151,19 @@ export default function PortfolioGrid() {
                                             }}
                                         />
                                     ) : (
-                                        <img
+                                        <Image
                                             src={project.image}
                                             alt={project.title}
+                                            width={500}
+                                            height={500}
                                             className="w-full h-auto object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
                                             loading="lazy"
-                                            decoding="async"
+                                            sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                                         />
                                     )
                                 ) : (
                                     <div
-                                        className="w-full aspect-[4/3] flex items-center justify-center"
-                                        style={{ background: project.gradient || "linear-gradient(135deg, #1e1b4b, #0f172a)" }}
+                                        className="w-full aspect-[4/3] flex items-center justify-center bg-neutral-900 border-b border-white/[0.05]"
                                     >
                                         <span className="text-white/20 text-xs font-bold tracking-widest uppercase">
                                             {project.category}
@@ -184,12 +178,12 @@ export default function PortfolioGrid() {
                                 <div
                                     className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] uppercase tracking-widest font-bold mb-2 w-fit translate-y-3 group-hover:translate-y-0 transition-transform duration-300 delay-75"
                                     style={{
-                                        background: "rgba(6,182,212,0.15)",
-                                        color: "#67e8f9",
-                                        border: "1px solid rgba(6,182,212,0.25)",
+                                        background: "rgba(255,255,255,0.08)",
+                                        color: "rgba(255,255,255,0.9)",
+                                        border: "1px solid rgba(255,255,255,0.15)",
                                     }}
                                 >
-                                    <span className="w-1 h-1 rounded-full bg-cyan-400" />
+                                    <span className="w-1 h-1 rounded-full bg-white/70" />
                                     {project.category}
                                 </div>
                                 {/* Title */}
@@ -197,20 +191,18 @@ export default function PortfolioGrid() {
                                     {project.title}
                                 </h3>
                                 {/* Animated underline */}
-                                <div className="mt-2 h-[2px] w-0 group-hover:w-full transition-all duration-500 delay-150 rounded-full"
-                                    style={{ background: "linear-gradient(90deg, #6366f1, #06b6d4)" }}
-                                />
+                                <div className="mt-2 h-[1px] w-0 group-hover:w-full transition-all duration-500 delay-150 rounded-full bg-white/30" />
                                 {/* View prompt */}
                                 <p className="text-xs text-white/40 mt-2 translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-300 delay-200">
                                     {t("clickToView")}
                                 </p>
                             </div>
 
-                            {/* Subtle glow on hover */}
+                            {/* Subtle hover border glow */}
                             <div
                                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                                 style={{
-                                    boxShadow: "inset 0 0 40px rgba(99,102,241,0.05), 0 0 30px rgba(99,102,241,0.08)",
+                                    boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.15)",
                                 }}
                             />
                         </motion.div>

@@ -1,6 +1,9 @@
 "use client";
 import React, { useState, useEffect, useCallback, useRef } from "react";
+import Link from "next/link";
+import Image from "next/image";
 import { supabase } from "@/lib/supabase";
+import { RealtimePostgresChangesPayload } from "@supabase/supabase-js";
 import PricingCalculator from "@/components/pricing/PricingCalculator";
 
 // ─── Interfaces ───
@@ -12,7 +15,7 @@ interface Order {
     evidence_links: Array<{ url: string; publicId: string; uploadedAt: string }>;
     result_files: Array<{ name: string; url: string; type: string; size: number; uploadedAt: string }>;
     uuid_token: string; chat_enabled: boolean; created_at: string; updated_at: string;
-    pricing_details?: any;
+    pricing_details?: Record<string, unknown>;
     admin_notes?: string;
 }
 interface ResultFile { name: string; url: string; type: string; size: number; uploadedAt: string; }
@@ -72,16 +75,34 @@ const ChatBubble = ({ m, name }: { m: ChatMsg; name: string }) => (
     </div>
 );
 
+const Badge = ({ status }: { status: string }) => (
+    <span className="text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wide" style={{ background: `${statusColor(status)}15`, color: statusColor(status) }}>{status}</span>
+);
+
 export default function AdminPage() {
     // ─── Auth ───
-    const [auth, setAuth] = useState(false);
+    const [auth, setAuth] = useState(() => {
+        if (typeof window !== "undefined") {
+            return localStorage.getItem("admin_auth") === "true";
+        }
+        return false;
+    });
     const [pw, setPw] = useState("");
     const [authErr, setAuthErr] = useState("");
+
+    // Store auth state in localStorage whenever it changes
+    useEffect(() => {
+        if (auth) {
+            localStorage.setItem("admin_auth", "true");
+        } else {
+            localStorage.removeItem("admin_auth");
+        }
+    }, [auth]);
 
     // ─── Core State ───
     const [view, setView] = useState<AdminView>("orders");
     const [orders, setOrders] = useState<Order[]>([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(auth); // Initialize loading only if we are authenticated
     const [selected, setSelected] = useState<Order | null>(null);
     const [activeChat, setActiveChat] = useState<Order | null>(null);
     const [tab, setTab] = useState<"details" | "chat" | "evidence" | "results">("details");
@@ -118,19 +139,19 @@ export default function AdminPage() {
 
     // ─── Fetch ───
     const fetchOrders = useCallback(async () => {
-        setLoading(true);
+        // loading is now true by default, or managed externally if re-fetching
         const { data } = await supabase.from("orders").select("*").order("created_at", { ascending: false });
         setOrders(data || []);
         setLoading(false);
     }, []);
 
-    useEffect(() => { if (localStorage.getItem("admin_auth") === "true") setAuth(true); }, []);
-
     useEffect(() => {
         if (!auth) return;
-        fetchOrders();
-        localStorage.setItem("admin_auth", "true");
-        const ch = supabase.channel('admin-orders').on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, (p) => {
+        setTimeout(() => {
+            fetchOrders();
+        }, 0);
+        // localStorage is now handled by the auth effect above
+        const ch = supabase.channel('admin-orders').on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, (p: RealtimePostgresChangesPayload<Order>) => {
             if (p.eventType === 'INSERT') setOrders(prev => [p.new as Order, ...prev]);
             else if (p.eventType === 'UPDATE') {
                 setOrders(prev => prev.map(o => o.id === p.new.id ? p.new as Order : o));
@@ -168,9 +189,19 @@ export default function AdminPage() {
     }, [selected, activeChat, view]);
 
     useEffect(() => {
+        let iv: NodeJS.Timeout | null = null;
         if ((tab === "chat" && selected && view === "orders") || (view === "messages" && activeChat)) {
-            fetchChat(); const iv = setInterval(fetchChat, 5000); return () => clearInterval(iv);
+            // Use a small delay to avoid synchronous state updates during initial mount
+            const timer = setTimeout(() => {
+                fetchChat();
+            }, 0);
+            iv = setInterval(fetchChat, 5000);
+            return () => {
+                clearTimeout(timer);
+                if (iv) clearInterval(iv);
+            };
         }
+        return () => { if (iv) clearInterval(iv); };
     }, [tab, selected, activeChat, view, fetchChat]);
 
     useEffect(() => { chatEnd.current?.scrollIntoView({ behavior: "smooth" }); }, [msgs]);
@@ -245,16 +276,6 @@ export default function AdminPage() {
         if (v === "portfolio") supabase.from("portfolio_items").select("*").order("created_at", { ascending: false }).then(({ data }) => setPortfolio(data || []));
     };
 
-    // ═══════════════════════════════════════════
-    //  STATUS BADGE
-    // ═══════════════════════════════════════════
-    const Badge = ({ status }: { status: string }) => (
-        <span className="text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wide" style={{ background: `${statusColor(status)}15`, color: statusColor(status) }}>{status}</span>
-    );
-
-    // ═══════════════════════════════════════════
-    //  MAIN LAYOUT
-    // ═══════════════════════════════════════════
     return (
         <div className="flex h-screen overflow-hidden" style={{ background: "#0A0A0A" }}>
             {/* ═══ SIDEBAR ═══ */}
@@ -306,9 +327,9 @@ export default function AdminPage() {
 
                 {/* Bottom Actions */}
                 <div className="border-t border-white/[0.06] p-2 space-y-1">
-                    <a href="/" className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-white/40 hover:text-white/70 hover:bg-white/[0.04] transition-all`}>
-                        {Icons.home}{!sidebarCollapsed && <span>Back to Site</span>}
-                    </a>
+                    <Link href="/" className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-white/40 hover:text-white/70 hover:bg-white/[0.04] transition-all`}>
+                        {Icons.home}<span>Back to Site</span>
+                    </Link>
                     <button onClick={logout} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-red-400/60 hover:text-red-400 hover:bg-red-500/[0.06] transition-all">
                         {Icons.logout}{!sidebarCollapsed && <span>Logout</span>}
                     </button>
@@ -516,10 +537,10 @@ export default function AdminPage() {
                                                 ) : (
                                                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                                                         {selected.evidence_links.map((ev, i) => (
-                                                            <a key={i} href={ev.url} target="_blank" rel="noopener noreferrer" className="group relative aspect-square rounded-xl overflow-hidden border border-white/[0.06] hover:border-blue-500/30 transition-all">
-                                                                <img src={ev.url} alt={`Evidence ${i + 1}`} className="w-full h-full object-cover" />
+                                                            <div key={i} className="group relative aspect-square rounded-xl overflow-hidden border border-white/[0.06] hover:border-blue-500/30 transition-all">
+                                                                <Image src={ev.url} alt={`Evidence ${i + 1}`} fill className="object-cover" />
                                                                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"><span className="text-white text-xs font-semibold">View</span></div>
-                                                            </a>
+                                                            </div>
                                                         ))}
                                                     </div>
                                                 )}
@@ -743,7 +764,11 @@ export default function AdminPage() {
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                 {portfolio.map(item => (
                                     <div key={item.id} className="rounded-2xl overflow-hidden bg-white/[0.015] border border-white/[0.06] hover:border-white/[0.12] transition-all group">
-                                        {item.image_url && <img src={item.image_url} alt={item.title} className="w-full h-40 object-cover" />}
+                                        {item.image_url && (
+                                            <div className="relative w-full h-40">
+                                                <Image src={item.image_url} alt={item.title} fill className="object-cover" />
+                                            </div>
+                                        )}
                                         <div className="p-4">
                                             <p className="text-sm font-semibold text-white">{item.title}</p>
                                             <p className="text-xs text-white/30 mt-0.5">{item.service_type}</p>

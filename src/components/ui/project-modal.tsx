@@ -39,7 +39,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                         className="w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-2xl relative"
                         style={{
                             background: "rgba(10,10,10,0.95)",
-                            border: "1px solid var(--color-border)",
+                            border: "1px solid rgba(255,255,255,0.08)",
                         }}
                         onClick={(e) => e.stopPropagation()}
                     >
@@ -59,7 +59,7 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                                             <path d="M18 6L6 18M6 6l12 12" />
                                         </svg>
                                     </button>
-                                    <p className="text-xs uppercase tracking-wider mb-2" style={{ color: "var(--color-highlight)" }}>
+                                    <p className="text-[10px] uppercase tracking-widest mb-2 font-bold" style={{ color: "var(--color-text-muted)" }}>
                                         {project.category}
                                     </p>
                                     <h2 className="text-2xl md:text-3xl font-bold" style={{ fontFamily: "var(--font-heading)" }}>
@@ -86,9 +86,9 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                                                 key={tool}
                                                 className="px-3 py-1.5 rounded-full text-xs font-medium"
                                                 style={{
-                                                    background: "rgba(59,130,246,0.1)",
-                                                    color: "var(--color-primary)",
-                                                    border: "1px solid rgba(59,130,246,0.2)",
+                                                    background: "rgba(255,255,255,0.03)",
+                                                    color: "#A3A3A3", // Silver/gray
+                                                    border: "1px solid rgba(255,255,255,0.1)",
                                                 }}
                                             >
                                                 {tool}

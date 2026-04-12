@@ -6,6 +6,7 @@ import { projects, Project } from "@/data/projects";
 import ProjectModal from "@/components/ui/project-modal";
 import WarpTunnel from "@/components/ui/warp-tunnel";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 import Link from "next/link";
 
 // Transform projects data to match CardStackItem interface
@@ -28,8 +29,7 @@ export default function ResumePage() {
     useEffect(() => {
         // Start Sequence immediately on mount (simulating "Click View Resume")
 
-        // Phase 1: Pre-load / Idle (Instant)
-        setAnimationPhase('idle');
+        // Phase 1: Pre-load / Idle (Instant handled by initial state)
 
         // Phase 2: The Trigger & Burst (0 -> 100ms)
         const burstTimer = setTimeout(() => {
@@ -111,7 +111,9 @@ export default function ResumePage() {
                                         item.imageSrc.match(/\.(mp4|webm|mov|avi)$/i) ? (
                                             <video src={item.imageSrc} autoPlay muted loop playsInline className="h-full w-full object-cover" />
                                         ) : (
-                                            <img src={item.imageSrc} alt={item.title} className="h-full w-full object-cover" />
+                                            <div className="relative h-full w-full">
+                                                <Image src={item.imageSrc} alt={item.title} fill className="object-cover" />
+                                            </div>
                                         )
                                     )}
                                 </div>
