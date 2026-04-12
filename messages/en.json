@@ -219,8 +219,13 @@
     },
     "TrackPage": {
         "title": "Track Order",
-        "placeholder": "Enter Order ID",
-        "submit": "Track"
+        "placeholder": "Enter Email Address",
+        "submit": "Track",
+        "search": "Search",
+        "noProjects": "No projects found.",
+        "projectsFound": "Projects Found",
+        "active": "Active",
+        "viewDetails": "View Details"
     },
     "OrderPage": {
         "title": "Order Details",

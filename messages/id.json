@@ -219,8 +219,13 @@
     },
     "TrackPage": {
         "title": "Lacak Pesanan",
-        "placeholder": "Masukkan ID Pesanan",
-        "submit": "Lacak"
+        "placeholder": "Masukkan Email Anda",
+        "submit": "Lacak",
+        "search": "Cari",
+        "noProjects": "Tidak ada proyek ditemukan.",
+        "projectsFound": "Proyek Ditemukan",
+        "active": "Aktif",
+        "viewDetails": "Lihat Detail"
     },
     "OrderPage": {
         "title": "Detail Pesanan",

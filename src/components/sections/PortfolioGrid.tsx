@@ -1,8 +1,8 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { Project, projects, ProjectCategory } from "@/data/projects";
 import ProjectModal from "@/components/ui/project-modal";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 
 function isVideo(src: string) {
@@ -24,19 +24,31 @@ export default function PortfolioGrid() {
             .sort((a, b) => a.id - b.id);
     }, [activeCategory]);
 
+    const sectionRef = useRef<HTMLElement>(null);
+    const { scrollYProgress } = useScroll({
+        target: sectionRef,
+        offset: ["start end", "end start"]
+    });
+    
+    // Title moves down slightly faster than scroll
+    const yTitle = useTransform(scrollYProgress, [0, 1], [0, 150]);
+    // Grid items subtle float
+    const yGridOdd = useTransform(scrollYProgress, [0, 1], [0, -40]);
+    const yGridEven = useTransform(scrollYProgress, [0, 1], [0, 40]);
+
     return (
-        <section id="portfolio-grid" className="w-full py-24 bg-[#0A0A0A]">
+        <section ref={sectionRef} id="portfolio-grid" className="w-full py-24 bg-[#0A0A0A] overflow-hidden">
             <div className="max-w-[1400px] mx-auto px-6 md:px-12">
 
                 {/* Header — reference style: big uppercase "WORK" + thin horizontal rule */}
-                <div className="mb-16 border-b border-white/[0.06] pb-8">
+                <div className="mb-16 border-b border-white/[0.06] pb-8 relative">
                     <motion.h2
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                        className="text-6xl md:text-8xl font-black uppercase tracking-tight text-white"
-                        style={{ fontFamily: "var(--font-heading)" }}
+                        className="text-6xl md:text-8xl font-black uppercase tracking-tight text-white inline-block"
+                        style={{ fontFamily: "var(--font-heading)", y: yTitle }}
                     >
                         WORK
                     </motion.h2>
@@ -68,17 +80,24 @@ export default function PortfolioGrid() {
                     className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-px bg-white/[0.04]"
                 >
                     <AnimatePresence mode="popLayout">
-                        {filteredProjects.map((project, i) => (
-                            <motion.div
-                                key={project.id}
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                transition={{ duration: 0.4, delay: i * 0.05 }}
-                                className="group cursor-pointer bg-[#0A0A0A] overflow-hidden relative"
-                                onClick={() => setSelectedProject(project)}
-                            >
-                                {/* Image / Video */}
+                        {filteredProjects.map((project, i) => {
+                            const isOddColumn = (i % 3) === 1;
+                            const isThirdColumn = (i % 3) === 2;
+                            // Middle column goes up, ends go down for a dynamic ripple parallax
+                            const yTransform = isOddColumn ? yGridOdd : isThirdColumn ? yGridEven : yGridOdd;
+                            
+                            return (
+                                <motion.div
+                                    key={project.id}
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={{ duration: 0.4, delay: i * 0.05 }}
+                                    className="group cursor-pointer bg-[#0A0A0A] overflow-hidden relative"
+                                    onClick={() => setSelectedProject(project)}
+                                    style={{ y: yTransform }}
+                                >
+                                    {/* Image / Video */}
                                 <div className="w-full aspect-[4/3] overflow-hidden relative bg-neutral-900">
                                     {project.image ? (
                                         isVideo(project.image) ? (
@@ -122,7 +141,8 @@ export default function PortfolioGrid() {
                                     </p>
                                 </div>
                             </motion.div>
-                        ))}
+                            );
+                        })}
                     </AnimatePresence>
                 </motion.div>
 

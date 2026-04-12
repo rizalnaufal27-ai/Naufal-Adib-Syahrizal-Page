@@ -200,350 +200,174 @@ export default function UnifiedOrderPage() {
                 </div>
             </header>
 
-            {/* ============ WORKFLOW PROGRESS BAR ============ */}
+            {/* ============ MOCKUP 3: HORIZONTAL TRACKER ============ */}
             {!isConsultation && (
-                <div className="border-b border-white/5 bg-white/[0.01]">
-                    <div className="max-w-6xl mx-auto px-4 md:px-6 py-6">
-                        <div className="grid grid-cols-4 gap-2 md:gap-4">
-                            {phases.map((phase, i) => {
-                                const PhaseIcon = phase.icon;
-                                return (
-                                    <div
-                                        key={i}
-                                        className={`relative p-3 md:p-4 rounded-xl border transition-all duration-500 ${phase.status === "active"
-                                            ? "bg-indigo-500/10 border-indigo-500/30 shadow-lg shadow-indigo-500/10"
-                                            : phase.status === "completed"
-                                                ? "bg-green-500/5 border-green-500/20"
-                                                : "bg-white/[0.01] border-white/5 opacity-40"
-                                            }`}
-                                    >
-                                        <div className="flex items-center gap-2 mb-1">
-                                            <PhaseIcon size={14} className={
-                                                phase.status === "completed" ? "text-green-400"
-                                                    : phase.status === "active" ? "text-indigo-400"
-                                                        : "text-white/30"
-                                            } />
-                                            <span className="text-[10px] font-bold uppercase tracking-wider text-white/40">
-                                                {t(`workflow.step${i + 1}`)}
-                                            </span>
-                                        </div>
-                                        <div className="font-semibold text-xs md:text-sm mb-2">{phase.name}</div>
-                                        <div className="text-[10px] text-white/40">{phase.detail}</div>
+                <div className="pt-10 pb-6 px-4 md:px-6 max-w-5xl mx-auto">
+                    <div className="relative flex justify-between items-center w-full max-w-4xl mx-auto mb-10">
+                        {/* Background connecting line */}
+                        <div className="absolute left-[10%] right-[10%] h-[2px] bg-white/10 top-6 -z-10" />
 
-                                        {/* Mini progress */}
-                                        <div className="h-0.5 bg-white/10 rounded-full overflow-hidden mt-2">
-                                            <div className={`h-full transition-all duration-1000 rounded-full ${phase.status === "completed" ? "bg-green-500 w-full"
-                                                : phase.status === "active" ? "bg-indigo-500 w-1/2 animate-pulse"
-                                                    : "w-0"
-                                                }`} />
-                                        </div>
-                                        {phase.status === "completed" && (
-                                            <div className="absolute top-2 right-2 text-green-500"><CheckCircle2 size={12} /></div>
-                                        )}
+                        {phases.map((phase, i) => {
+                            const PhaseIcon = phase.icon;
+                            const isActive = phase.status === "active";
+                            const isCompleted = phase.status === "completed";
+                            return (
+                                <div key={i} className="flex flex-col items-center gap-3 relative z-10 w-1/4">
+                                    <div className={`w-12 h-12 flex items-center justify-center rounded-full transition-all duration-300 ${isCompleted ? "bg-[#1A2E26] text-[#22C55E] ring-1 ring-[#22C55E]/20" : isActive ? "bg-[#1E293B] text-white ring-2 ring-white/50" : "bg-[#0A0A0A] text-white/30 border border-white/10"}`}>
+                                        <PhaseIcon size={18} />
                                     </div>
-                                );
-                            })}
-                        </div>
+                                    <div className="flex flex-col items-center">
+                                        <span className={`text-xs font-medium ${isCompleted || isActive ? "text-white" : "text-white/40"}`}>{phase.name}</span>
+                                        {isActive && <div className="absolute -bottom-4 w-1.5 h-1.5 bg-[#22C55E] rounded-full shadow-[0_0_8px_#22c55e]" />}
+                                        {(isCompleted) && <div className="absolute -bottom-4 w-1.5 h-1.5 bg-[#22C55E]/50 rounded-full" />}
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
             )}
 
             {/* ============ MAIN CONTENT — 2 COLUMN ============ */}
-            <div className="max-w-6xl mx-auto px-4 md:px-6 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="max-w-5xl mx-auto px-4 md:px-6 pb-12 grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6">
 
-                {/* ─── LEFT COLUMN ─── */}
-                <div className="lg:col-span-2 space-y-6">
+                {/* ─── LEFT COLUMN: Order Details Card ─── */}
+                <div className="bg-gradient-to-b from-[#111111] to-[#0A0A0A] border border-white/10 p-8 rounded-3xl shadow-2xl relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-[#22C55E]/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
+                    
+                    <h2 className="text-2xl font-semibold text-white/90 mb-8 relative z-10">Order Details: #{order.order_number}</h2>
 
-                    {/* Project Overview */}
+                    <div className="grid grid-cols-2 gap-y-8 gap-x-6 relative z-10 mb-8">
+                        <div>
+                            <p className="text-xs text-white/40 uppercase tracking-wider mb-2">Project Name</p>
+                            <p className="text-lg font-medium text-white/90">{order.service_type}</p>
+                            <p className="text-xs text-white/50 mt-1 line-clamp-2">{order.description || "Website Design & Development"}</p>
+                        </div>
+                        <div>
+                            <p className="text-xs text-white/40 uppercase tracking-wider mb-2">Order Date</p>
+                            <p className="text-lg font-medium text-white/90">{new Date(order.created_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric"})}</p>
+                        </div>
+                        <div>
+                            <p className="text-xs text-white/40 uppercase tracking-wider mb-2">Client Contact</p>
+                            <p className="text-lg font-medium text-white/90">{order.customer_name || "Client"}</p>
+                            <p className="text-sm text-white/50 mt-1">{order.customer_email}</p>
+                        </div>
+                        
+                        <div className="row-span-2 flex flex-col gap-4">
+                            <div className="bg-white/5 border border-white/5 p-4 rounded-xl backdrop-blur-sm">
+                                <p className="text-white/80 font-medium text-sm mb-1">{order.service_type}</p>
+                                <p className="text-xs text-white/40">Rp {order.gross_amount.toLocaleString("id-ID")}</p>
+                            </div>
+                            <div className="bg-white/5 border border-white/5 p-4 rounded-xl backdrop-blur-sm">
+                                <p className="text-xs text-white/40 mb-1">Current Status</p>
+                                <p className="text-white/80 text-sm">{order.progress >= 100 ? "Completed and delivered." : `Your order is currently in the ${order.status.replace("_", " ")} phase. We are crafting it with premium quality.`}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* ──── PAYMENT SECTION (Integrated inside the card) ──── */}
                     {!isConsultation && (
-                        <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
-                            <h2 className="text-sm font-bold flex items-center gap-2 mb-3 text-white/80">
-                                <ShieldCheck size={16} className="text-indigo-400" />
-                                {t("overview")}
-                            </h2>
-                            <p className="text-sm text-white/40 leading-relaxed">
-                                {order.description || t("noDescription")}
-                            </p>
-                        </div>
-                    )}
-
-                    {/* ──── PAYMENT SECTION ──── */}
-                    {!isConsultation && (
-                        <div className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
-                            <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-white/[0.01]">
-                                <h2 className="text-sm font-bold flex items-center gap-2 text-white/80">
-                                    <CreditCard size={16} className="text-indigo-400" />
-                                    {t("paymentStatus")}
-                                </h2>
-                                <span className="font-mono text-sm font-bold text-indigo-400">
-                                    Rp {order.gross_amount?.toLocaleString("id-ID") || 0}
-                                </span>
-                            </div>
-                            <div className="p-6 space-y-4">
-                                {/* Down Payment Row */}
-                                <div className={`p-4 rounded-xl border transition-all ${isDepositPaid
-                                    ? "border-green-500/20 bg-green-500/5"
-                                    : "border-indigo-500/20 bg-indigo-500/5"
-                                    }`}>
-                                    <div className="flex items-center justify-between mb-2">
-                                        <div className="flex items-center gap-2">
-                                            {isDepositPaid
-                                                ? <CheckCircle2 size={16} className="text-green-400" />
-                                                : <Clock size={16} className="text-indigo-400 animate-pulse" />
-                                            }
-                                            <span className="font-semibold text-sm">{t("downPayment")}</span>
-                                        </div>
-                                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${isDepositPaid
-                                            ? "bg-green-500/10 text-green-400 border border-green-500/20"
-                                            : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
-                                            }`}>
-                                            {isDepositPaid ? t("phases.paid") : t("unpaid")}
-                                        </span>
+                        <div className="mt-8 pt-8 border-t border-white/10 relative z-10">
+                            <h3 className="text-sm font-semibold text-white/80 mb-4 flex items-center gap-2">
+                                <CreditCard size={14} /> Payments
+                            </h3>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className={`p-4 rounded-xl border ${isDepositPaid ? "border-[#22C55E]/30 bg-[#22C55E]/5" : "border-white/10 bg-white/5"}`}>
+                                    <div className="flex justify-between items-center mb-1">
+                                        <span className="text-xs font-semibold text-white/60">Down Payment</span>
+                                        <span className={`text-[10px] uppercase font-bold px-1.5 py-0.5 rounded ${isDepositPaid ? "bg-[#22C55E]/20 text-[#22C55E]" : "bg-white/10 text-white/40"}`}>{isDepositPaid ? "Paid" : "Pending"}</span>
                                     </div>
-                                    <div className="flex items-center justify-between mt-3">
-                                        <span className="font-mono text-sm text-white/60">
-                                            Rp {order.down_payment_amount?.toLocaleString("id-ID") || 0}
-                                        </span>
-                                        {!isDepositPaid && (
-                                            <PaymentButton
-                                                uuidToken={order.uuid_token}
-                                                orderId={order.id}
-                                                paymentType="down_payment"
-                                                amount={order.down_payment_amount}
-                                                onSuccess={fetchOrder}
-                                            />
-                                        )}
+                                    <div className="flex justify-between items-end mt-2">
+                                        <span className="font-mono text-sm">Rp {order.down_payment_amount.toLocaleString("id-ID")}</span>
+                                        {!isDepositPaid && <PaymentButton uuidToken={order.uuid_token} orderId={order.id} paymentType="down_payment" amount={order.down_payment_amount} onSuccess={fetchOrder} />}
                                     </div>
                                 </div>
-
-                                {/* Final Payment Row */}
-                                <div className={`p-4 rounded-xl border transition-all ${isCompleted
-                                    ? "border-green-500/20 bg-green-500/5"
-                                    : !isDepositPaid
-                                        ? "border-white/5 bg-white/[0.01] opacity-40"
-                                        : "border-indigo-500/20 bg-indigo-500/5"
-                                    }`}>
-                                    <div className="flex items-center justify-between mb-2">
-                                        <div className="flex items-center gap-2">
-                                            {isCompleted
-                                                ? <CheckCircle2 size={16} className="text-green-400" />
-                                                : !isDepositPaid
-                                                    ? <Lock size={16} className="text-white/30" />
-                                                    : <Clock size={16} className="text-indigo-400" />
-                                            }
-                                            <span className="font-semibold text-sm">{t("finalPaymentStatus")}</span>
-                                        </div>
-                                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${isCompleted
-                                            ? "bg-green-500/10 text-green-400 border border-green-500/20"
-                                            : !isDepositPaid
-                                                ? "bg-white/5 text-white/30 border border-white/10"
-                                                : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
-                                            }`}>
-                                            {isCompleted ? t("phases.paid") : !isDepositPaid ? t("phases.locked") : t("unpaid")}
-                                        </span>
+                                <div className={`p-4 rounded-xl border ${isCompleted ? "border-[#22C55E]/30 bg-[#22C55E]/5" : "border-white/10 bg-white/5"}`}>
+                                    <div className="flex justify-between items-center mb-1">
+                                        <span className="text-xs font-semibold text-white/60">Final Payment</span>
+                                        <span className={`text-[10px] uppercase font-bold px-1.5 py-0.5 rounded ${isCompleted ? "bg-[#22C55E]/20 text-[#22C55E]" : "bg-white/10 text-white/40"}`}>{isCompleted ? "Paid" : "Pending"}</span>
                                     </div>
-                                    <div className="flex items-center justify-between mt-3">
-                                        <span className="font-mono text-sm text-white/60">
-                                            Rp {order.final_payment_amount?.toLocaleString("id-ID") || 0}
-                                        </span>
-                                        {isDepositPaid && !isCompleted && (
-                                            <PaymentButton
-                                                uuidToken={order.uuid_token}
-                                                paymentType="final_payment"
-                                                amount={order.final_payment_amount}
-                                                onSuccess={fetchOrder}
-                                                label="Pay Now"
-                                            />
-                                        )}
+                                    <div className="flex justify-between items-end mt-2">
+                                        <span className="font-mono text-sm">Rp {order.final_payment_amount.toLocaleString("id-ID")}</span>
+                                        {isDepositPaid && !isCompleted && <PaymentButton uuidToken={order.uuid_token} paymentType="final_payment" amount={order.final_payment_amount} onSuccess={fetchOrder} label="Pay" />}
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* ──── PROGRESS + CHAT ──── */}
-                    {!isConsultation && isDepositPaid && (
-                        <div className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
-                            <div className="px-6 py-4 border-b border-white/5 bg-white/[0.01]">
-                                <h2 className="text-sm font-bold flex items-center gap-2 text-white/80">
-                                    <MessageSquare size={16} className="text-indigo-400" />
-                                    {t("productionProgress")}
-                                </h2>
-                            </div>
-                            <div className="p-6 space-y-5">
-                                {/* Progress bar */}
-                                <div className="space-y-2">
-                                    <div className="flex justify-between text-xs text-white/40">
-                                        <span>{t("completionStatus")}</span>
-                                        <span className="text-white font-mono font-bold">{order.progress}%</span>
-                                    </div>
-                                    <div className="h-2 bg-white/5 rounded-full overflow-hidden">
-                                        <div
-                                            className="h-full rounded-full transition-all duration-1000"
-                                            style={{
-                                                width: `${order.progress}%`,
-                                                background: order.progress >= 100
-                                                    ? "#22C55E"
-                                                    : "linear-gradient(90deg, #6366f1, #06b6d4)",
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* Evidence Gallery */}
-                                {order.evidence_links && order.evidence_links.length > 0 && (
-                                    <div>
-                                        <h3 className="text-xs font-bold text-white/40 uppercase tracking-wider mb-3">
-                                            {t("evidence")} ({order.evidence_links.length})
-                                        </h3>
-                                        <div className="grid grid-cols-3 gap-2">
-                                            {order.evidence_links.map((ev, i) => (
-                                                <a key={i} href={ev.url} target="_blank" rel="noopener noreferrer"
-                                                    className="block aspect-video rounded-lg overflow-hidden border border-white/10 hover:border-indigo-500/50 transition-colors relative group"
-                                                >
-                                                    <Image src={ev.url} alt={`Evidence ${i + 1}`} fill className="object-cover" unoptimized />
-                                                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                                        <span className="text-[10px] font-bold text-white uppercase">{t("view")}</span>
-                                                    </div>
-                                                </a>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Chat Accordion */}
-                                <div className="border border-white/10 rounded-xl overflow-hidden">
-                                    <button
-                                        onClick={() => setChatOpen(!chatOpen)}
-                                        className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/[0.02] transition-colors"
-                                    >
-                                        <div className="flex items-center gap-2">
-                                            <MessageSquare size={14} className="text-indigo-400" />
-                                            <span className="text-sm font-semibold">{t("chatWithAdmin")}</span>
-                                        </div>
-                                        <ChevronDown size={14} className={`text-white/40 transition-transform duration-300 ${chatOpen ? "rotate-180" : ""}`} />
-                                    </button>
-                                    {chatOpen && (
-                                        <div className="h-[350px] border-t border-white/5 bg-black/20">
-                                            <OrderChat orderId={order.id} uuidToken={order.uuid_token} chatEnabled={order.chat_enabled} />
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {isConsultation && (
-                        <div className="rounded-2xl border border-pink-500/20 bg-white/[0.02] overflow-hidden shadow-[0_0_30px_rgba(236,72,153,0.05)]">
-                            <div className="px-6 py-4 border-b border-white/5 bg-gradient-to-r from-pink-500/10 to-indigo-500/10 backdrop-blur-md">
-                                <h2 className="text-sm font-bold flex items-center gap-2 text-white">
-                                    <MessageSquare size={16} className="text-pink-400" />
-                                    {t("privateConsultation")}
-                                </h2>
-                                <p className="text-[10px] text-white/50 mt-1">
-                                    {t("consultationDesc")}
-                                </p>
-                            </div>
-                            <div className="h-[500px] border-t border-white/5 bg-[#0a0a0a]">
-                                <OrderChat orderId={order.id} uuidToken={order.uuid_token} chatEnabled={true} />
                             </div>
                         </div>
                     )}
                 </div>
 
-                {/* ─── RIGHT SIDEBAR ─── */}
-                <div className="space-y-6">
+                {/* ─── RIGHT SIDEBAR: Updates Timeline ─── */}
+                <div className="pl-4">
+                    <h3 className="text-lg font-medium text-white/90 mb-6">Updates</h3>
+                    
+                    <div className="space-y-4 relative">
+                        <div className="absolute left-[7px] top-4 bottom-4 w-0.5 bg-white/10" />
 
-                    {/* Quick Info Card */}
-                    <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
-                        <h3 className="text-xs font-bold text-white/40 uppercase tracking-wider mb-4">{t("projectDetails")}</h3>
-                        <div className="space-y-4">
-                            <div>
-                                <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">{t("client")}</p>
-                                <p className="text-sm font-medium">{order.customer_name || "—"}</p>
+                        {/* Event: Completion */}
+                        {isCompleted && (
+                            <div className="relative pl-8">
+                                <div className="absolute left-0 top-1 w-4 h-4 rounded-full bg-[#10B981] border-4 border-[#050505]" />
+                                <div className="bg-white/5 border border-white/5 rounded-xl p-3">
+                                    <div className="text-xs font-semibold text-white/80">Project Delivered</div>
+                                    <div className="text-[10px] text-white/40 mt-1">All final files handed over.</div>
+                                </div>
                             </div>
-                            <div>
-                                <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">{t("service")}</p>
-                                <p className="text-sm font-medium">{order.service_type}</p>
+                        )}
+
+                        {/* Event: Working */}
+                        {isDepositPaid && (
+                            <div className="relative pl-8">
+                                <div className="absolute left-0 top-1 w-4 h-4 rounded-full bg-white/20 border-4 border-[#050505]" />
+                                <div className="bg-white/5 border border-white/5 rounded-xl p-3">
+                                    <div className="text-xs font-semibold text-white/80">Design Phase Progress</div>
+                                    <div className="text-[10px] text-white/40 mt-1">Currently at {order.progress}%.</div>
+                                </div>
                             </div>
-                            <div>
-                                <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">{t("totalValue")}</p>
-                                <p className="text-sm font-mono font-bold text-indigo-400">
-                                    Rp {order.gross_amount?.toLocaleString("id-ID") || 0}
-                                </p>
-                            </div>
-                            <div>
-                                <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">{t("started")}</p>
-                                <p className="text-sm">{new Date(order.created_at).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}</p>
+                        )}
+
+                        {/* Event: Order Confirmed */}
+                        <div className="relative pl-8">
+                            <div className="absolute left-0 top-1 w-4 h-4 rounded-full bg-[#10B981] border-4 border-[#050505]" />
+                            <div className="bg-white/5 border border-white/5 rounded-xl p-3">
+                                <div className="text-xs font-semibold text-white/80">Order Confirmed</div>
+                                <div className="text-[10px] text-white/40 mt-1">Order #{order.order_number} received.</div>
                             </div>
                         </div>
-                    </div>
 
-                    {/* Result Files Download */}
+                    </div>
+                    
+                    {/* Result Files Download placed here if exists */}
                     {order.result_files && order.result_files.length > 0 && (
-                        <div className="rounded-2xl border border-green-500/20 bg-green-500/[0.03] p-6">
-                            <h3 className="text-xs font-bold text-green-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
-                                {t("projectResults")} ({order.result_files.length} files)
+                        <div className="mt-8 rounded-xl border border-green-500/20 bg-green-500/[0.03] p-4">
+                            <h3 className="text-xs font-bold text-green-400 uppercase tracking-wider mb-3">
+                                Results
                             </h3>
                             <div className="space-y-2">
-                                {order.result_files.map((f: { name: string; url: string; type: string; size: number; uploadedAt: string }, i: number) => (
-                                    <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-black/20 border border-white/[0.04]">
-                                        <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 text-lg bg-green-500/10">
-                                            {f.type?.includes("image") ? "🖼️" : f.type?.includes("video") ? "🎬" : f.type?.includes("pdf") ? "📄" : f.type?.includes("zip") || f.type?.includes("rar") ? "📦" : "📎"}
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <p className="text-sm font-medium text-white truncate">{f.name}</p>
-                                            <p className="text-[10px] text-white/30">{(f.size / 1024 / 1024).toFixed(2)} MB</p>
-                                        </div>
-                                        <a href={f.url} target="_blank" rel="noopener noreferrer" download className="px-4 py-2 rounded-lg text-xs font-bold text-white transition-all hover:brightness-110" style={{ background: "linear-gradient(135deg, #22C55E, #16A34A)" }}>
-                                            {t("download")}
-                                        </a>
-                                    </div>
+                                {order.result_files.map((f: any, i: number) => (
+                                    <a key={i} href={f.url} download target="_blank" className="flex items-center gap-2 p-2 rounded-lg bg-black/20 border border-white/5 hover:bg-white/5 transition-colors text-xs font-medium text-white truncate max-w-full block">
+                                        📎 {f.name}
+                                    </a>
                                 ))}
                             </div>
                         </div>
                     )}
-
-                    {/* Milestone Logs */}
-                    <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
-                        <h3 className="text-xs font-bold text-white/40 uppercase tracking-wider mb-4">{t("activityLog")}</h3>
-                        <div className="space-y-4 relative">
-                            <div className="absolute left-[5px] top-2 bottom-2 w-px bg-white/10" />
-
-                            {isCompleted && (
-                                <div className="relative pl-5">
-                                    <div className="absolute left-0 top-1.5 w-2.5 h-2.5 rounded-full bg-green-500 border-2 border-[#050505]" />
-                                    <div className="text-[10px] text-white/30 mb-0.5">{t("completed")}</div>
-                                    <div className="text-xs text-green-400 font-medium">{t("allPaymentsSettled")}</div>
+                    
+                    {/* Chat CTA below */}
+                    {order.chat_enabled && isDepositPaid && (
+                        <div className="mt-8 border border-white/10 rounded-xl overflow-hidden bg-white/5">
+                            <button onClick={() => setChatOpen(!chatOpen)} className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/[0.02]">
+                                <span className="text-sm font-semibold">Project Chat</span>
+                                <ChevronDown size={14} className={`${chatOpen ? "rotate-180" : ""}`} />
+                            </button>
+                            {chatOpen && (
+                                <div className="h-[350px] border-t border-white/5 bg-black/40">
+                                    <OrderChat orderId={order.id} uuidToken={order.uuid_token} chatEnabled={true} />
                                 </div>
                             )}
-
-                            <div className="relative pl-5">
-                                <div className="absolute left-0 top-1.5 w-2.5 h-2.5 rounded-full bg-indigo-500 border-2 border-[#050505]" />
-                                <div className="text-[10px] text-white/30 mb-0.5">
-                                    {new Date(order.updated_at).toLocaleString("id-ID", { hour: "2-digit", minute: "2-digit", day: "numeric", month: "short" })}
-                                </div>
-                                <div className="text-xs text-white/70">{t("latestUpdateLogged")}</div>
-                            </div>
-
-                            {isDepositPaid && (
-                                <div className="relative pl-5">
-                                    <div className="absolute left-0 top-1.5 w-2.5 h-2.5 rounded-full bg-green-500/60 border-2 border-[#050505]" />
-                                    <div className="text-[10px] text-white/30 mb-0.5">{t("payment")}</div>
-                                    <div className="text-xs text-white/50">{t("downPaymentReceived")}</div>
-                                </div>
-                            )}
-
-                            <div className="relative pl-5">
-                                <div className="absolute left-0 top-1.5 w-2.5 h-2.5 rounded-full bg-white/20 border-2 border-[#050505]" />
-                                <div className="text-[10px] text-white/30 mb-0.5">
-                                    {new Date(order.created_at).toLocaleString("id-ID", { hour: "2-digit", minute: "2-digit", day: "numeric", month: "short" })}
-                                </div>
-                                <div className="text-xs text-white/50">{t("projectInitiated")}</div>
-                            </div>
                         </div>
-                    </div>
+                    )}
+                </div>
 
                     {/* Public View Link */}
                     <div className="rounded-2xl bg-gradient-to-br from-indigo-900/20 to-purple-900/20 border border-indigo-500/20 p-6 text-center">
@@ -573,7 +397,7 @@ export default function UnifiedOrderPage() {
                         <p className="text-sm font-semibold text-green-400">{t("contactViaWhatsapp")}</p>
                     </a>
                 </div>
-            </div>
         </main>
     );
 }
+

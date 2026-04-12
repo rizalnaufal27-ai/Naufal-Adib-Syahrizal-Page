@@ -97,7 +97,7 @@ When user mentions ordering, include [OPEN_PRICING] at the end of your response.
         });
 
         const result = streamText({
-            model: openrouter("google/gemma-3-27b-it:free"),
+            model: openrouter("google/gemma-3-27b-it:free") as any,
             system: SYSTEM_PROMPT,
             messages,
             temperature: 0.7,

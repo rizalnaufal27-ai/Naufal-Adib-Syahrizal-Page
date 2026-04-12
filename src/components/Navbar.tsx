@@ -30,12 +30,12 @@ export default function Navbar() {
     const handleClick = (href: string) => {
         setMobileOpen(false);
         if (isSubPage) {
-            router.push(`/${href}`);
+            router.push("/" as any);
         } else if (href.startsWith("#")) {
             const el = document.querySelector(href);
             if (el) el.scrollIntoView({ behavior: "smooth" });
         } else {
-            router.push(href);
+            router.push(href as any);
         }
     };
 
