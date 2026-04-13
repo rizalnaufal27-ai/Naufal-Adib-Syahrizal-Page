@@ -245,5 +245,22 @@
     },
     "FloatingOrderFab": {
         "order": "Order Now"
+    },
+    "NasaiExplorer": {
+        "welcome": "Hi, I'm NASAI! I'm here to show you how Naufal's studio works. Ready for a quick tour?",
+        "profile": "Naufal is a visual storyteller focusing on premium design. Let's see who's behind the screen.",
+        "services": "We offer professional branding, UI/UX, and photography. You can even check the prices personally!",
+        "work": "Quality is our signature. Here you can see recent projects with high-end matte aesthetics.",
+        "experience": "Naufal has been crafting digital experiences for clients worldwide. Here's the track record.",
+        "action": "Ready to start your project? Use the calculator for an instant quote or chat with Naufal!",
+        "buttons": {
+            "start": "Start Tour",
+            "next": "Next",
+            "back": "Back",
+            "skip": "Skip",
+            "finish": "Finish",
+            "order": "Order Now",
+            "whatsapp": "Chat WA"
+        }
     }
 }

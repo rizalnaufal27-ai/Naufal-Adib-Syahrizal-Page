@@ -241,5 +241,22 @@
     },
     "FloatingOrderFab": {
         "order": "Pesan Sekarang"
+    },
+    "NasaiExplorer": {
+        "welcome": "Halo, saya NASAI! Saya di sini untuk menemani kamu keliling studio Naufal. Siap buat tur singkat?",
+        "profile": "Naufal adalah visual storyteller yang fokus pada desain premium. Yuk kenalan sama orangnya.",
+        "services": "Kami melayani branding, UI/UX, sampai fotografi. Kamu bisa cek harganya langsung di sini!",
+        "work": "Kualitas adalah tanda tangan kami. Cek proyek terbaru dengan estetika matte yang elegan di sini.",
+        "experience": "Naufal sudah membangun pengalaman digital untuk klien global. Ini adalah rekam jejaknya.",
+        "action": "Siap mulai proyekmu? Gunakan kalkulator untuk penawaran instan atau ngobrol sama Naufal!",
+        "buttons": {
+            "start": "Mulai Tur",
+            "next": "Lanjut",
+            "back": "Kembali",
+            "skip": "Lewati",
+            "finish": "Selesai",
+            "order": "Pesan Sekarang",
+            "whatsapp": "Chat WA"
+        }
     }
 }

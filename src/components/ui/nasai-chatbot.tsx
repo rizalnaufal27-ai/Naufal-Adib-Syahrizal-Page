@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from 'react';
-import { useChat } from 'ai/react';
-import { Send, X } from 'lucide-react';
+import React, { useState, useCallback, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronRight, ChevronLeft, X, Play, ExternalLink, MessageCircle } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 const PenguinIcon = ({ className }: { className?: string }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -12,154 +13,210 @@ const PenguinIcon = ({ className }: { className?: string }) => (
     </svg>
 );
 
-function renderMarkdown(text: string) {
-    if (!text) return "";
-    let r = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    r = r.replace(/\*(.*?)\*/g, '<em>$1</em>');
-    r = r.replace(/`(.*?)`/g, '<code class="bg-white/10 px-1 py-0.5 rounded text-[11px]">$1</code>');
-    r = r.replace(/^#{1,3}\s(.+)$/gm, '<p class="font-bold text-white/90 mt-1">$1</p>');
-    r = r.replace(/^[\*\-]\s(.+)$/gm, '<li class="ml-3 list-disc text-white/70">$1</li>');
-    r = r.replace(/\n/g, '<br/>');
-    return r;
-}
+const TOUR_STEPS = [
+    { id: 'home', key: 'welcome' },
+    { id: 'profile', key: 'profile' },
+    { id: 'services', key: 'services' },
+    { id: 'work', key: 'work' },
+    { id: 'experience', key: 'experience' },
+    { id: 'home', key: 'action' }, // Back to top for final CTA
+];
 
 export function NasaiChatbot() {
+    const t = useTranslations('NasaiExplorer');
     const [isOpen, setIsOpen] = useState(false);
-    const [errorMsg, setErrorMsg] = useState<string | null>(null);
-    const messagesEndRef = useRef<HTMLDivElement>(null);
+    const [isTourActive, setIsTourActive] = useState(false);
+    const [currentStep, setCurrentStep] = useState(0);
 
-    const { messages, input, handleInputChange, handleSubmit, isLoading, setInput } = useChat({
-        api: '/api/chat',
-        onError: (err) => {
-            console.error("NASAI error:", err);
-            setErrorMsg("NASAI tidak dapat diakses saat ini. Coba lagi sebentar.");
-        },
-        onResponse: () => {
-            setErrorMsg(null);
-        },
-    });
+    const scrollToSection = useCallback((sectionId: string) => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+            const offset = 80; // Navbar offset
+            const bodyRect = document.body.getBoundingClientRect().top;
+            const elementRect = element.getBoundingClientRect().top;
+            const elementPosition = elementRect - bodyRect;
+            const offsetPosition = elementPosition - offset;
 
-    useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages]);
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+        }
+    }, []);
 
-    const quickSend = (text: string) => {
-        setInput(text);
-        // Allow React to re-render with the new input before pseudo-submitting
-        setTimeout(() => {
-            const form = document.getElementById('nasai-form') as HTMLFormElement | null;
-            if (form) form.requestSubmit();
-        }, 50);
+    const startTour = () => {
+        setIsTourActive(true);
+        setCurrentStep(0);
+        scrollToSection(TOUR_STEPS[0].id);
     };
 
+    const nextStep = () => {
+        if (currentStep < TOUR_STEPS.length - 1) {
+            const next = currentStep + 1;
+            setCurrentStep(next);
+            scrollToSection(TOUR_STEPS[next].id);
+        } else {
+            finishTour();
+        }
+    };
+
+    const prevStep = () => {
+        if (currentStep > 0) {
+            const prev = currentStep - 1;
+            setCurrentStep(prev);
+            scrollToSection(TOUR_STEPS[prev].id);
+        }
+    };
+
+    const finishTour = () => {
+        setIsTourActive(false);
+        setIsOpen(false);
+        setCurrentStep(0);
+    };
+
+    // Auto-open greeting on first mount
+    useEffect(() => {
+        const hasSeenTour = localStorage.getItem('nasai_tour_seen');
+        if (!hasSeenTour) {
+            const timer = setTimeout(() => setIsOpen(true), 3000);
+            return () => clearTimeout(timer);
+        }
+    }, []);
+
     if (!isOpen) return (
-        <button
+        <motion.button
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
             onClick={() => setIsOpen(true)}
             className="fixed bottom-6 right-6 z-50 p-4 rounded-full bg-[#111111] border border-white/10 shadow-2xl hover:border-emerald-500/40 hover:bg-[#1a1a1a] transition-all duration-300 group flex items-center justify-center pointer-events-auto"
         >
             <div className="absolute inset-0 rounded-full bg-emerald-500/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
             <PenguinIcon className="w-7 h-7 text-white group-hover:text-emerald-400 relative" />
-        </button>
+        </motion.button>
     );
 
     return (
-        <div className="fixed bottom-6 right-6 z-50 w-[360px] sm:w-[400px] h-[580px] max-h-[80vh] flex flex-col bg-[#0a0a0a] border border-white/10 rounded-2xl shadow-2xl overflow-hidden pointer-events-auto">
-            {/* Header */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-white/8 bg-[#0f0f0f] shrink-0">
-                <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-emerald-500/15 flex items-center justify-center border border-emerald-500/25">
-                        <PenguinIcon className="w-5 h-5 text-emerald-400" />
-                    </div>
-                    <div>
-                        <p className="text-sm font-semibold text-white/90">NASAI</p>
-                        <p className="text-[9px] text-emerald-500/70 font-mono uppercase tracking-widest">Studio Web Instructor</p>
-                    </div>
-                </div>
-                <button onClick={() => setIsOpen(false)} className="p-2 text-white/40 hover:text-white transition-colors">
-                    <X className="w-4 h-4" />
-                </button>
-            </div>
-
-            {/* Chat Area */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-3 scrollbar-thin scrollbar-thumb-white/5 scrollbar-track-transparent">
-                {messages.length === 0 && (
-                    <div className="text-center py-6 px-2">
-                        <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mx-auto mb-3">
-                            <PenguinIcon className="w-7 h-7 text-white/30" />
+        <AnimatePresence>
+            <motion.div
+                initial={{ y: 20, opacity: 0, scale: 0.9 }}
+                animate={{ y: 0, opacity: 1, scale: 1 }}
+                exit={{ y: 20, opacity: 0, scale: 0.9 }}
+                className="fixed bottom-6 right-6 z-50 w-[340px] bg-[#0a0a0a] border border-white/10 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.8)] overflow-hidden pointer-events-auto"
+            >
+                {/* Header */}
+                <div className="flex items-center justify-between px-4 py-3 border-b border-white/5 bg-[#0f0f0f]">
+                    <div className="flex items-center gap-2.5">
+                        <div className="w-7 h-7 rounded-full bg-emerald-500/15 flex items-center justify-center border border-emerald-500/20">
+                            <PenguinIcon className="w-4 h-4 text-emerald-400" />
                         </div>
-                        <p className="text-white/80 text-sm font-medium mb-1">Hi, I&apos;m NASAI!</p>
-                        <p className="text-white/40 text-xs mb-5">Naufal&apos;s AI Studio assistant. What can I help you with?</p>
-                        <div className="flex flex-wrap gap-2 justify-center">
-                            {["Lihat Harga", "Cara Order?", "Layanan Apa Saja?"].map((q) => (
-                                <button
-                                    key={q}
-                                    onClick={() => quickSend(q)}
-                                    className="px-3 py-1.5 rounded-full border border-white/10 bg-white/5 text-xs text-white/60 hover:bg-white/10 hover:text-white transition-colors"
-                                >
-                                    {q}
-                                </button>
-                            ))}
+                        <div>
+                            <p className="text-[11px] font-bold text-white/90 uppercase tracking-tighter">NASAI Explorer</p>
                         </div>
                     </div>
-                )}
-
-                {messages.map((m) => (
-                    <div key={m.id} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                        <div className={`px-3.5 py-2.5 rounded-2xl max-w-[88%] text-sm leading-relaxed ${
-                            m.role === 'user'
-                                ? 'bg-emerald-600/80 border border-emerald-500/30 text-white rounded-br-sm'
-                                : 'bg-white/[0.06] border border-white/8 text-white/80 rounded-bl-sm'
-                        }`}>
-                            {m.role === 'user' ? (
-                                m.content
-                            ) : (
-                                <span dangerouslySetInnerHTML={{ __html: renderMarkdown(m.content) }} />
-                            )}
-                        </div>
-                    </div>
-                ))}
-
-                {isLoading && (
-                    <div className="flex items-start">
-                        <div className="px-4 py-3 rounded-2xl rounded-bl-sm bg-white/[0.06] border border-white/8">
-                            <div className="flex gap-1.5 items-center h-3">
-                                {['-0.3s', '-0.15s', '0s'].map((d, i) => (
-                                    <div key={i} className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce" style={{ animationDelay: d }} />
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {errorMsg && (
-                    <div className="px-3 py-2 rounded-xl bg-red-500/10 border border-red-500/20 text-xs text-red-400 text-center">
-                        {errorMsg}
-                    </div>
-                )}
-
-                <div ref={messagesEndRef} />
-            </div>
-
-            {/* Input */}
-            <form id="nasai-form" onSubmit={handleSubmit} className="p-3 border-t border-white/8 bg-[#0d0d0d] shrink-0">
-                <div className="flex items-center gap-2">
-                    <input
-                        value={input}
-                        onChange={handleInputChange}
-                        placeholder="Ask NASAI anything..."
-                        className="flex-1 bg-white/[0.04] border border-white/8 rounded-full py-2.5 px-4 text-sm text-white focus:outline-none focus:border-emerald-500/40 transition-all placeholder:text-white/20"
-                        disabled={isLoading}
-                    />
-                    <button
-                        type="submit"
-                        disabled={isLoading || !input.trim()}
-                        className="p-2.5 rounded-full bg-emerald-600 text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-emerald-500 transition-colors shrink-0"
-                    >
-                        <Send className="w-4 h-4" />
+                    <button onClick={() => setIsOpen(false)} className="p-1 px-4 text-white/30 hover:text-white transition-colors">
+                        <X className="w-4 h-4" />
                     </button>
                 </div>
-                <p className="text-center text-[9px] text-white/20 uppercase tracking-widest mt-2 font-mono">NASAI Studio Assistant</p>
-            </form>
-        </div>
+
+                {/* Content Area */}
+                <div className="p-5">
+                    {!isTourActive ? (
+                        <div className="text-center py-4">
+                            <div className="w-16 h-16 rounded-3xl bg-emerald-500/5 border border-emerald-500/10 flex items-center justify-center mx-auto mb-4">
+                                <PenguinIcon className="w-8 h-8 text-emerald-400/80" />
+                            </div>
+                            <h3 className="text-white font-bold mb-2 text-sm">{t('welcome')}</h3>
+                            <button
+                                onClick={startTour}
+                                className="w-full mt-4 py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2 group"
+                            >
+                                <Play size={14} className="fill-current" />
+                                {t('buttons.start')}
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="space-y-5">
+                            <AnimatePresence mode="wait">
+                                <motion.div
+                                    key={currentStep}
+                                    initial={{ opacity: 0, x: 10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: -10 }}
+                                    transition={{ duration: 0.3 }}
+                                >
+                                    <p className="text-white/80 text-sm leading-relaxed mb-4">
+                                        {t(TOUR_STEPS[currentStep].key)}
+                                    </p>
+
+                                    {currentStep === TOUR_STEPS.length - 1 && (
+                                        <div className="flex flex-col gap-2 mb-4">
+                                            <button
+                                                onClick={() => {
+                                                    const btn = document.querySelector('[data-order-trigger="true"]') as HTMLButtonElement;
+                                                    if (btn) btn.click();
+                                                    else window.location.hash = 'services';
+                                                }}
+                                                className="w-full py-3 bg-white text-black rounded-lg text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-neutral-200 transition-colors"
+                                            >
+                                                <ExternalLink size={14} />
+                                                {t('buttons.order')}
+                                            </button>
+                                            <a
+                                                href="https://wa.me/6285782074034"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="w-full py-3 bg-emerald-600/10 border border-emerald-500/20 text-emerald-400 rounded-lg text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-emerald-600/20 transition-colors"
+                                            >
+                                                <MessageCircle size={14} />
+                                                {t('buttons.whatsapp')}
+                                            </a>
+                                        </div>
+                                    )}
+                                </motion.div>
+                            </AnimatePresence>
+
+                            {/* Navigation */}
+                            <div className="flex items-center justify-between pt-4 border-t border-white/5">
+                                <div className="flex gap-1">
+                                    {TOUR_STEPS.map((_, i) => (
+                                        <div 
+                                            key={i} 
+                                            className={`h-1 rounded-full transition-all duration-300 ${i === currentStep ? 'w-4 bg-emerald-500' : 'w-1 bg-white/10'}`} 
+                                        />
+                                    ))}
+                                </div>
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={prevStep}
+                                        disabled={currentStep === 0}
+                                        className="p-2 rounded-lg bg-white/5 text-white/40 hover:text-white disabled:opacity-20 transition-colors"
+                                    >
+                                        <ChevronLeft size={16} />
+                                    </button>
+                                    <button
+                                        onClick={nextStep}
+                                        className="p-2 px-4 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors flex items-center gap-1 text-[10px] font-bold uppercase"
+                                    >
+                                        {currentStep === TOUR_STEPS.length - 1 ? t('buttons.finish') : t('buttons.next')}
+                                        <ChevronRight size={16} />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Footer Subtle */}
+                <div className="px-4 py-2 bg-white/5 flex items-center justify-between">
+                    <span className="text-[8px] text-white/20 uppercase tracking-[0.2em] font-mono">NASAI V2.0 · PROACTIVE MODE</span>
+                    {isTourActive && (
+                        <button onClick={finishTour} className="text-[8px] text-white/40 uppercase tracking-widest hover:text-white transition-colors">
+                            {t('buttons.skip')}
+                        </button>
+                    )}
+                </div>
+            </motion.div>
+        </AnimatePresence>
     );
 }
+

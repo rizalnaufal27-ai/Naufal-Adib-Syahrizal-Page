@@ -86,6 +86,7 @@ export default function HeroSection({ onOrderClick }: HeroSectionProps) {
           </button>
           <button 
             onClick={onOrderClick}
+            data-order-trigger="true"
             className="px-6 py-2.5 rounded-full bg-white text-black border border-white text-[11px] font-bold uppercase tracking-[0.15em] hover:bg-neutral-200 transition-colors pointer-events-auto w-fit text-left"
           >
             Start a Project
