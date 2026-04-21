@@ -1,4 +1,4 @@
-export type ProjectCategory = "Graphic Design" | "Illustration" | "Photography" | "Video Editing" | "Animation" | "App Development";
+export type ProjectCategory = "Graphic Design" | "Illustration" | "Photography" | "Video Editing" | "Animation" | "App Development" | "Web Design & Development";
 
 export interface Project {
     id: number;
@@ -10,6 +10,7 @@ export interface Project {
     story: string;
     media: string[];
     date?: string; // Added date field as requested
+    liveUrl?: string; // Link to the actual website
 }
 
 export const projects: Project[] = [
@@ -162,5 +163,17 @@ export const projects: Project[] = [
         story: "A freelance branding project for 'Taya Snack', a home-based snack business. The logo uses a vibrant red and yellow color palette to evoke feelings of happiness, appetite, and satisfaction, perfectly representing the joy of sharing delicious snacks.",
         media: ["/images/portfolio/taya-snack-logo/logo.png"],
         date: "2024",
+    },
+    {
+        id: 15,
+        title: "SINERINA FILMS — Production Brief & Hub",
+        category: "Web Design & Development",
+        image: "/images/portfolio/sinerina/cover.png",
+        gradient: "linear-gradient(135deg, #1a1a1a, #2a2a2a)",
+        tools: ["Next.js 15", "Supabase", "Framer Motion", "Nodemailer", "Gemini AI"],
+        story: "A comprehensive digital ecosystem for SINERINA FILMS, a cinematic production agency. The project includes a high-end public recruitment platform with AI-driven applicant scoring and a central management hub for team portfolios. Designed with a 'Matte Dark' aesthetic to match the agency's professional cinematic vision, the system automates recruitment workflows and centralizes project management across Films and Photography divisions.",
+        media: ["/images/portfolio/sinerina/cover.png"],
+        date: "2024",
+        liveUrl: "https://sinerina-films.vercel.app",
     },
 ];

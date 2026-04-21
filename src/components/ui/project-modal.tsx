@@ -83,6 +83,21 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                                     <p className="text-sm text-neutral-400 leading-relaxed">
                                         {project.story}
                                     </p>
+                                    {project.liveUrl && (
+                                        <div className="mt-8">
+                                            <a 
+                                                href={project.liveUrl} 
+                                                target="_blank" 
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-3 px-6 py-3 bg-white text-black text-[10px] font-black uppercase tracking-[0.2em] hover:bg-neutral-200 transition-all active:scale-95"
+                                            >
+                                                Visit Live Site
+                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                                    <path d="M7 17L17 7M17 7H7M17 7v10" />
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* Tools — reference: outlined pills, monochrome, uppercase */}

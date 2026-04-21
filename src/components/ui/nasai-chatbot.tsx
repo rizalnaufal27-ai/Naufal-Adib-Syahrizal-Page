@@ -19,7 +19,7 @@ const TOUR_STEPS = [
     { id: 'services', key: 'services' },
     { id: 'work', key: 'work' },
     { id: 'experience', key: 'experience' },
-    { id: 'home', key: 'action' }, // Back to top for final CTA
+    { id: 'contact', key: 'action' }, // Point to footer for contact
 ];
 
 export function NasaiChatbot() {
