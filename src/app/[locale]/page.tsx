@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import IntroSequence from "@/components/IntroSequence";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/sections/HeroSection";
@@ -19,8 +19,17 @@ import FloatingOrderFab from "@/components/ui/floating-order-fab";
 
 
 export default function Home() {
-  const [introComplete, setIntroComplete] = useState(false);
+  const [introComplete, setIntroComplete] = useState(true); // Default to seen (skipped) for SSR
   const [orderFormOpen, setOrderFormOpen] = useState(false);
+
+  // Check storage on mount to decide if we show intro
+  useEffect(() => {
+    const hasSeenIntro = localStorage.getItem('ncs_intro_seen');
+    if (!hasSeenIntro) {
+      setIntroComplete(false);
+    }
+  }, []);
+
   const handleOrderClick = useCallback(() => {
     setOrderFormOpen(true);
   }, []);
@@ -33,6 +42,7 @@ export default function Home() {
 
   const handleIntroComplete = useCallback(() => {
     setIntroComplete(true);
+    localStorage.setItem('ncs_intro_seen', 'true');
   }, []);
 
   if (!introComplete) {

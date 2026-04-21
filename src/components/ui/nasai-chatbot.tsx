@@ -76,9 +76,12 @@ export function NasaiChatbot() {
 
     // Auto-open greeting on first mount
     useEffect(() => {
-        const hasSeenTour = localStorage.getItem('nasai_tour_seen');
-        if (!hasSeenTour) {
-            const timer = setTimeout(() => setIsOpen(true), 3000);
+        const hasSeenPopup = localStorage.getItem('nasai_popup_seen');
+        if (!hasSeenPopup) {
+            const timer = setTimeout(() => {
+                setIsOpen(true);
+                localStorage.setItem('nasai_popup_seen', 'true');
+            }, 3000);
             return () => clearTimeout(timer);
         }
     }, []);
