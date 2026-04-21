@@ -13,7 +13,7 @@ const skills = [
     { name: "Canva", abbr: "Cn" },
     { name: "DaVinci Resolve", abbr: "Dv" },
     { name: "Camera", abbr: "📷" },
-    { name: "Figma", abbr: "Fi" },
+    { name: "Antigravity", abbr: "Ag" },
     { name: "VS Code", abbr: "VS" },
 ];
 

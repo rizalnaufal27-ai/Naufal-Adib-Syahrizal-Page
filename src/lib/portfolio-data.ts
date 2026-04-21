@@ -25,7 +25,7 @@ export const PORTFOLIO_RAG = `
 - Visual Communication Design student at Universitas Indraprasta PGRI
 - Based in Jakarta, Indonesia
 - 1+ year freelance experience
-- Tools: Photoshop, Illustrator, CapCut, Canva, DaVinci Resolve, Figma, Next.js
+- Tools: Photoshop, Illustrator, CapCut, Canva, DaVinci Resolve, Antigravity, Next.js
 - Contact: WhatsApp +6285782074034, Email rizalnaufal27@gmail.com
 - Instagram: @syahrizalnaufal07
 `;

@@ -170,7 +170,7 @@ export const projects: Project[] = [
         category: "Web Design & Development",
         image: "/images/portfolio/sinerina/desktop.png",
         gradient: "linear-gradient(135deg, #1a1a1a, #2a2a2a)",
-        tools: ["Next.js 15", "Supabase", "Framer Motion", "Nodemailer", "Gemini AI"],
+        tools: ["Next.js 15", "Supabase", "Framer Motion", "Nodemailer", "Antigravity"],
         story: "A comprehensive digital ecosystem for SINERINA FILMS, a cinematic production agency. The project includes a high-end public recruitment platform with AI-driven applicant scoring and a central management hub for team portfolios. Designed with a 'Matte Dark' aesthetic to match the agency's professional cinematic vision, the system automates recruitment workflows and centralizes project management across Films and Photography divisions.",
         media: ["/images/portfolio/sinerina/desktop.png", "/images/portfolio/sinerina/mobile.png"],
         date: "2024",
