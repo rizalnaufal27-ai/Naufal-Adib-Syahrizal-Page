@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 const skills = [
     { name: "Photoshop", abbr: "Ps" },
     { name: "Illustrator", abbr: "Ai" },
-    { name: "After Effects", abbr: "Ae" },
+    { name: "Krita", abbr: "Kr" },
     { name: "Premiere Pro", abbr: "Pr" },
     { name: "InDesign", abbr: "Id" },
     { name: "Ibis Paint", abbr: "iP" },
