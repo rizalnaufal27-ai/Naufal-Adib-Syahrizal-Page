@@ -11,18 +11,18 @@ function isVideo(src: string) {
 
 export default function PortfolioGrid() {
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-    const [activeCategory, setActiveCategory] = useState<"All" | ProjectCategory>("All");
-
+    
     const categories = useMemo(() => {
-        const uniqueCats = Array.from(new Set(projects.map((p) => p.category))).sort();
-        return ["All", ...uniqueCats];
+        return Array.from(new Set(projects.map((p) => p.category))).sort();
     }, []);
+
+    const [activeCategory, setActiveCategory] = useState<ProjectCategory>(categories[0]);
 
     const filteredProjects = useMemo(() => {
         return projects
-            .filter((project) => activeCategory === "All" || project.category === activeCategory)
+            .filter((project) => project.category === activeCategory)
             .sort((a, b) => a.id - b.id);
-    }, [activeCategory]);
+    }, [activeCategory, categories]);
 
     const sectionRef = useRef<HTMLElement>(null);
     const { scrollYProgress } = useScroll({
@@ -59,7 +59,7 @@ export default function PortfolioGrid() {
                     {categories.map((category) => (
                         <button
                             key={category}
-                            onClick={() => setActiveCategory(category as ProjectCategory | "All")}
+                            onClick={() => setActiveCategory(category as ProjectCategory)}
                             className={`text-xs font-semibold uppercase tracking-[0.15em] transition-colors duration-300 py-1 border-b-2 ${
                                 activeCategory === category
                                     ? "text-white border-white"
